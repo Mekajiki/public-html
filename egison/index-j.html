@@ -1,0 +1,87 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>Egison - プログラミング言語<span style="font-size:50%">&rarr; <a href="index.html">English Version</a></span></h1>
+
+<hr/>
+
+<h2 id="discription">Egisonとは？</h2>
+
+<p>
+  Egisonは強力なパターンマッチ機能をもつ関数型言語です．<br/>
+  Egisonを使うと，純粋に帰納的には表せないデータ，例えば，集合や，多重集合，<br/>
+  また環や群といった代数構造などのパターンマッチを直感的に表現することができます．
+</p>
+
+<p>  
+  Egisonのその他に以下のような特徴があります．
+<ul>
+  <li>遅延評価</li>
+</ul>
+</p>
+
+<hr/>
+
+<h2 id="how-to-install">インストール方法</h2>
+
+<p>
+  EgisonはHaskellを使って実装されています．<br/>
+  Egisonはhackageのパッケージとして配布されています．<br/>
+</p>
+
+<p>
+  Egisonをインストールするには，<a href="http://www.haskell.org/ghc/">GHC</a>と
+  <a href="http://haskell.org/haskellwiki/Cabal-Install">Cabal-install</a>がインストールされている必要があります．<br/>
+
+  <a href="http://hackage.haskell.org/platform/">Haskell Platform</a>をインストールすれば，
+  その両方が自動でインストールされます．
+</p>
+
+<p>
+  Hasekll Platformをインストールしたら，コマンドラインで以下のコマンドを実行してみてください．
+
+  <dl>
+    <dd><code>% cabal update</code></dd>
+    <dd><code>% cabal install egison</code></dd>
+  </dl>
+
+  もし，インストールが成功したら，実行ファイルが生成されたパスが出力されるはずです．<br/>
+  シェルが実行ファイルを見つけれるように，シェルの$PATH変数にそのパスを追加してください．<br/>
+  (Windowsの場合はパスの設定が必要ないようです)
+</p>
+
+<p>
+  そうすると，以下のコマンドが実行できるはずです．
+  
+  <dl>
+    <dd><code>% egison</code></dd>
+  </dl>
+  
+</p>
+
+<hr/>
+
+<h2 id="manual">マニュアル</h2>
+
+ただいま執筆中です...
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td>last change: 2011/05/26</td>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>

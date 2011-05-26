@@ -5,29 +5,68 @@
 </head>
 
 <body>
-<h1>Egison - Programming Language<span style="font-size:50%"></h1>
+<h1>Egison - Programming Language<span style="font-size:50%">&rarr; <a href="index-j.html">Japanese Version</a></span></h1>
 
 <hr/>
 
-<h2 id="discription">Discription</h2>
+<h2 id="discription">What is Egison?</h2>
 
-Feature of this programming language is the strong pattern match facility.<br/>
-This programming lanugage is implemented in Haskell.<br/>
-Egison is distributed as a hackage program.<br/>
-You can install Egison with <i>cabal install</i> command.
+<p>
+  Egison is a functional programming language.<br/>
+  A feature of Egison is the strong pattern match facility.<br/>
+</p>
 
-<hr/>
-
-<h2 id="download">Download</h2>
-
+<p>  
+  Egison's other features are
 <ul>
-  <li>
-    <a href="http://hackage.haskell.org/package/egison">egison sorce code(hackage)</a>
-  </li>
-  <li>
-    <a href="elisp/egison-mode.el">egison-mode.el</a>
-  </li>
+  <li>Lazy evaluation</li>
 </ul>
+</p>
+
+<hr/>
+
+<h2 id="how-to-install">How to install?</h2>
+
+<p>
+  Egison is implemented in Haskell.<br/>
+  Egison is distributed as a hackage program.<br/>
+</p>
+
+<p>
+  To install Egison, you need to install <a href="http://www.haskell.org/ghc/">GHC</a> and
+  <a href="http://haskell.org/haskellwiki/Cabal-Install">Cabal-install</a>.<br/>
+
+  If you install <a href="http://hackage.haskell.org/platform/">Haskell Platform</a>,
+  both of GHC and Cabal-install will be installed.<br/>
+</p>
+
+<p>
+  After you installed Hasekll Platform, perform following commands.
+
+  <dl>
+    <dd><code>% cabal update</code></dd>
+    <dd><code>% cabal install egison</code></dd>
+  </dl>
+
+  If successfully installed, there will be an output where the binary file is generated.<br/>
+  Please add new path to $PATH variable of your shell, to make your shell to find egison command.<br/>
+  (If your OS is Windows, you don't need to set the path of the shell.)
+</p>
+
+<p>
+  After that, you can use follwing command.
+  
+  <dl>
+    <dd><code>% egison</code></dd>
+  </dl>
+  
+</p>
+
+<hr/>
+
+<h2 id="manual">Manual</h2>
+
+Please wait...
 
 </body>
 
@@ -35,7 +74,7 @@ You can install Egison with <i>cabal install</i> command.
   <hr size=1 noshade>
   <table width=100% border=0 cellspacing=0>
     <tr>
-      <td>last change: 2011/05/23</td>
+      <td>last change: 2011/05/26</td>
       <td align=right>
         <i>
           <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>

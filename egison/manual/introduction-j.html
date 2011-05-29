@@ -1,0 +1,121 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>イントロダクション</h1>
+<hr/>
+<p>
+  とりあえず，Egisonを動かしてみましょう．<br/>
+  この章では，ポーカーの役判定プログラムを書いて動かしてみます．<br/>
+  トランプのカードのコレクションを多重集合としてパターンマッチするプログラムです．<br/>
+  コレクションデータのパターンマッチの表現は，Egisonの得意とするものです．<br/>
+  これを動かしてみて，Egisonがどういうものなのか感じてみてください．<br/>
+</p>
+
+<hr/>
+
+<h2 id="how-to-install">インストールと実行</h2>
+<p>
+  EgisonはHaskellを使って実装されています．<br/>
+  Egisonは<a href="http://hackage.haskell.org/packages/hackage.html">Hackage</a>のパッケージとして配布されています．<br/>
+</p>
+
+<p>
+  Egisonをインストールするには，<a href="http://www.haskell.org/ghc/">GHC</a>と
+  <a href="http://haskell.org/haskellwiki/Cabal-Install">Cabal-install</a>がインストールされている必要があります．<br/>
+
+  <a href="http://hackage.haskell.org/platform/">Haskell Platform</a>をインストールすれば，
+  その両方が自動でインストールされます．
+</p>
+
+<p>
+  Hasekll Platformをインストールしたら，コマンドラインで以下のコマンドを実行してみてください．
+  <pre>
+    <code>
+  % cabal update
+  % cabal install egison
+    </code>
+  </pre>
+  もし，インストールが成功したら，実行ファイルが生成されたパスが出力されるはずです．<br/>
+  シェルが実行ファイルを見つけれるように，シェルの$PATH変数にそのパスを追加してください．<br/>
+  (Windowsの場合はパスの設定が必要ないようです)
+</p>
+
+<p>
+  そうすると，以下のコマンドが実行できるはずです．
+  <pre>
+    <code>
+  % egison
+    </code>
+  </pre>
+</p>
+
+<h2 id="how-to-update">アップデートの方法</h2>
+<p>
+  以下のコマンドで最新版にアップデートできます．
+  <pre>
+    <code>
+  % cabal update
+  % cabal install egison
+    </code>
+  </pre>
+</p>
+
+<hr/>
+
+<h2 id="run-interpreter">インタプリタを起動しよう</h2>
+
+<p>
+  インストールに成功すると，コマンドラインで<code>egison</code>と打つとEgisonのインタプリタが起動します．<br/>
+  Control-Dを打つとインタプリタを終了できます．(ControlキーとDキーを同時押し)
+  <pre>
+    <code>
+  % egison
+  Egison, version X.X.X : http://hagi.is.s.u-tokyo.ac.jp/~egi/egison/
+  Welcome to Egison Interpreter!
+  > ^D
+  Leaving Egison.
+  Byebye. See you again! (^^)/
+    </code>
+  </pre>
+</p>
+
+<p>
+  いくつか，Egisonに入力を与えてみましょう．
+  <pre>
+    <code>
+  > (define $x 2)
+  x
+  > (test (+ x 3))
+  5
+  > (define $f (lambda [$x $y] [(+ x y) (* x y)]))
+  f
+  > (test (f x 4))
+  [6 8]
+    </code>
+  </pre>
+  この例では，2つのトップ式(top expression)がでてきました．<br/>
+  <code>define</code>式と<code>test</code>式です．<br/>
+  <code>define</code>式は1番目の引数の変数の2番目の引数の式の値への束縛をトップレベル環境に加えます．<br/>
+  <code>test</code>式は1番目の引数の式を評価しその値を表示します．<br/>
+</p>
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td>last change: 2011/05/29</td>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>

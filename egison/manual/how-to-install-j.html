@@ -26,13 +26,15 @@
 
 <p>
   Hasekll Platformをインストールしたら，コマンドラインで以下のコマンドを実行してみてください．
-  <pre>
-    <code>
+</p>
+<pre>
+  <code>
 % cabal update
 % cabal install egison
-    </code>
-  </pre>
+  </code>
+</pre>
 
+<p>
   もし，インストールが成功したら，実行ファイルが生成されたパスが出力されるはずです．<br/>
   シェルが実行ファイルを見つけれるように，シェルの$PATH変数にそのパスを追加してください．<br/>
   (Windowsの場合はパスの設定が必要ないようです)
@@ -40,12 +42,12 @@
 
 <p>
   そうすると，以下のコマンドが実行できるはずです．
+</p>
   <pre>
     <code>
 % egison
     </code>
   </pre>
-</p>
 
 <h2 id="how-to-update">アップデートの方法</h2>
 <p>
@@ -62,14 +64,15 @@
 <p>
   EmacsでEgison modeを使えるようにするには，<code>egison-mode.el</code>をEmacsのロードパスに追加して，
   以下のコードを<code>.emacs</code>に追加してください．
-  <pre>
-    <code>
+</p>
+
+<pre>
+  <code>
 (autoload 'egison-mode "egison-mode" "Major mode for editing Egison code." t)
 (setq auto-mode-alist
 (cons `("\\.egi$" . egison-mode) auto-mode-alist))
-    </code>
-  </pre>
-</p>
+  </code>
+</pre>
 
 </body>
 

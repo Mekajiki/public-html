@@ -275,6 +275,31 @@ f
   次節で型定義について概説します．
 </p>
 
+<p>
+  他にも例をいくつかあげておきます．
+</p>
+
+<pre>
+  <code>
+&gt; (test (match {5 2 1 3 4} (Multiset Int)
+          {[&lt;cons $n
+             &lt;cons ,(- n 1)
+              &lt;cons ,(- n 2)
+               &lt;cons ,(- n 3)
+                &lt;cons ,(- n 4)
+                 &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+            &lt;ok&gt;]
+           [ _ &lt;ko&gt;]}))
+&lt;ok&gt;
+&gt; (test (match-all {1 2 3} (List Int)
+          [&lt;join $hs &lt;cons $x $ts&gt;&gt; [hs x ts]]))
+{[{} 1 {2 3}] [{1} 2 {3}] [{1 2} 3 {}]}
+&gt; (test (match-all {1 2 3 4 5} (Multiset Int)
+          [&lt;cons $n $rest&gt; [m rest]]))
+{[1 {2 3 4 5}] [2 {1 3 4 5}] [3 {1 2 4 5}] [4 {1 2 3 5}] [5 {1 2 3 4}]}
+  </code>
+</pre>
+
 <h2 id="four-parenses">型の定義方法</h2>
 
 <pre>

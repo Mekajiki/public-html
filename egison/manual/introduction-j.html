@@ -27,7 +27,7 @@
 % egison
 Egison, version X.X.X : http://hagi.is.s.u-tokyo.ac.jp/~egi/egison/
 Welcome to Egison Interpreter!
-> ^D
+&gt; ^D
 Leaving Egison.
 Byebye. See you again! (^^)/
   </code>
@@ -72,6 +72,8 @@ f
 <p>
   '<code><</code>', '<code>></code>' で囲まれた式は，データコンストラクタの適用を表します．<br/>
   囲まれた式のうちで先頭の式がデータコンストラクタで，それ以降の式が引数となります．<br/>
+  '<code><</code>', '<code>></code>' で囲まれた式は，パターンコンストラクタ(pattern constructor)の適用を表すのにも使われます．．<br/>
+  パターンコンストラクタはデータコンストラクタと呼び方を変えただけで，同じものです．後で説明します．<br/>
 </p>
 <p>
   '<code>[</code>', '<code>]</code>' で囲まれた式はタプルを表しています．<br/>
@@ -134,7 +136,7 @@ f
 </p>
 <pre>
   <code>
-> (test (let {[$f (lambda [$x] (+ (g x) 10))]
+&t; (test (let {[$f (lambda [$x] (+ (g x) 10))]
               [$g (lambda [$x] (+ x 1))]}
           (f 0)))
 11
@@ -146,12 +148,16 @@ f
 <p>
   パターンマッチを行うコードを動かしてみましょう．<br/>
   この節では，そのなかでもわかりやすいコレクションのパターンマッチを書いてみます．<br/>
-  この節に出てくるコードを実行するには，<conde>collection-lib.egi</code>をロードする必要があります．<br/>
+  この節に出てくるコードを実行するには，<code>collection-lib.egi</code>をロードする必要があります．<br/>
+  <code>load</code>式はトップ式で，1つ目の引数で指定されたファイルの内容を読み込みます．<br/>
+  (<code>load</code>式は，現在実装されていません．<br/>
+  <code>collection-lib.egi</code>の中身をコピーして手動で読み込ませてください．<br/>
+  近々実装する予定です．)
 </p>
 
 <pre>
   <code>
-> (load "/path/to/collection-lib.egi")
+&gt; (load "/path/to/lib/collection-lib.egi")
   </code>
 </pre>
 
@@ -209,16 +215,16 @@ f
 
 <pre>
   <code>
-> (test (let {[$pat <cons ,1 <nil>>]}
+&gt; (test (let {[$pat &lt;cons ,1 &lt;nil&gt;&gt;]}
           (match {1} (Multiset Int)
-            {[pat <ok>]
-             [_ <not-ok>]})))
-<ok>
-> (test (let {[$loop <cons ,1 (of {<nil> loop})>]}
+            {[pat &lt;ok&gt;]
+             [_ &lt;ko&gt;]})))
+&lt;ok&gt;
+&gt; (test (let {[$loop &lt;cons ,1 (of {&lt;nil&gt; loop})&gt;]}
           (match {1 1 1 1} (Multiset Int)
-            {[loop <ok>]
-             [_ <not-ok>]})))
-<ok>
+            {[loop &lt;ok&gt;]
+             [_ &lt;ko&gt;]})))
+&lt;ok&gt;
   </code>
 </pre>
 
@@ -229,21 +235,25 @@ f
 
 <pre>
   <code>
-> (test (match {1 1 1 1} (Multiset Int)
-          {[(with $loop <cons ,1 (of {<nil> loop})>) <ok>]
-           [_ <not-ok>]}))
-<ok>
+&gt; (test (match {1 1 1 1} (Multiset Int)
+          {[(with $loop &lt;cons ,1 (of {&lt;nil&gt; loop})&gt;) &lt;ok&gt;]
+           [_ &lt;ko&gt;]}))
+&lt;ok&gt;
   </code>
 </pre>
 
 <p>
   次は，パターンマッチによる束縛フレームが複数あって面白い例をみてみましょう．<br/>
+  <code>match-map</code>構文は，<code>match</code>構文と同じく1つ目の引数にターゲットを，2つ目の引数に型をとります．<br/>
+  ただ違うのは，3つめの引数で，マッチ節のコレクションではなく，単独のマッチ節をとります．<br/>
+  パターンとターゲットを，指定された型としてパターンマッチを実行し，得られた束縛フレームのコレクションの全ての束縛フレームについて，
+  それぞれマッチ節の式を実行し，その結果をコレクションにして返します．<br/>
 </p>
 
 <pre>
   <code>
 &gt; (test (match-all {1 2 3} (List Int)
-          [&lt;join $hs $x $ts&gt; [hs ts]]))
+          [&lt;join $hs $ts&gt; [hs ts]]))
 {[{} {1 2 3}] [{1} {2 3}] [{1 2} {3}] [{1 2 3} {}]}
 
 &gt; (test (match-all {1 2 3} (Multiset Int)
@@ -259,7 +269,10 @@ f
 </pre>
 
 <p>
-  
+  パターンコンストラクタ<code>join</code>は引数を2つ取ります．<br/>
+  1つ目の引数にマッチした値と2つ目の引数にマッチした値を合わせた要素が，ターゲットと同値であればパターンマッチします．<br/>
+  パターンコンストラクタ毎のパターンマッチの方法の詳しい記述は型の定義のところで記述されます．<br/>
+  次節で型定義について概説します．
 </p>
 
 <h2 id="four-parenses">型の定義方法</h2>

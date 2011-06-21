@@ -1,0 +1,88 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+  
+<h1>インストールと実行</h1>
+<hr/>
+
+<h2 id="how-to-install">インストールの方法</h2>
+
+<p>
+  EgisonはHaskellを使って実装されています．<br/>
+  Egisonは<a href="http://hackage.haskell.org/packages/hackage.html">Hackage</a>のパッケージとして配布されています．<br/>
+</p>
+
+<p>
+  Egisonをインストールするには，<a href="http://www.haskell.org/ghc/">GHC</a>と
+  <a href="http://haskell.org/haskellwiki/Cabal-Install">Cabal-install</a>がインストールされている必要があります．<br/>
+
+  <a href="http://hackage.haskell.org/platform/">Haskell Platform</a>をインストールすれば，
+  その両方が自動でインストールされます．
+</p>
+
+<p>
+  Hasekll Platformをインストールしたら，コマンドラインで以下のコマンドを実行してみてください．
+  <pre>
+    <code>
+% cabal update
+% cabal install egison
+    </code>
+  </pre>
+
+  もし，インストールが成功したら，実行ファイルが生成されたパスが出力されるはずです．<br/>
+  シェルが実行ファイルを見つけれるように，シェルの$PATH変数にそのパスを追加してください．<br/>
+  (Windowsの場合はパスの設定が必要ないようです)
+</p>
+
+<p>
+  そうすると，以下のコマンドが実行できるはずです．
+  <pre>
+    <code>
+% egison
+    </code>
+  </pre>
+</p>
+
+<h2 id="how-to-update">アップデートの方法</h2>
+<p>
+  以下のコマンドで最新版にアップデートできます．
+  <pre>
+    <code>
+% cabal update
+% cabal install egison
+    </code>
+  </pre>
+</p>
+
+<h2 id="emacs-mode">Emacs に Egison mode を導入する方法</h2>
+<p>
+  EmacsでEgison modeを使えるようにするには，<code>egison-mode.el</code>をEmacsのロードパスに追加して，
+  以下のコードを<code>.emacs</code>に追加してください．
+  <pre>
+    <code>
+(autoload 'egison-mode "egison-mode" "Major mode for editing Egison code." t)
+(setq auto-mode-alist
+(cons `("\\.egi$" . egison-mode) auto-mode-alist))
+    </code>
+  </pre>
+</p>
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>

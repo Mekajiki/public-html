@@ -8,60 +8,10 @@
 <h1>イントロダクション</h1>
 <hr/>
 <p>
-  とりあえず，Egisonを動かしてみましょう．<br/>
-  この章では，ポーカーの役判定プログラムを書いて動かしてみます．<br/>
-  トランプのカードのコレクションを多重集合としてパターンマッチするプログラムです．<br/>
-  コレクションデータのパターンマッチの表現は，Egisonの得意とするものです．<br/>
-  これを動かしてみて，Egisonがどういうものなのか感じてみてください．<br/>
-</p>
-
-<hr/>
-
-<h2 id="how-to-install">インストールと実行</h2>
-<p>
-  EgisonはHaskellを使って実装されています．<br/>
-  Egisonは<a href="http://hackage.haskell.org/packages/hackage.html">Hackage</a>のパッケージとして配布されています．<br/>
-</p>
-
-<p>
-  Egisonをインストールするには，<a href="http://www.haskell.org/ghc/">GHC</a>と
-  <a href="http://haskell.org/haskellwiki/Cabal-Install">Cabal-install</a>がインストールされている必要があります．<br/>
-
-  <a href="http://hackage.haskell.org/platform/">Haskell Platform</a>をインストールすれば，
-  その両方が自動でインストールされます．
-</p>
-
-<p>
-  Hasekll Platformをインストールしたら，コマンドラインで以下のコマンドを実行してみてください．
-  <pre>
-    <code>
-  % cabal update
-  % cabal install egison
-    </code>
-  </pre>
-  もし，インストールが成功したら，実行ファイルが生成されたパスが出力されるはずです．<br/>
-  シェルが実行ファイルを見つけれるように，シェルの$PATH変数にそのパスを追加してください．<br/>
-  (Windowsの場合はパスの設定が必要ないようです)
-</p>
-
-<p>
-  そうすると，以下のコマンドが実行できるはずです．
-  <pre>
-    <code>
-  % egison
-    </code>
-  </pre>
-</p>
-
-<h2 id="how-to-update">アップデートの方法</h2>
-<p>
-  以下のコマンドで最新版にアップデートできます．
-  <pre>
-    <code>
-  % cabal update
-  % cabal install egison
-    </code>
-  </pre>
+  この章では，Egisonの得意なパターンマッチを行うプログラムを動かしてみましょう．<br/>
+  Egisonは代数的に定義されるデータ構造に対して協力なパターンマッチ機能を持っています．<br/>
+  この章では，そのもっともわかりやすい例として，コレクションデータに対してパターンマッチを行うプログラムを書いてみます．<br/>
+  これを動かしてみて，Egisonがどのようなものなのか感じてみてください．<br/>
 </p>
 
 <hr/>
@@ -73,12 +23,12 @@
   Control-Dを打つとインタプリタを終了できます．(ControlキーとDキーを同時押し)
   <pre>
     <code>
-  % egison
-  Egison, version X.X.X : http://hagi.is.s.u-tokyo.ac.jp/~egi/egison/
-  Welcome to Egison Interpreter!
-  > ^D
-  Leaving Egison.
-  Byebye. See you again! (^^)/
+% egison
+Egison, version X.X.X : http://hagi.is.s.u-tokyo.ac.jp/~egi/egison/
+Welcome to Egison Interpreter!
+> ^D
+Leaving Egison.
+Byebye. See you again! (^^)/
     </code>
   </pre>
 </p>
@@ -87,20 +37,118 @@
   いくつか，Egisonに入力を与えてみましょう．
   <pre>
     <code>
-  > (define $x 2)
-  x
-  > (test (+ x 3))
-  5
-  > (define $f (lambda [$x $y] [(+ x y) (* x y)]))
-  f
-  > (test (f x 4))
-  [6 8]
+> (define $x 2)
+x
+> (test (+ x 3))
+5
+> (define $f (lambda [$x $y] [(+ x y) (* x y)]))
+f
+> (test (f x 4))
+[6 8]
     </code>
   </pre>
   この例では，2つのトップ式(top expression)がでてきました．<br/>
   <code>define</code>式と<code>test</code>式です．<br/>
   <code>define</code>式は1番目の引数の変数の2番目の引数の式の値への束縛をトップレベル環境に加えます．<br/>
   <code>test</code>式は1番目の引数の式を評価しその値を表示します．<br/>
+  トップ式は，他にもあるのですが，とりあえずここではこの2つだけ覚えておいてください．
+</p>
+
+<h2 id="four-parenses">4種類の括弧</h2>
+
+<p>
+  Egisonには4種類の括弧があります．<br/>
+  
+  '<code>(</code>', '<code>)</code>' で囲まれた式は，言語に組み込まれている構文を適用する式を表すのと，ユーザ定義した関数を適用する式を表すのに使われる．小囲まれた式のうちで先頭にあるものがオペレータで，それ以降の式が引数となります．<br/>
+  
+  '<code><</code>', '<code>></code>' で囲まれた式は，データコンストラクタの適用を表します．囲まれた式のうちで先頭の式がデータコンストラクタで，それ以降の式が引数となります．<br/>
+  
+  '<code>[</code>', '<code>]</code>' で囲まれた式はタプルを表しています．Egisonのタプルは多値として使うことができます．1つの式しか含んでいないタプルはその1つの式と同値になります．<br/>
+  <pre>
+    <code>
+1 = [1] = [[1]] = ...
+    </code>
+  </pre>
+  
+  '<code>{</code>', '<code>}</code>' で囲まれた式はコレクション(任意個の同じ種類の要素からなるデータ)を表します．囲まれている式には先頭に'<code>@</code>' がついていない式とついている式との2種類がある．'<code>@</code>' がついていない式は，全体のコレクションの要素の1つとして扱われる．'<code>@</code>' がついている式は，全体のコレクションの部分コレクション(subcollection)として扱われる．<br/>
+  <pre>
+    <code>
+{1 @{2 3 4} @{5 @{6} 7} 8} = {1 2 3 4 5 6 7 8}
+    </code>
+  </pre>
+</p>
+
+<h2 id="four-parenses">パターンマッチの仕組み</h2>
+
+<p>
+  <pre>
+    <code>
+(test (match {2 7 7 2 7} (Multiset Int)
+        {[&lt;cons $m
+           &lt;cons ,m
+            &lt;cons ,m
+             !&lt;cons $n
+               !&lt;cons ,n
+                 !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+          &lt;ok&gt;]
+         [ _ &lt;ko&gt;]})
+=&gt; &lt;ok&gt;
+    </code>
+  </pre>
+  
+  <pre>
+    <code>
+(test (match-all {1 2 3} (List Int)
+        [&lt;join $hs $x $ts&gt; [hs ts]]))
+=&gt; {[{} {1 2 3}] [{1} {2 3}] [{1 2} {3}] [{1 2 3} {}]}
+
+(test (match-all {1 2 3} (Multiset Int)
+        [&lt;join $hs $ts&gt; [hs ts]]))
+=&gt; {[{} {1 2 3}] [{3} {1 2}] [{2} {1 3}] [{2 3} {1}] [{1} {2 3}] [{1 3} {2}] [{1 2} {3}] [{1 2 3} {}]}
+          
+(test (match-all {1 2 3} (Set Int)
+        [&lt;join $hs $ts&gt; [hs ts]]))
+=&gt; {[{} {1 2 3}] [{3} {1 2}] [{3} {1 2 3}] [{2} {1 3}] [{2} {1 3 2}] [{2 3} {1}] [{2 3} {1 3}] [{2 3} {1 2}] [{2 3} {1 2 3}]
+    [{1} {2 3}] [{1} {2 3 1}] [{1 3} {2}] [{1 3} {2 3}] [{1 3} {2 1}] [{1 3} {2 1 3}] [{1 2} {3}] [{1 2} {3 2}] [{1 2} {3 1}] [{1 2} {3 1 2}]
+    [{1 2 3} {}] [{1 2 3} {3}] [{1 2 3} {2}] [{1 2 3} {2 3}] [{1 2 3} {1}] [{1 2 3} {1 3}] [{1 2 3} {1 2}] [{1 2 3} {1 2 3}]}
+    </code>
+  </pre>
+
+
+
+  <pre>
+    <code>
+(define $Multiset
+  (lambda [$a]
+    (type
+      {[$var-match (lambda [$tgt] {tgt})]
+       [$inductive-match
+        (deconstructor
+          {[nil []
+            {[{} {[]}]
+             [_ {}]
+             }]
+           [cons [a (Multiset a)]
+            {[$tgt (map (lambda [$t] [t ((remove a) tgt t)])
+                        tgt)]
+             }]
+           [join [(Multiset a) (Multiset a)]
+            {[$tgt (map (lambda [$ts] [ts ((remove-collection a) tgt ts)])
+                        (subcollections tgt))]
+             }]
+           })]
+       [$equal? (lambda [$val $tgt]
+                  (match [val tgt] [(Multiset a) (Multiset a)]
+                    {[[&lt;nil&gt; &lt;nil&gt;] &lt;true&gt;]
+                     [[&lt;cons $x $xs&gt;
+                       &lt;cons ,x ,xs&gt;]
+                      &lt;true&gt;]
+                     [[_ _] &lt;false&gt;]}))]
+       })))
+    </code>
+  </pre>
+  
+  プリミティブパターン(primitive pattern)<br/>
 </p>
 
 </body>
@@ -109,7 +157,6 @@
   <hr size=1 noshade>
   <table width=100% border=0 cellspacing=0>
     <tr>
-      <td>last change: 2011/05/29</td>
       <td align=right>
         <i>
           <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>

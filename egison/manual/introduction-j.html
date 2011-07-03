@@ -201,11 +201,22 @@ f
 
 <p>
   1つ目のマッチ節のパターンは，ターゲットが要素5つのコレクションで同じ要素が3つあり，残り2つの要素も同じである場合にパターンマッチに成功します．<br/>
-  Egisonのパターンはnon-left-linearになっています．
+  Egisonではパターンの左側から順にパターンマッチしていきます．<br/>
+  Egisonのパターンマッチはnon-left-linearになっています．<br/>
   non-left-linearは，パターンに現れたパターン変数に束縛される値を，それより右側で参照できるという意味です．<br/>
-  '<code>,</code>' が先頭についたパターンは，評価されその値とターゲットを比較して同じだった場合パターンマッチに成功します．<br/>
+  '<code>,</code>' が先頭についたパターンは，バリューパターン(value pattern)です．<br/>
+  評価されその値とターゲットを比較して同じだった場合パターンマッチに成功します．<br/>
   その際の評価で，左側のパターン変数に束縛された値を参照できます．<br/>
   パターンマッチは，常にパターンの左側から順に行われていきます．<br/>
+  '<code>!</code>' が先頭についたパターンは，カットパターン(cut pattern)です．<br/>
+  複数のマッチ可能な候補があっても，そのうち1つだけを残してパターンマッチを続けます．<br/>
+  カットパターンは不必要なバックトラックをなくすために使われます．<br/>
+  この場合は，5枚中同じ数のカードが3枚あるのは1パターンしかないので，もし，その組み合わせが見つかれば，それ以上のバックトラックは必要ないのでそれを表現している．<br/>
+</p>
+
+<p>
+  2つ目のマッチ節のパターンは，ターゲットが何でもパターンマッチに成功します．<br/>
+  '<code>_</code>' はワイルドカード(wild card)であり，何に対しもパターンマッチ成功します．<br/>
 </p>
 
 <p>
@@ -302,6 +313,11 @@ f
 
 <h2 id="four-parenses">型の定義方法</h2>
 
+<p>
+  この節では，型の定義方法について概説します．<br/>
+  例として多重集合(同じ要素の重複を考慮する集合)の型の定義をみてみます．<br/>
+</p>
+
 <pre>
   <code>
 (define $Multiset
@@ -333,6 +349,95 @@ f
        })))
   </code>
 </pre>
+
+<p>
+  <code>Multiset</code>は，型を1つ受け取って，その型の多重集合の型を返す関数となっています．<br/>
+  例えば，<code>(Multiset Number)</code>は，数の多重集合という型になり，
+  <code>(Multiset (Multiset (Number)))</code>は，数の多重集合の多重集合という型になります．<br/>
+  <code>type</code>式を用いて，型を定義しています．<br/>
+  <code>type</code>式は，引数に，<code>let</code>式の1つ目の引数と同じくパターン変数と式のタプルのコレクションをとります．<br/>
+  <code>let</code>式と同じく相互再帰的な値の定義を行うことができます．<br/>
+  <code>type-ref</code>式を用いると<code>type</code>式で定義した値を参照することができます．<br/>
+</p>
+
+<pre>
+  <code>
+> (define $t (type {[$a 2] [$f (lambda [$x] (+ x 10))]}))
+t
+> (test (type-ref t a))
+2
+> (test (type-ref t f))
+#&lt;function&gt;
+> (test ((type-ref t f) 2))
+12
+  </code>
+</pre>
+
+<p>
+  <code>Multiset</code>の型の定義では，<code>var-match</code>関数と，<code>inductive-match</code>関数，<code>equal?</code>関数を定義しています．<br/>
+  この3つの関数を使って，マッチ関数(match function)が構成されます．<br/>
+  マッチ関数は，パターンとターゲットを受け取って，可能な束縛のコレクションを返す関数です．<br/>
+</p>
+
+<p>
+  <code>var-match</code>関数，<code>equal</code>関数，<code>inductive-match</code>関数の順で説明していきます．
+</p>
+
+<p>
+  <code>var-match</code>関数は，パターンが変数パターンである場合に使われます．<br/>
+  <code>var-match</code>関数に，ターゲットを適用した返り値のコレクションが，そのパターン変数の取りうる値の範囲となります．
+</p>
+
+<p>
+  <code>equal?</code>関数は，パターンがバリューパターンである場合に使われます．<br/>
+  <code>equal?</code>関数に，バリューパターンの中身の値とターゲットとを適用した返り値の真偽値が，パターンマッチ可能かどうかを示します．<br/>
+</p>
+
+<p>
+  <code>inductive-match</code>関数は，パターンがインダクティブパターン(inductive pattern)である場合に使われます．<br/>
+  インダクティブパターンとは，パターンコンストラクタを用いて構成されたパターンのことです．<br/>
+  <code>inductive-match</code>関数は，<code>deconstructor</code>式を用いて定義されます．<br/>
+  <code>deconstructor</code>式は，デコンストラクトマッチ節(deconstructor-match clause)のコレクションを引数に取ります．<br/>
+</p>
+
+<p>
+  デコンストラクトマッチ節は，パターンコンストラクタ，コンストラクタの引数の型のタプル，
+  プリミティブマッチ節(primitive match clause)のコレクションからなります．<br/>
+</p>
+
+<p>
+  例として，まず<code>cons</code>のデコンストラクトマッチ節をみてみます．<br/>
+  パターンのパターンコンストラクタが<code>cons</code>であった場合，
+  1つ目の引数は型<code>a</code>として，2つ目の引数は型<code>(Multiset a)</code>として，
+  再帰的にパターンマッチするということを表しています．<br/>
+</p>
+
+<pre>
+  <code>
+_
+pat-var
+&lt;cons prime-pat ...&gt;
+[prime-pat ...]
+{}
+{prime-pat .prime-pat}
+{.prime-pat prime-pat}
+  </code>
+</pre>
+
+<p>
+  例えば，パターンが<code>cons</code>のインダクティブパターンで，ターゲットが<code>{1 2 3}</code>というコレクションだった場合，
+  <pre>
+    <code>1, {2 3}</code>
+    <code>2, {1 3}</code>
+    <code>3, {1 2}</code>
+  </pre>
+  をターゲットしてそれぞれ再帰的にパターンマッチする．
+</p>
+
+<p>
+  <code>join</code>の方は，1つ目の引数は型<code>(Multiset a)</code>として，2つ目の引数も型<code>(Multiset a)</code>として，再帰的にパターンマッチするということを表しています．<br/>
+  <code>nil</code>の方は，引数はなくて，再帰的にこれ以上パターンマッチを行わないことを示しています．<br/>
+</p>
 
 <p>
   プリミティブパターン(primitive pattern)<br/>

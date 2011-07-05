@@ -136,7 +136,7 @@ f
 </p>
 <pre>
   <code>
-&t; (test (let {[$f (lambda [$x] (+ (g x) 10))]
+&gt; (test (let {[$f (lambda [$x] (+ (g x) 10))]
               [$g (lambda [$x] (+ x 1))]}
           (f 0)))
 11
@@ -148,7 +148,7 @@ f
 <p>
   パターンマッチを行うコードを動かしてみましょう．<br/>
   この節では，そのなかでもわかりやすいコレクションのパターンマッチを書いてみます．<br/>
-  この節に出てくるコードを実行するには，<code>lib/collection.egi</code>をロードする必要があります．<br/>
+  この節に出てくるコードを実行するには，<code>lib/base.egi</code>と，<code>lib/number.egi</code>，<code>lib/collection.egi</code>をロードする必要があります．<br/>
   <code>load</code>式はトップ式で，1つ目の引数で指定されたファイルの内容を読み込みます．<br/>
   (<code>load</code>式は，現在実装されていません．<br/>
   <code>lib/collection.egi</code>の中身をコピーして手動で読み込ませてください．<br/>
@@ -157,6 +157,8 @@ f
 
 <pre>
   <code>
+&gt; (load "/path/to/lib/base.egi")
+&gt; (load "/path/to/lib/number.egi")
 &gt; (load "/path/to/lib/collection.egi")
   </code>
 </pre>
@@ -407,40 +409,53 @@ t
 
 <p>
   例として，まず<code>cons</code>のデコンストラクトマッチ節をみてみます．<br/>
+  デコンストラクトマッチ節の2つ目の要素に<code>[a (Multiset a)]</code>とあるのは，
   パターンのパターンコンストラクタが<code>cons</code>であった場合，
   1つ目の引数は型<code>a</code>として，2つ目の引数は型<code>(Multiset a)</code>として，
   再帰的にパターンマッチするということを表しています．<br/>
 </p>
 
-<pre>
-  <code>
-_
-pat-var
-&lt;cons prime-pat ...&gt;
-[prime-pat ...]
-{}
-{prime-pat .prime-pat}
-{.prime-pat prime-pat}
-  </code>
-</pre>
+<p>
+  デコンストラクトマッチ節の3つ目の要素は，プリミティブマッチ節のコレクションです．<br/>
+  プリミティブマッチ節は，プリミティブパターン(primitive pattern)と式のタプルです．<br/>
+  マッチ式のターゲットが，プリミティブパターンにマッチしたら，その節の式の返り値が次のパターンマッチの再帰のターゲットになります．<br/>
+</p>
 
 <p>
-  例えば，パターンが<code>cons</code>のインダクティブパターンで，ターゲットが<code>{1 2 3}</code>というコレクションだった場合，
+  現状のEgisonで，プリミティブパターンの要素はこれから説明する7つです．<br/>
+</p>
+
+<p>
+  <code>_</code>は，ワイルドカードです．ターゲットが何でもパターンマッチ成功します．<br/>
+  <i>pat-var</i>は，パターン変数です．ターゲットが何でもパターンマッチに成功し，値をその変数に束縛します．<br/>
+  <code>&lt;</code><i>cons prime-pat</i><code> ...&gt;</code>は，
+  ターゲットが<i>cons</i>で構成されたインダクティブデータである場合にパターンマッチ成功します．<br/>
+  <code>[</code><i>prime-pat</i><code> ...]</code>は，ターゲットがタプルの場合，パターンマッチします．<br/>
+  <code>{}</code>は，ターゲットが空のコレクションの場合，パターンマッチします．<br/>
+  <code>{</code><i>prime-pat</i><code> .</code><i>prime-pat</i><code>}</code>は，コンスパターン(cons pattern)です．<br/>
+  ターゲットが1つ以上の要素を含むコレクションである場合にリストとして，パターンマッチに成功し，
+  1つ目の<i>prime-pat</i>にターゲットの先頭の要素が，
+  2つ目の<i>prime-pat</i>にターゲットの残りの要素コレクションが束縛されます．<br/>
+  <code>{.</code><i>prime-pat</i><code> </code><i>prime-pat</i><code>}</code>は，スノックパターン(snoc pattern)です．<br/>
+  ターゲットが1つ以上の要素を含むコレクションである場合にリストとして，パターンマッチに成功し，
+  2つ目の<i>prime-pat</i>にターゲットの一番後ろの要素が，
+  1つ目の<i>prime-pat</i>にターゲットの残りの要素コレクションが束縛されます．<br/>
+</p>
+
+<p>
+  例えば，型が<code>(Multiset Int)</code>で，パターンが<code>cons</code>のインダクティブパターンで，ターゲットが<code>{1 2 3}</code>というコレクションだった場合，
   <pre>
     <code>1, {2 3}</code>
     <code>2, {1 3}</code>
     <code>3, {1 2}</code>
   </pre>
-  をターゲットしてそれぞれ再帰的にパターンマッチする．
+  をそれぞれ1つ目を<code>Int</code>として，2つ目を<code>(Multiset Int)</code>として，再帰的にパターンマッチしていきます．
 </p>
 
 <p>
-  <code>join</code>の方は，1つ目の引数は型<code>(Multiset a)</code>として，2つ目の引数も型<code>(Multiset a)</code>として，再帰的にパターンマッチするということを表しています．<br/>
+  <code>join</code>の方は，1つ目の引数は型<code>(Multiset a)</code>として，
+  2つ目の引数も型<code>(Multiset a)</code>として，再帰的にパターンマッチを行います．<br/>
   <code>nil</code>の方は，引数はなくて，再帰的にこれ以上パターンマッチを行わないことを示しています．<br/>
-</p>
-
-<p>
-  プリミティブパターン(primitive pattern)<br/>
 </p>
 
 </body>

@@ -5,12 +5,11 @@
 </head>
 
 <body>
-<h1>例1. ポーカーの役判定</h1>
+<h1>例2. グラフのパターンマッチ</h1>
 <hr/>
 <p>
-  この章では，ポーカーの役判定プログラムを書いて動かしてみます．<br/>
-  トランプのカードのコレクションを多重集合としてパターンマッチするプログラムです．<br/>
-  このページで解説しているコードは，<code>sample/collection-test.egi</code>にあります．<br/>
+  この章では，グラフのパターンマッチを行うを書いて動かしてみます．<br/>
+  このページで解説しているコードは，<code>sample/graph-test.egi</code>にあります．<br/>
 </p>
 
 <p>
@@ -26,166 +25,6 @@
   </code>
 </pre>
 
-<p>
-  まず，カードのデータ型を定義します．<br/>
-  そのために，スート型と13の剰余環型を定義します．<br/>
-</p>
-
-<p>
-  以下は，スート型の定義です．<br/>
-</p>
-
-<pre>
-  <code>
-(define $Suit
-  (type
-    {[$var-match (lambda [$tgt] {tgt})]
-     [$inductive-match
-      (deconstructor
-        {[spade []
-          {[&lt;spade&gt; {[]}]
-           [_ {}]}]
-         [heart []
-          {[&lt;heart&gt; {[]}]
-           [_ {}]}]
-         [club []
-          {[&lt;club&gt; {[]}]
-           [_ {}]}]
-         [diamond []
-          {[&lt;diamond&gt; {[]}]
-           [_ {}]}]
-         })]
-     [$equal?
-      (lambda [$val $tgt]
-        (match [val tgt] [Suit Suit]
-          {[[&lt;spade&gt; &lt;spade&gt;] &lt;true&gt;]
-           [[&lt;heart&gt; &lt;heart&gt;] &lt;true&gt;]
-           [[&lt;club&gt; &lt;club&gt;] &lt;true&gt;]
-           [[&lt;diamond&gt; &lt;diamond&gt;] &lt;true&gt;]
-           [[_ _] &lt;false&gt;]}))]
-     }))
-  </code>
-</pre>
-
-<p>
-  以下は，剰余環の定義です．<br/>
-</p>
-<pre>
-  <code>
-(define $Mod
-  (lambda [$m]
-    (type
-      {[$var-match (lambda [$tgt] {(mod tgt m)})]
-       [$equal? (lambda [$val $tgt]
-                  (= (mod val m) (mod tgt m)))]})))
-  </code>
-</pre>
-
-<p>
-  カード型は，この2つの型を使って定義されます．<br/>
-</p>
-
-<pre>
-  <code>
-(define $Card
-  (type
-    {[$var-match (lambda [$tgt] {tgt})]
-     [$inductive-match
-      (deconstructor
-        {[card [Suit (Mod 13)]
-          {[&lt;card $s $n&gt; {[s n]}]}]})]
-     [$equal? (lambda [$val $tgt]
-                (match [val tgt] [Card Card]
-                  {[[&lt;card $s $n&gt;
-                     &lt;card ,s ,n&gt;]
-                    &lt;true&gt;]
-                   [[_ _] &lt;false&gt;]}))]}))
-  </code>
-</pre>
-
-<p>
-  このように，トランプのカードの型を定義すれば，以下のように書けばポーカーの役判定を行う関数が書けます．<br/>
-</p>
-
-<pre>
-  <code>
-(define $poker-hands
-  (lambda [$Cs]
-    (match Cs (Multiset Card)
-      {[&lt;cons &lt;card $S $n&gt;
-         &lt;cons &lt;card ,S ,(- n 1)&gt;
-          &lt;cons &lt;card ,S ,(- n 2)&gt;
-           &lt;cons &lt;card ,S ,(- n 3)&gt;
-            &lt;cons &lt;card ,S ,(- n 4)&gt;
-             !&lt;nil&gt;
-             &gt;&gt;&gt;&gt;&gt;
-        &lt;straight-flush&gt;]
-       [&lt;cons &lt;card _ $n&gt;
-         &lt;cons &lt;card _ ,n&gt;
-          !&lt;cons &lt;card _ ,n&gt;
-            !&lt;cons &lt;card _ ,n&gt;
-              !&lt;cons _
-                !&lt;nil&gt;
-                &gt;&gt;&gt;&gt;&gt;
-        &lt;four-of-kind&gt;]
-       [&lt;cons &lt;card _ $m&gt;
-         &lt;cons &lt;card _ ,m&gt;
-          &lt;cons &lt;card _ ,m&gt;
-           !&lt;cons &lt;card _ $n&gt;
-             !&lt;cons &lt;card _ ,n&gt;
-               !&lt;nil&gt;
-               &gt;&gt;&gt;&gt;&gt;
-        &lt;full-house&gt;]
-       [&lt;cons &lt;card $S _&gt;
-         !&lt;cons &lt;card ,S _&gt;
-           !&lt;cons &lt;card ,S _&gt;
-             !&lt;cons &lt;card ,S _&gt;
-               !&lt;cons &lt;card ,S _&gt;
-                 !&lt;nil&gt;
-                 &gt;&gt;&gt;&gt;&gt;
-        &lt;flush&gt;]
-       [&lt;cons &lt;card _ $n&gt;
-         &lt;cons &lt;card _ ,(- n 1)&gt;
-          &lt;cons &lt;card _ ,(- n 2)&gt;
-           &lt;cons &lt;card _ ,(- n 3)&gt;
-            &lt;cons &lt;card _ ,(- n 4)&gt;
-             !&lt;nil&gt;
-             &gt;&gt;&gt;&gt;&gt;
-        &lt;straight&gt;]
-       [&lt;cons &lt;card _ $n&gt;
-         &lt;cons &lt;card _ ,n&gt;
-          &lt;cons &lt;card _ ,n&gt;
-           &lt;cons _
-            &lt;cons _
-             !&lt;nil&gt;
-             &gt;&gt;&gt;&gt;&gt;
-        &lt;three-of-kind&gt;]
-       [&lt;cons &lt;card _ $m&gt;
-         &lt;cons &lt;card _ ,m&gt;
-          !&lt;cons &lt;card _ $n&gt;
-            &lt;cons &lt;card _ ,n&gt;
-             !&lt;cons _
-               !&lt;nil&gt;
-               &gt;&gt;&gt;&gt;&gt;
-        &lt;two-pair&gt;]
-       [&lt;cons &lt;card _ $n&gt;
-         &lt;cons &lt;card _ ,n&gt;
-          &lt;cons _
-           &lt;cons _
-            &lt;cons _
-             !&lt;nil&gt;
-             &gt;&gt;&gt;&gt;&gt;
-        &lt;one-pair&gt;]
-       [&lt;cons _
-         &lt;cons _
-          &lt;cons _
-           &lt;cons _
-            &lt;cons _
-             !&lt;nil&gt;
-             &gt;&gt;&gt;&gt;&gt;
-        &lt;nothing&gt;]})))
-  </code>
-</pre>
 
 </body>
 

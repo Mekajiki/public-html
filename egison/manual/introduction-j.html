@@ -12,7 +12,6 @@
   Egisonは代数的に定義されるデータ構造に対して協力なパターンマッチ機能を持っています．<br/>
   この章では，そのもっともわかりやすい例として，コレクションデータに対してパターンマッチを行うプログラムを書いてみます．<br/>
   これを動かしてみて，Egisonがどのようなものなのか感じてみてください．</p>
-
 <hr/>
 
 <h2 id="run-interpreter">インタプリタを起動しよう</h2>
@@ -285,7 +284,7 @@ f
 </p>
 
 <p>
-  他にも例をいくつかあげておきます．
+  他にも例をいくつかあげておきます．<br/>
 </p>
 
 <pre>
@@ -309,11 +308,20 @@ f
   </code>
 </pre>
 
-<h2 id="four-parenses">型の定義方法</h2>
+<h2>型の定義方法</h2>
 
 <p>
-  この節では，型の定義方法について概説します．<br/>
-  例として多重集合(同じ要素の重複を考慮する集合)の型の定義をみてみます．<br/>
+前章で説明したパターンマッチの式が動くのは，
+型ごとにどのようにパターンマッチを行うのか記述しているからである．<br/>
+本章では，型の定義の方法を示しながら，実際にどのような流れでパターンマッチが
+行われるのかを説明する．<br/>
+</p>
+
+<p>
+多重集合(同じ要素の重複を考慮する集合)の型の定義を理解すれば，
+型定義の際に必要なことが全て理解できる．<br/>
+したがって，ここでは多重集合の型の定義の例を用いて説明する．
+図1は，Egisonで多重集合の型を定義したものである．<br/>
 </p>
 
 <pre>
@@ -326,133 +334,210 @@ f
         (deconstructor
           {[nil []
             {[{} {[]}]
-             [_ {}]
-             }]
+             [_ {}]}]
            [cons [a (Multiset a)]
-            {[$tgt (map (lambda [$t] [t ((remove a) tgt t)])
-                        tgt)]
-             }]
+            {[$tgt (map (lambda [$t] [t ((remove a) tgt t)]) tgt)]}]
            [join [(Multiset a) (Multiset a)]
             {[$tgt (map (lambda [$ts] [ts ((remove-collection a) tgt ts)])
-                        (subcollections tgt))]
-             }]
-           })]
-       [$equal? (lambda [$val $tgt]
-                  (match [val tgt] [(Multiset a) (Multiset a)]
-                    {[[&lt;nil&gt; &lt;nil&gt;] &lt;true&gt;]
-                     [[&lt;cons $x $xs&gt;
-                       &lt;cons ,x ,xs&gt;]
-                      &lt;true&gt;]
-                     [[_ _] &lt;false&gt;]}))]
-       })))
+                        (subcollections tgt))]}]})]
+       [$equal?
+        (lambda [$val $tgt]
+          (match [val tgt] [(Multiset a) (Multiset a)]
+            {[[&lt;nil&gt; &lt;nil&gt;] &lt;true&gt;]
+             [[&lt;cons $x $xs&gt; &lt;cons ,x ,xs&gt;] &lt;true&gt;]
+             [[_ _] &lt;false&gt;]}))]})))
   </code>
 </pre>
 
 <p>
-  <code>Multiset</code>は，型を1つ受け取って，その型の多重集合の型を返す関数となっています．<br/>
-  例えば，<code>(Multiset Number)</code>は，数の多重集合という型になり，
-  <code>(Multiset (Multiset (Number)))</code>は，数の多重集合の多重集合という型になります．<br/>
-  <code>type</code>式を用いて，型を定義しています．<br/>
-  <code>type</code>式は，引数に，<code>let</code>式の1つ目の引数と同じくパターン変数と式のタプルのコレクションをとります．<br/>
-  <code>let</code>式と同じく相互再帰的な値の定義を行うことができます．<br/>
-  <code>type-ref</code>式を用いると<code>type</code>式で定義した値を参照することができます．<br/>
+<code>remove</code>は型を引数に取り，
+1つ目の引数の値の要素を2つ目の引数のコレクションから取り除く関数を返す．<br/>
+<code>remove-collection</code>は型を引数に取り，
+1つ目の引数のコレクションの要素を2つ目の引数のコレクションから取り除く関数を返す．<br/>
+</p>
+
+<p>
+<code>Multiset</code>は，型を1つ受け取って，その型の多重集合の型を返す関数となっている．<br/>
+例えば，<code>(Multiset Int)</code>は数の多重集合という型になり，
+<code>(Multiset (Multiset Int))</code>は数の多重集合の多重集合という型になる．<br/>
+</p>
+
+<p>
+型は<code>type</code>式を用いて定義される．<br/>
+<code>type</code>式は引数に<code>let</code>式の1つ目の引数と同じく，パターン変数と式のタプルのコレクションをとる．<br/>
+<code>let</code>式と同じく相互再帰的な値の定義を行うことができる．<br/>
+<code>type-ref</code>式を用いると<code>type</code>式で定義した値を参照することができる．<br/>
+</p>
+
+<p>
+<code>Multiset</code>の型の定義では，<code>var-match</code>関数と，
+<code>inductive-match</code>関数，<code>equal?</code>関数が定義されている．<br/>
+この3つの関数を使って，マッチ関数(<i>match function</i>)が構成される．<br/>
+マッチ関数とは，パターンとターゲットを受け取って，
+可能な束縛フレームのコレクションを返す関数である．<br/>
+<code>var-match</code>関数と，<code>inductive-match</code>関数，<code>equal?</code>関数の定義から，
+マッチ関数が自動で構成される．<br/>
+</p>
+
+<p>
+<code>var-match</code>関数，<code>inductive-match</code>関数，<code>equal?</code>関数についてそれぞれ説明する．<br/>
+</p>
+
+<p>
+<code>var-match</code>関数は，パターンが変数パターンである場合に使われる．<br/>
+<code>var-match</code>関数にターゲットの値を適用して得られる返り値のコレクションの要素が，そのパターン変数の取りうる値となる．<br/>
+この<code>Multiset</code>の定義の例だと，パターン変数の取りうる値は，ターゲットの値だけということが記述されている．<br/>
+</p>
+
+<p>
+<code>inductive-match</code>関数は，パターンがインダクティブパターン(<i>inductive pattern</i>)である場合に使われる．<br/>
+インダクティブパターンとは，パターンコンストラクタを用いて構成されたパターンのことである．<br/>
+<code>inductive-match</code>関数についての説明は長くなるので，<code>equal?</code>関数を説明したすぐ後でまた説明する．<br/>
+</p>
+
+<p>
+<code>equal?</code>関数は，パターンがバリューパターンである場合に使われる．<br/>
+<code>equal?</code>関数に，バリューパターンの中身の値とターゲットとを適用した返り値の真偽値が，パターンマッチ可能かどうかを示す．<br/>
+<code>Multiset</code>の定義の場合だと，順序関係なく同じ要素を含んでいたら<code>&lt;true&gt;</code>を返し，
+そうでなかったら<code>&lt;false&gt;</code>を返すように定義されている．<br/>
+この定義では，<code>equal?</code>関数の中で再帰的に<code>Multiset</code>が呼び出されている．<br/>
+</p>
+
+<p>
+では，再び<code>inductive-match</code>関数について説明する．<br/>
+<code>inductive-match</code>関数は，<code>deconstructor</code>式を用いて定義される．<br/>
+<code>deconstructor</code>式は，デコンストラクトマッチ節(<i>deconstructor-match clause</i>)のコレクションを引数に取る．<br/>
+デコンストラクトマッチ節は，パターンコンストラクタ，評価したら型のタプルを返す式，
+プリミティブマッチ節(<i>primitive match clause</i>)のコレクションからなる．<br/>
+例として，まず<code>Multiset</code>の定義の<code>cons</code>のデコンストラクトマッチ節をみる．<br/>
+デコンストラクトマッチ節の2つ目の要素に<code>[a (Multiset a)]</code>とあるのは，
+パターンのパターンコンストラクタが<code>cons</code>であった場合， 1つ目の引数は型<code>a</code>として，
+2つ目の引数は型<code>(Multiset a)</code>として， 再帰的にパターンマッチするということを表している．<br/>
+</p>
+
+<p>
+プリミティブマッチ節は，プリミティブパターン(<i>primitive pattern</i>)と式のタプルとして表される．<br/>
+マッチ式のターゲットが，プリミティブパターンにマッチしたら，
+そのプリミティブマッチ節の式を評価した値が，再帰的に行われる次のパターンマッチのターゲットになる．<br/>
+</p>
+
+<p>
+例の場合だと，型が<code>(Multiset Int)</code>で，パターンが<code>&lt;cons $x $xs&gt;</code>という形のインダクティブパターンで，
+ターゲットが<code>{1 2 3}</code>というコレクションだった場合，
+<code>inductive-match</code>関数を使って，パターンマッチの処理が行われる．<br/>
+その際，<code>inductive-match</code>関数の<code>cons</code>のデコンストラクトマッチ節にマッチし，
+さらに，その中の唯一のプリミティブマッチ節にマッチする．<br/>
+このプリミティブマッチ節の式を評価すると，<code>{[1 {2 3}] [2 {1 3}] [3 {1 2}]}</code>がその結果として返ってくる．<br/>
+これのそれぞれ1つ目の要素を<code>Int</code>として，2つ目の要素を<code>(Multiset Int)</code>として，
+再帰的にパターンマッチを行われる．<br/>
+</p>
+
+<p>
+プリミティブパターンマッチでは，パターンマッチに成功する場合，可能な束縛結果が一意的に決まるような
+パターンマッチしか行えない．<br/>
+プリミティブパターンマッチでは，ひとがプリミティブに行えるデコンストラクトを行えるようになっている．<br/>
+</p>
+
+<p>
+現状のEgisonで，プリミティブパターンこれから説明する7つの要素から構成される．<br/>
+</p>
+
+<pre>
+primpat ::= _
+          | patvar
+          | &lt; cons primpat ... &t;
+          | [ primpat ... ]
+          | {}
+          | { primpat .primpat }
+          | { .primepat primepat }
+</pre>
+
+<p>
+'<code>_</code>'は，ワイルドカードである．ターゲットが何でもパターンマッチ成功する．
+</p>
+
+<p>
+<i>pat-var</i>は，パターン変数である．ターゲットが何でもパターンマッチに成功し，値をその変数に束縛します．
+</p>
+
+<p>
+<code>&lt;</code><i>cons</i> <i>prime-pat</i> <i>...</i> <code>&gt;</code>は，
+ターゲットが<code>cons</code>で指定されたデータコンストラクタで構成された
+インダクティブデータである場合にパターンマッチを行う．<br/>
+データコンストラクタの引数について再帰的にパターンマッチを行う．<br/>
+</p>
+
+<p>
+<code>[</code><i>prime-pat</i> <i>...</i> <code>]</code>は，ターゲットがタプルの場合，パターンマッチを行う．<br/>
+タプルの中身の要素について再帰的にパターンマッチを行う．<br/>
+</p>
+
+<p>
+<code>{}</code>は，エンプティパターン(<i>empty pattern</i>)と呼ばれる．<br/>
+ターゲットが空のコレクションの場合，パターンマッチする．<br/>
+</p>
+
+<p>
+<code>{</code><i>prime-pat</i> <code>.</code> <i>prime-pat</i> <code>}</code>は，コンスパターン(<i>cons pattern</i>)と呼ばれる．<br/>
+ターゲットが1つ以上の要素を含むコレクションである場合にリストとしてパターンマッチを行い，
+1つ目の<i>prime-pat</i>とターゲットの先頭の要素を，
+2つ目の<i>prime-pat</i>とターゲットの残りの要素コレクションをパターンマッチする．<br/>
+</p>
+
+<p>
+<code>{</code><code>.</code><i>prime-pat</i> <i>prime-pat</i><code>}</code>は，スノックパターン(<i>snoc pattern</i>)と呼ばれる．<br/>
+ターゲットが1つ以上の要素を含むコレクションである場合にリストとしてパターンマッチを行い，
+2つ目の<i>prime-pat</i>とターゲットの一番後ろの要素を，
+1つ目の<i>prime-pat</i>とターゲットの残りの要素コレクションをパターンマッチする．<br/>
+</p>
+
+<p>
+多重集合の定義と同じように，リストや集合の型の定義もできる．<br/>
+図2は，リストの型を定義したものである．<br/>
+<code>nil</code>のプリミティブパターンマッチではエンプティパターンが，
+<code>cons</code>のプリミティブパターンマッチではコンスパターンが，
+<code>snoc</code>のプリミティブパターンマッチではスノックパターンが使われている．<br/>
 </p>
 
 <pre>
   <code>
-> (define $t (type {[$a 2] [$f (lambda [$x] (+ x 10))]}))
-t
-> (test (type-ref t a))
-2
-> (test (type-ref t f))
-#&lt;function&gt;
-> (test ((type-ref t f) 2))
-12
+(define $List
+  (lambda [$a]
+    (type
+      {[$var-match (lambda [$tgt] {tgt})]
+       [$inductive-match
+        (deconstructor
+          {[nil []
+            {[{} {[]}]
+             [_ {}]}]
+           [cons [a (List a)]
+            {[{$x .$xs} {[x xs]}]
+             [_ {}]}]
+           [snoc [a (List a)]
+            {[{.$xs $x} {[x xs]}]
+             [_ {}]}]
+           [join [(List a) (List a)]
+            {[$tgt (let {[$loop (lambda [$ts]
+                                  (match ts (List a)
+                                    {[&lt;nil&gt; {[{} {}]}]
+                                     [&lt;cons $x $xs&gt; {[{} ts] @(map (lambda [$as $bs] [{x @as} bs])
+                                                                   (loop xs))}]}))]}
+                   (loop tgt))]}]
+           [nioj [(List a) (List a)]
+            {[$tgt (let {[$loop (lambda [$ts]
+                                  (match ts (List a)
+                                    {[&lt;nil&gt; {[{} {}]}]
+                                     [&lt;snoc $x $xs&gt; {[{} ts] @(map (lambda [$as $bs] [{@as x} bs])
+                                                                   (loop xs))}]}))]}
+                   (loop tgt))]}]})]
+       [$equal? (lambda [$val $tgt]
+                  (match [val tgt] [(List a) (List a)]
+                    {[[&lt;nil&gt; &lt;nil&gt;] &lt;true&gt;]
+                     [[&lt;cons $x $xs&gt; &lt;cons ,x ,xs&gt;]
+                      &lt;true&gt;]
+                     [[_ _] &lt;false&gt;]}))]})))
   </code>
 </pre>
-
-<p>
-  <code>Multiset</code>の型の定義では，<code>var-match</code>関数と，<code>inductive-match</code>関数，<code>equal?</code>関数を定義しています．<br/>
-  この3つの関数を使って，マッチ関数(match function)が構成されます．<br/>
-  マッチ関数は，パターンとターゲットを受け取って，可能な束縛のコレクションを返す関数です．<br/>
-</p>
-
-<p>
-  <code>var-match</code>関数，<code>equal?</code>関数，<code>inductive-match</code>関数の順で説明していきます．
-</p>
-
-<p>
-  <code>var-match</code>関数は，パターンが変数パターンである場合に使われます．<br/>
-  <code>var-match</code>関数に，ターゲットを適用した返り値のコレクションが，そのパターン変数の取りうる値の範囲となります．
-</p>
-
-<p>
-  <code>equal?</code>関数は，パターンがバリューパターンである場合に使われます．<br/>
-  <code>equal?</code>関数に，バリューパターンの中身の値とターゲットとを適用した返り値の真偽値が，パターンマッチ可能かどうかを示します．<br/>
-</p>
-
-<p>
-  <code>inductive-match</code>関数は，パターンがインダクティブパターン(inductive pattern)である場合に使われます．<br/>
-  インダクティブパターンとは，パターンコンストラクタを用いて構成されたパターンのことです．<br/>
-  <code>inductive-match</code>関数は，<code>deconstructor</code>式を用いて定義されます．<br/>
-  <code>deconstructor</code>式は，デコンストラクトマッチ節(deconstructor-match clause)のコレクションを引数に取ります．<br/>
-</p>
-
-<p>
-  デコンストラクトマッチ節は，パターンコンストラクタ，コンストラクタの引数の型のタプル，
-  プリミティブマッチ節(primitive match clause)のコレクションからなります．<br/>
-</p>
-
-<p>
-  例として，まず<code>cons</code>のデコンストラクトマッチ節をみてみます．<br/>
-  デコンストラクトマッチ節の2つ目の要素に<code>[a (Multiset a)]</code>とあるのは，
-  パターンのパターンコンストラクタが<code>cons</code>であった場合，
-  1つ目の引数は型<code>a</code>として，2つ目の引数は型<code>(Multiset a)</code>として，
-  再帰的にパターンマッチするということを表しています．<br/>
-</p>
-
-<p>
-  デコンストラクトマッチ節の3つ目の要素は，プリミティブマッチ節のコレクションです．<br/>
-  プリミティブマッチ節は，プリミティブパターン(primitive pattern)と式のタプルです．<br/>
-  マッチ式のターゲットが，プリミティブパターンにマッチしたら，その節の式の返り値が次のパターンマッチの再帰のターゲットになります．<br/>
-</p>
-
-<p>
-  現状のEgisonで，プリミティブパターンの要素はこれから説明する7つです．<br/>
-</p>
-
-<p>
-  <code>_</code>は，ワイルドカードです．ターゲットが何でもパターンマッチ成功します．<br/>
-  <i>pat-var</i>は，パターン変数です．ターゲットが何でもパターンマッチに成功し，値をその変数に束縛します．<br/>
-  <code>&lt;</code><i>cons prime-pat</i><code> ...&gt;</code>は，
-  ターゲットが<i>cons</i>で構成されたインダクティブデータである場合にパターンマッチ成功します．<br/>
-  <code>[</code><i>prime-pat</i><code> ...]</code>は，ターゲットがタプルの場合，パターンマッチします．<br/>
-  <code>{}</code>は，ターゲットが空のコレクションの場合，パターンマッチします．<br/>
-  <code>{</code><i>prime-pat</i><code> .</code><i>prime-pat</i><code>}</code>は，コンスパターン(cons pattern)です．<br/>
-  ターゲットが1つ以上の要素を含むコレクションである場合にリストとして，パターンマッチに成功し，
-  1つ目の<i>prime-pat</i>にターゲットの先頭の要素が，
-  2つ目の<i>prime-pat</i>にターゲットの残りの要素コレクションが束縛されます．<br/>
-  <code>{.</code><i>prime-pat</i><code> </code><i>prime-pat</i><code>}</code>は，スノックパターン(snoc pattern)です．<br/>
-  ターゲットが1つ以上の要素を含むコレクションである場合にリストとして，パターンマッチに成功し，
-  2つ目の<i>prime-pat</i>にターゲットの一番後ろの要素が，
-  1つ目の<i>prime-pat</i>にターゲットの残りの要素コレクションが束縛されます．<br/>
-</p>
-
-<p>
-  例えば，型が<code>(Multiset Int)</code>で，パターンが<code>cons</code>のインダクティブパターンで，ターゲットが<code>{1 2 3}</code>というコレクションだった場合，
-  <pre>
-    <code>1, {2 3}</code>
-    <code>2, {1 3}</code>
-    <code>3, {1 2}</code>
-  </pre>
-  をそれぞれ1つ目を<code>Int</code>として，2つ目を<code>(Multiset Int)</code>として，再帰的にパターンマッチしていきます．
-</p>
-
-<p>
-  <code>join</code>の方は，1つ目の引数は型<code>(Multiset a)</code>として，
-  2つ目の引数も型<code>(Multiset a)</code>として，再帰的にパターンマッチを行います．<br/>
-  <code>nil</code>の方は，引数はなくて，再帰的にこれ以上パターンマッチを行わないことを示しています．<br/>
-</p>
 
 </body>
 

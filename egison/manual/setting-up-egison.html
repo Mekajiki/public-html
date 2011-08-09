@@ -1,0 +1,83 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+  
+<h1>Setting up Egison!!</h1>
+<hr/>
+
+<h2 id="how-to-install">How to install?</h2>
+
+<p>
+  Egison is implemented in Haskell.<br/>
+  Egison is distributed as a <a href="http://hackage.haskell.org/packages/hackage.html">Hackage</a> program.<br/>
+</p>
+
+<p>
+  To install Egison, you need to install <a href="http://www.haskell.org/ghc/">GHC</a> and
+  <a href="http://haskell.org/haskellwiki/Cabal-Install">Cabal-install</a>.<br/>
+  If you install <a href="http://hackage.haskell.org/platform/">Haskell Platform</a>,
+  both of GHC and Cabal-install will be installed.<br/>
+</p>
+
+<p>
+  After you installed Hasekll Platform, perform following commands.
+  <dl>
+    <dd><code>% cabal update</code></dd>
+    <dd><code>% cabal install egison</code></dd>
+  </dl>
+  If successfully installed, there will be an output where the binary file is generated.<br/>
+  Please add new path to $PATH variable of your shell, to make your shell to find egison command.<br/>
+  (If your OS is Windows, you don't need to set the path of the shell.)
+</p>
+
+<p>
+  After that, you can use Egison with the following command.
+  <dl>
+    <dd><code>% egison</code></dd>
+  </dl>
+</p>
+
+<h2 id="how-to-update">How to update?</h2>
+<p>
+  You can update Egison with the following commands.
+  <pre>
+    <code>
+% cabal update
+% cabal install egison
+    </code>
+  </pre>
+</p>
+
+<h2 id="emacs-mode">How to use Egison mode on your emacs</h2>
+<p>
+  To use Egison mode on your Emacs, you shold add directory, in which <code>egison-mode.el</code> exists,
+  to loadpath of your emacs, and add following lines in your <code>.emacs</code>.
+</p>
+
+<pre>
+  <code>
+(autoload 'egison-mode "egison-mode" "Major mode for editing Egison code." t)
+(setq auto-mode-alist
+(cons `("\\.egi$" . egison-mode) auto-mode-alist))
+  </code>
+</pre>
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>

@@ -5,20 +5,20 @@
 </head>
 
 <body>
-<h1>イントロダクション</h1>
+<h1>Introduction</h2>
 <hr/>
 <p>
-  この章では，Egisonの得意なパターンマッチを行うプログラムを動かしてみましょう．<br/>
-  Egisonは代数的に定義されるデータ構造に対して協力なパターンマッチ機能を持っています．<br/>
-  この章では，そのもっともわかりやすい例として，コレクションデータに対してパターンマッチを行うプログラムを書いてみます．<br/>
-  これを動かしてみて，Egisonがどのようなものなのか感じてみてください．</p>
+  In this chapter, we run programs that execute pattern matching which is a specialty of Egison.<br/>
+  Egison is good at to pattern match for algebraic data structure.<br/>
+  In this chapter, we write programs that execute pattern matching for collection data.
+  Run them and feel how Egison is like!!<br/>
 <hr/>
 
-<h2 id="run-interpreter">インタプリタを起動しよう</h2>
+<h2 id="run-interpreter">Run Interpreter!!</h2>
 
 <p>
-  インストールに成功すると，コマンドラインで<code>egison</code>と打つとEgisonのインタプリタが起動します．<br/>
-  Control-Dを打つとインタプリタを終了できます．(ControlキーとDキーを同時押し)
+  After installed Egison, and command 'egison', Egison interpreter start.<br/>
+  Typing Control-D, you can terminate the interpreter.
 </p>
 <pre>
   <code>
@@ -32,7 +32,7 @@ Byebye. See you again! (^^)/
 </pre>
 
 <p>
-  いくつか，Egisonに入力を与えてみましょう．
+  Give some inputs to Egison.
 </p>
 
 <pre>
@@ -53,22 +53,24 @@ f
   <code>define</code>式と<code>test</code>式です．<br/>
   <code>define</code>式は1番目の引数の変数の2番目の引数の式の値への束縛をトップレベル環境に加えます．<br/>
   <code>test</code>式は1番目の引数の式を評価しその値を表示します．<br/>
-  トップ式は，他にもあるのですが，とりあえずここではこの2つだけ覚えておいてください．<br/>
+  <code>test</code> expression evaluate the expression of first argument and display the result.<br/>
+  Although there are other kinds of top expressions, please note these two for the present.
 </p>
 
-<h2 id="four-parenses">4種類の括弧</h2>
+<h2 id="four-parenses">Four Kinds of Parentheses</h2>
 
 <p>
-  Egisonには4種類の括弧があります．<br/>
+  There are four kinds of parentheses in Egison.<br/>
 </p>
 
 <p>
   '<code>(</code>', '<code>)</code>' で囲まれた式は，言語に組み込まれている構文を適用する式を表すのと，
   ユーザ定義した関数を適用する式を表すのに使われます．<br/>
   小囲まれた式のうちで先頭にあるものがオペレータで，それ以降の式が引数となります．<br/>
+  head of the surrounded expressions are operator, rests are arguments.<br/>
 </p>
 <p>
-  '<code><</code>', '<code>></code>' で囲まれた式は，データコンストラクタの適用を表します．<br/>
+  Expressions surrounded with '<code>&lt;</code>' and '<code>&gt;</code>' represent inductive data.<br/>
   囲まれた式のうちで先頭の式がデータコンストラクタで，それ以降の式が引数となります．<br/>
   '<code><</code>', '<code>></code>' で囲まれた式は，パターンコンストラクタ(pattern constructor)の適用を表すのにも使われます．<br/>
   パターンコンストラクタはデータコンストラクタと呼び方を変えただけで，同じものです．後で説明します．<br/>
@@ -86,7 +88,9 @@ f
 
 <p>
   '<code>{</code>', '<code>}</code>' で囲まれた式はコレクション(任意個の同じ種類の要素からなるデータ)を表します．<br/>
+  Expressions surrounded with '<code>{</code>' and '<code>}</code>' represent collections.<br/>
   囲まれている式には先頭に'<code>@</code>' がついていない式とついている式との2種類があります．<br/>
+  two kinds of expressions     head of the expression
   '<code>@</code>' がついていない式は，全体のコレクションの要素の1つとして扱われます．<br/>
   '<code>@</code>' がついている式は，全体のコレクションの部分コレクション(subcollection)として扱われます．<br/>
 </p>
@@ -112,6 +116,7 @@ f
   2つ目の引数に適用する式を書きます．<br/>
   適用する関数と引数を並べて，'<code>(</code>' と '<code>)</code>' によってで囲った式は，
   <code>apply</code>構文の糖衣構文です．
+  This is a syntax sugar with <code>apply</code>.
 </p>
 <pre>
   <code>
@@ -141,13 +146,15 @@ f
   </code>
 </pre>
 
-<h2 id="four-parenses">パターンマッチしてみよう</h2>
+<h2 id="four-parenses">Let's do Pattern Matching!!</h2>
 
 <p>
-  パターンマッチを行うコードを動かしてみましょう．<br/>
-  この節では，そのなかでもわかりやすいコレクションのパターンマッチを書いてみます．<br/>
-  この節に出てくるコードを実行するには，<code>lib/base.egi</code>と，<code>lib/number.egi</code>，<code>lib/collection.egi</code>をロードする必要があります．<br/>
-  <code>load</code>式はトップ式で，1つ目の引数で指定されたファイルの内容を読み込みます．<br/>
+  Let's run codes that do pattern matchnig!<br/>
+  In this section, we write codes that do pattern matching for collection,
+  which are good examples to know the characteristics of Egison.<br/>
+  To run programs in this section, we need to load <code>lib/base.egi</code>, <code>lib/number.egi</code> and <code>lib/collection.egi</code>.<br/>
+  <code>load</code> expression is a kinds of top expression.<br/>
+  It is used to load a egison program file, specified by the first argument.<br/>
 </p>
 
 <pre>
@@ -159,7 +166,7 @@ f
 </pre>
 
 <p>
-  では，パターンマッチを行うコードを動かしてみましょう．<br/>
+  So, let's execute the code below!
 </p>
 
 <pre>
@@ -183,7 +190,9 @@ f
   3つめの引数にマッチ節(match clause)のコレクションをとります．<br/>
   この式は，<code>{2 7 7 2 7}</code>というコレクションを，
   <code>(Multiset Int)</code>としてパターンマッチするという意味になります．<br/>
-  <code>(Multiset Int)</code>という式は，整数のマルチセットという意味です．<br/>
+  Meaning of this expression is
+  a collection <code>{2 7 7 2 7}</code> as <code>(Multiset Int)</code>.<br/>
+  <code>(Multiset Int)</code> means multiset of integer.<br/>
   (マルチセットというのは，要素の順序関係は無視するが，重複は考えるコレクションデータ型のことです．)<br/>
 </p>
 
@@ -217,7 +226,7 @@ f
 </p>
 
 <p>
-  Egisonでは，パターンはファーストクラスオブジェクトです．<br/>
+  In Egison, patterns are first class objects.<br/>
   パターンも他の式と同じように評価したり，関数の引数として渡したりすることができます．<br/>
 </p>
 
@@ -454,10 +463,13 @@ primpat ::= _
 
 <p>
 '<code>_</code>'は，ワイルドカードである．ターゲットが何でもパターンマッチ成功します．
+'<code>_</code>' is wildcard.<br/>
 </p>
 
 <p>
 <i>pat-var</i>は，パターン変数である．ターゲットが何でもパターンマッチに成功し，値をその変数に束縛します．
+<i>pat-var</i> is a pattern variable.<br/>
+This pattern match whenver.
 </p>
 
 <p>
@@ -469,12 +481,13 @@ primpat ::= _
 
 <p>
 <code>[</code><i>prime-pat</i> <i>...</i> <code>]</code>は，ターゲットがタプルの場合，パターンマッチを行います．<br/>
+
 タプルの中身の要素について再帰的にパターンマッチを行います．<br/>
 </p>
 
 <p>
-<code>{}</code>は，エンプティパターン(<i>empty pattern</i>)と呼ばれます．<br/>
-ターゲットが空のコレクションの場合，パターンマッチします．<br/>
+<code>{}</code> is called <i>empty pattern</i>.<br/>
+This pattern match when target is a empty collection.<br/>
 </p>
 
 <p>
@@ -485,18 +498,21 @@ primpat ::= _
 </p>
 
 <p>
-<code>{</code><code>.</code><i>prime-pat</i> <i>prime-pat</i><code>}</code>は，スノックパターン(<i>snoc pattern</i>)と呼ばれます．<br/>
-ターゲットが1つ以上の要素を含むコレクションである場合にリストとしてパターンマッチを行い，
-2つ目の<i>prime-pat</i>とターゲットの一番後ろの要素を，
-1つ目の<i>prime-pat</i>とターゲットの残りの要素コレクションをパターンマッチします．<br/>
+<code>{</code><code>.</code><i>prime-pat</i> <i>prime-pat</i><code>}</code> is called <i>snoc pattern</i>.
+This pattern match when target collection contain more than one element,
+second <i>prime-pat</i> is matched with the last element of target collection,
+and first <i>prime-pat</i> is matched with the rest elements of target collection.<br/>
 </p>
 
 <p>
-多重集合の定義と同じように，リストや集合の型の定義もできます．<br/>
-図2は，リストの型を定義したものです．<br/>
-<code>nil</code>のプリミティブパターンマッチではエンプティパターンが，
-<code>cons</code>のプリミティブパターンマッチではコンスパターンが，
-<code>snoc</code>のプリミティブパターンマッチではスノックパターンが使われています．<br/>
+We can define lists and sets, as we do for multisets.<br/>
+We can define the type of lists as figure 2.<br/>
+In the pattern of primitive pattern match clause of <code>nil</code>,
+there is a empty pattern,
+in the pattern of primitive pattern match clause of <code>cons</code>,
+there is a cons pattern,
+<in the pattern of primitive pattern match clause of <code>snoc</code>,
+there is a snoc pattern.
 </p>
 
 <pre>

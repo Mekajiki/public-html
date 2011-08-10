@@ -9,15 +9,15 @@
 <hr/>
 <p>
   In this chapter, we run programs that execute pattern matching which is a specialty of Egison.<br/>
-  Egison is good at to pattern match for algebraic data structure.<br/>
-  In this chapter, we write programs that execute pattern matching for collection data.
+  Egison is good at to pattern match algebraic data structure.<br/>
+  In this chapter, we write programs that execute pattern matching for collection.
   Run them and feel how Egison is like!!<br/>
 <hr/>
 
 <h2 id="run-interpreter">Run Interpreter!!</h2>
 
 <p>
-  After installed Egison, and command 'egison', Egison interpreter start.<br/>
+  After installed Egison, command 'egison', Egison interpreter will start.<br/>
   Typing Control-D, you can terminate the interpreter.
 </p>
 <pre>
@@ -186,19 +186,19 @@ f
 </pre>
 
 <p>
-  <code>match</code>構文は1つ目の引数にパターンマッチのターゲット(target)を，
-  2つ目の引数にパターンマッチを行う際の型(type)を，
-  3つめの引数にマッチ節(match clause)のコレクションをとります．<br/>
+  <code>match</code> expressions take <i>target</i> of pattern matching as their first argument,
+  take <i>type</i> as their second argument,
+  and take <i>match clauses</i> as their third argument.<br/>
   この式は，<code>{2 7 7 2 7}</code>というコレクションを，
   <code>(Multiset Int)</code>としてパターンマッチするという意味になります．<br/>
   Meaning of this expression is
   a collection <code>{2 7 7 2 7}</code> as <code>(Multiset Int)</code>.<br/>
   <code>(Multiset Int)</code> means multiset of integer.<br/>
-  (マルチセットというのは，要素の順序関係は無視するが，重複は考えるコレクションデータ型のことです．)<br/>
+  Multiset is a collection data type, which ignore the order of the elements.<br/>
 </p>
 
 <p>
-  マッチ節は，パターン(pattern)とパターンマッチが成功した際に実行される式からなるタプルとして表されます．<br/>
+  Match clauses are represented as a tuple of a <i>pattern</i> and an expression which is evaluated when the pattern is matched with the target.<br/>
   <code>match</code>式が実行される際，先頭のマッチ節から順に，パターンマッチに成功するかどうかみていきます．<br/>
   パターンマッチに成功したパターンがあれば，パターンマッチによって計算された束縛フレーム(binding frame)を現環境に追加して，その節の式を評価します．<br/>
   Egisonでは，パターンマッチによる束縛フレームが複数ある場合があります．<br/>
@@ -223,7 +223,8 @@ f
 
 <p>
   2つ目のマッチ節のパターンは，ターゲットが何でもパターンマッチに成功します．<br/>
-  '<code>_</code>' はワイルドカード(wild card)であり，何に対しもパターンマッチ成功します．<br/>
+  '<code>_</code>' is a <i>wild card</i>.<br/>
+  This pattern matches with any objects.<br/>
 </p>
 
 <p>
@@ -287,14 +288,15 @@ f
 </pre>
 
 <p>
-  パターンコンストラクタ<code>join</code>は引数を2つ取ります．<br/>
+  Pattern constructor <code>join</code> takes two arguments.<br/>
   1つ目の引数にマッチした値と2つ目の引数にマッチした値を合わせた要素が，ターゲットと同値であればパターンマッチします．<br/>
+  object matched with pattern of the first argument
   パターンコンストラクタ毎のパターンマッチの方法の詳しい記述は型の定義のところで記述されます．<br/>
   次節で型定義について概説します．
 </p>
 
 <p>
-  他にも例をいくつかあげておきます．<br/>
+  We give some other examples.<br/>
 </p>
 
 <pre>

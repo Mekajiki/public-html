@@ -49,12 +49,11 @@ f
 </pre>
 
 <p>
-  この例では，2つのトップ式(top expression)がでてきました．<br/>
-  <code>define</code>式と<code>test</code>式です．<br/>
-  <code>define</code>式は1番目の引数の変数の2番目の引数の式の値への束縛をトップレベル環境に加えます．<br/>
-  <code>test</code>式は1番目の引数の式を評価しその値を表示します．<br/>
+  There are two kinds of <i>top expression</i> in this expample.<br/>
+  <code>define</code> expression and <code>test</code> expression.<br/>
+  When <code>define</code> expression is evaluated, bind which binds the variable of first argument to the second argument value added to the top level environment.<br/>
   <code>test</code> expression evaluate the expression of first argument and display the result.<br/>
-  Although there are other kinds of top expressions, please note these two for the present.
+  Although there are other kinds of top expressions, please note these two for the present.<br/>
 </p>
 
 <h2 id="four-parenses">Four Kinds of Parentheses</h2>
@@ -64,20 +63,21 @@ f
 </p>
 
 <p>
-  '<code>(</code>', '<code>)</code>' で囲まれた式は，言語に組み込まれている構文を適用する式を表すのと，
-  ユーザ定義した関数を適用する式を表すのに使われます．<br/>
-  小囲まれた式のうちで先頭にあるものがオペレータで，それ以降の式が引数となります．<br/>
-  head of the surrounded expressions are operator, rests are arguments.<br/>
+  Expressions surrounded with '<code>(</code>' and '<code>)</code>' are used to represent application of syntax of the language,
+  and application of a user-defined function.<br/>
+  The head of the surrounded expression is operator, and rests are arguments.<br/>
 </p>
 <p>
   Expressions surrounded with '<code>&lt;</code>' and '<code>&gt;</code>' represent inductive data.<br/>
-  囲まれた式のうちで先頭の式がデータコンストラクタで，それ以降の式が引数となります．<br/>
-  '<code><</code>', '<code>></code>' で囲まれた式は，パターンコンストラクタ(pattern constructor)の適用を表すのにも使われます．<br/>
-  パターンコンストラクタはデータコンストラクタと呼び方を変えただけで，同じものです．後で説明します．<br/>
+  The head of the surrounded expression is a data constuructor, and rests are arguments.<br/>
+  These expressions are also used to represent application of <i>pattern constructor</i>.<br/>
+  Pattern constructors are same things with data constructors.<br/>
+  We will describe them later.<br/>
 </p>
 <p>
-  '<code>[</code>', '<code>]</code>' で囲まれた式はタプルを表しています．<br/>
-  Egisonのタプルは多値として使うことができます．1つの式しか含んでいないタプルはその1つの式と同値になります．<br/>
+  Expressions surrounded with '<code>[</code>' and '<code>]</code>' represent tuples.<br/>
+  Tuples are dealt as multiple values in Egison.<br/>
+  Tuple which contains only one element are dealt as sigleton value.<br/>
 </p>
 
 <pre>
@@ -87,12 +87,12 @@ f
 </pre>
 
 <p>
-  '<code>{</code>', '<code>}</code>' で囲まれた式はコレクション(任意個の同じ種類の要素からなるデータ)を表します．<br/>
   Expressions surrounded with '<code>{</code>' and '<code>}</code>' represent collections.<br/>
-  囲まれている式には先頭に'<code>@</code>' がついていない式とついている式との2種類があります．<br/>
-  two kinds of expressions     head of the expression
-  '<code>@</code>' がついていない式は，全体のコレクションの要素の1つとして扱われます．<br/>
-  '<code>@</code>' がついている式は，全体のコレクションの部分コレクション(subcollection)として扱われます．<br/>
+  There are two forms of expression in the expressions in the collection.<br/>
+  Expressions which have no '<code>@</code> at the head of the expression, and
+  expressions which have '<code>@</code> at the head of the expression.<br/>
+  Expressions which have no '<code>@</code> are dealt as an element of the collection.<br/>
+  Expressions which have '<code>@</code> are dealt as an <i>subcollection</i> of the collection.<br/>
 </p>
 
 <pre>
@@ -101,22 +101,23 @@ f
   </code>
 </pre>
   
-<h2 id="four-parenses"><code>lambda</code>と<code>let</code></h2>
+<h2 id="four-parenses"><code>lambda</code> and <code>let</code></h2>
 
 <p>
-  <code>lambda</code>構文は，1つ目の引数にパターン変数(pattern variable)のタプルをとります．<br/>
-  パターン変数というのは，先頭に'<code>$</code>'がついている文字列のことです．<br/>
-  これからでそこで束縛される変数を表します．<br/>
-  2つ目の引数に関数適用した際に実行する式をとります．<br/>
+  <code>lambda</code> expressions take a <i>pattern variable</i> as their first argument.<br/>
+  Pattern variables have '<code>$</code>' at their head.<br/>
+  <code>lambda</code> expressions take a expression to execute when applied as their second argument.<br/>
 </p>
+
 <p>
-  関数適用の式には，<code>apply</code>構文を用いたものと，
-  適用する関数と引数を並べて，'<code>(</code>' と '<code>)</code>'によって囲ったものがあります，<br/>
-  <code>apply</code>構文は，1つ目の引数に適用する関数をとります．<br/>
-  2つ目の引数に適用する式を書きます．<br/>
-  適用する関数と引数を並べて，'<code>(</code>' と '<code>)</code>' によってで囲った式は，
-  <code>apply</code>構文の糖衣構文です．
-  This is a syntax sugar with <code>apply</code>.
+  There are two syntax for function applications.<br/>
+  Expressions with <code>apply</code> expression,
+  and expressions simply surrounded with '<code>(</code>' and '<code>)</code>'.<br/>
+  <code>apply</code> expressions take an operator function as their first argument,
+  and arguments as their second argument.<br/>
+  Expressions simply surrounded with '<code>(</code>' and '<code>)</code>' takes an operator function as their first elements,
+  and arguments as their rest of elements.<br/>
+  This is a syntax sugar of <code>apply</code>.
 </p>
 <pre>
   <code>
@@ -132,10 +133,10 @@ f
 </pre>
 
 <p>
-  <code>let</code>構文は，1つ目の引数にパターン変数と式のタプルのコレクションをとります．<br/>
-  その式を評価した値をパターン変数に束縛します．<br/>
-  Egisonの<code>let</code>は，相互再帰的な束縛をします．<br/>
-  その束縛を現環境追加して，2つ目の引数の式を実行します．<br/>
+  <code>let</code> expressions take a collection of tuples of pattern variable and expression.<br/>
+  The Value of the expression second element of tuple are bound to the pattern variable first element of tuple.<br/>
+  Bound by <code>let</code> expressions are mutual recursive.<br/>
+  The expression second argument of <code>let</code> expressions are evaluated with the new environment.<br/>
 </p>
 <pre>
   <code>

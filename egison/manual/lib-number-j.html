@@ -8,10 +8,92 @@
 <h1>ライブラリ <code>number.egi</code></h1>
 <hr/>
 <p>
-  ライブラリ<code>lib/number.egi</code>には，<code>Nat</code>型，<code>Int</code>型が定義されています．
+  ライブラリ<code>lib/number.egi</code>には，<code>Integer</code>型，<code>Double</code>型，<code>Nat</code>型が定義されています．
 </p>
 
+<dl>
+  <dt>Type : <code>Integer</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $Integer
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     [$equal? (lambda [$val $tgt] (= val tgt))]}))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+    整数を扱うための型です．
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
 
+<dl>
+  <dt>Type : <code>Double</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $Double
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     [$equal? (lambda [$val $tgt] (=f val tgt))]}))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+    浮動小数点数を扱うための型です．
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Type : <code>Nat</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $Nat
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     [$inductive-match
+      (deconstructor
+        {[o []
+          {[0 {[]}]
+           [_ {}]}]
+         [s [Nat]
+          {[$tgt (match (compare-number tgt 0) Order
+                   {[&lt;greater&gt; {(- tgt 1)}]
+                      [_ {}]})]}]})]
+       [$equal? (lambda [$val $tgt] (= val tgt))]}))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+    自然数を扱うための型です．
+  </dd>
+  <dd>
+    <pre>
+      <code>
+(define $fib
+  (lambda [$n]
+    (match n Nat
+      {[&lt;o&gt; 1]
+       [&lt;s &lt;o&gt;&gt; 1]
+       [&lt;s &lt;s $n1&gt;&gt; (+ (fib (+ n1 1)) (fib n1))]})))
+      </code>
+    </pre>
+  </dd>
+</dl>
 
 </body>
 

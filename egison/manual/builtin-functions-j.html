@@ -1,0 +1,396 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>組み込み関数</h1>
+<hr/>
+<p>
+  以下が全ての組み込み関数のリストです．
+</p>
+
+
+<dl>
+  <dt><u>Function:</u> <b>read</b> <i>World</i>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>write</b> <i>World Something</i>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>print</b> <i>World String</i>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>read-char</b> <i>World</i>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>write-char</b> <i>World Character</i>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>int-to-float</b> <i>Intger</i>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>ceiling floor truncate round</b> <i>Double</i>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>=</b> <i>Intger Intger</i>
+  <dd>
+    <p>
+      2つの整数を引数に受け取り，それらを比較した結果を<code>Order</code>型で返します．
+    </p>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(= 1 2) &rArr; &lt;less&gt;
+(= 10 10) &rArr; &lt;equal&gt;
+(= 20 10) &rArr; &lt;greater&gt;
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>compare-integer</b> <i>Intger Intger</i>
+  <dd>
+    <p>
+      2つの整数を引数に受け取り，それらを比較した結果を<code>Order</code>型で返します．
+    </p>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(compare-integer 1 2) &rArr; &lt;less&gt;
+(compare-integer 10 10) &rArr; &lt;equal&gt;
+(compare-integer 20 10) &rArr; &lt;greater&gt;
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>+ - *</b> <i>Intger Intger</i></dt>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(+ 1 2) &rArr; 3
+(- 1 2) &rArr; -1
+(* 1 2) &rArr; 2
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>dev</b> <i>Intger Intger</i></dt>
+  <dd>
+    <p>
+      2つの整数を引数に受け取り，1つ目の引数の数を2つ目の引数の数で割った商を返します．
+    </p>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(dev 11 2) &rArr; 5
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl>
+
+<dl>
+  <dt><u>Function:</u> <b>mod</b> <i>Intger Intger</i></dt>
+  <dd>
+    <p>
+      2つの整数を引数に受け取り，1つ目の引数の数を2つ目の引数の数で割った余りを返します．
+    </p>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(dev 11 2) &rArr; 5
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl>
+
+<dl>
+  <dt><u>Function:</u> <b>=f</b> <i>Double Double</i>
+  <dd>
+    <p>
+      2つの実数を引数に受け取り，それらを比較した結果を<code>Order</code>型で返します．
+    </p>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(=f 1.0 2.0) &rArr; &lt;false&gt;
+(=f 10.0 10.0) &rArr; &lt;true&gt;
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>compare-float</b> <i>Double Double</i>
+  <dd>
+    <p>
+      2つの実数を引数に受け取り，それらを比較した結果を<code>Order</code>型で返します．
+    </p>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(compare-float 1.0 2.0) &rArr; &lt;less&gt;
+(compare-float 10.0 10.0) &rArr; &lt;equal&gt;
+(compare-float 20.0 10.0) &rArr; &lt;greater&gt;
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>+f -f *f /f</b> <i>Double Double</i></dt>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(+f 1.1 2.2) &rArr; 3.3
+(-f 1.1 2.2) &rArr; -1.1
+(*f 1.1 2.2) &rArr; 2.4200000000000004
+(/f 1.1 2.2) &rArr; 0.5
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<!--
+    "pi" -> Just builtinPi
+  -->
+
+<dl>
+  <dt><u>Function:</u> <b>exp</b> <i>Double</i></dt>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(exp 1.0) &rArr; 2.718281828459045
+(exp 2.0) &rArr; 7.38905609893065
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl>
+
+<dl>
+  <dt><u>Function:</u> <b>log</b> <i>Double</i></dt>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(log 2.71828) &rArr; 0.999999327347282
+(log 10.0) &rArr; 2.302585092994046
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>sqrt</b> <i>Double</i></dt>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(sqrt 2.0) &rArr; 1.4142135623730951
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>**</b> <i>Double Double</i></dt>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(** 2.0 2.0) &rArr; 4.0
+(** 2.0 3.0) &rArr; 8.0
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>log-base</b> <i>Double Double</i></dt>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+(log-base 2.0 4.0) &rArr; 2.0
+(log-base 2.0 8.0) &rArr; 3.0
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+<dl>
+  <dt><u>Function:</u> <b>sin cos tan asin acos atan sinh cosh tanh asinh acosh atanh</b> <i>Double</i></dt>
+  <dd>
+    <table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <pre>
+          </pre>
+        </td>
+      </tr>
+    </table>
+  </dd>
+</dl> 
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>
+

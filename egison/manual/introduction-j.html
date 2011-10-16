@@ -164,7 +164,7 @@ f
 
 <pre>
   <code>
-&gt; (test (match {2 7 7 2 7} (Multiset Int)
+&gt; (test (match {2 7 7 2 7} (Multiset Integer)
           {[&lt;cons $m
              &lt;cons ,m
               &lt;cons ,m
@@ -182,8 +182,8 @@ f
   2つ目の引数にパターンマッチを行う際の型(<i>type</i>)を，
   3つめの引数にマッチ節(<i>match clause</i>)のコレクションをとります．<br/>
   この式は，<code>{2 7 7 2 7}</code>というコレクションを，
-  <code>(Multiset Int)</code>としてパターンマッチするという意味になります．<br/>
-  <code>(Multiset Int)</code>という式は，整数のマルチセットという意味です．<br/>
+  <code>(Multiset Integer)</code>としてパターンマッチするという意味になります．<br/>
+  <code>(Multiset Integer)</code>という式は，整数のマルチセットという意味です．<br/>
   (マルチセットというのは，要素の順序関係は無視するが，重複は考えるコレクションデータ型のことです．)<br/>
 </p>
 
@@ -224,12 +224,12 @@ f
 <pre>
   <code>
 &gt; (test (let {[$pat &lt;cons ,1 &lt;nil&gt;&gt;]}
-          (match {1} (Multiset Int)
+          (match {1} (Multiset Integer)
             {[pat &lt;ok&gt;]
              [_ &lt;ko&gt;]})))
 &lt;ok&gt;
 &gt; (test (let {[$loop &lt;cons ,1 (of {&lt;nil&gt; loop})&gt;]}
-          (match {1 1 1 1} (Multiset Int)
+          (match {1 1 1 1} (Multiset Integer)
             {[loop &lt;ok&gt;]
              [_ &lt;ko&gt;]})))
 &lt;ok&gt;
@@ -243,7 +243,7 @@ f
 
 <pre>
   <code>
-&gt; (test (match {1 1 1 1} (Multiset Int)
+&gt; (test (match {1 1 1 1} (Multiset Integer)
           {[(with $loop &lt;cons ,1 (of {&lt;nil&gt; loop})&gt;) &lt;ok&gt;]
            [_ &lt;ko&gt;]}))
 &lt;ok&gt;
@@ -260,15 +260,15 @@ f
 
 <pre>
   <code>
-&gt; (test (match-all {1 2 3} (List Int)
+&gt; (test (match-all {1 2 3} (List Integer)
           [&lt;join $hs $ts&gt; [hs ts]]))
 {[{} {1 2 3}] [{1} {2 3}] [{1 2} {3}] [{1 2 3} {}]}
 
-&gt; (test (match-all {1 2 3} (Multiset Int)
+&gt; (test (match-all {1 2 3} (Multiset Integer)
           [&lt;join $hs $ts&gt; [hs ts]]))
 {[{} {1 2 3}] [{3} {1 2}] [{2} {1 3}] [{2 3} {1}] [{1} {2 3}] [{1 3} {2}] [{1 2} {3}] [{1 2 3} {}]}
           
-&gt; (test (match-all {1 2 3} (Set Int)
+&gt; (test (match-all {1 2 3} (Set Integer)
           [&lt;join $hs $ts&gt; [hs ts]]))
 {[{} {1 2 3}] [{3} {1 2}] [{3} {1 2 3}] [{2} {1 3}] [{2} {1 3 2}] [{2 3} {1}] [{2 3} {1 3}] [{2 3} {1 2}] [{2 3} {1 2 3}]
  [{1} {2 3}] [{1} {2 3 1}] [{1 3} {2}] [{1 3} {2 3}] [{1 3} {2 1}] [{1 3} {2 1 3}] [{1 2} {3}] [{1 2} {3 2}] [{1 2} {3 1}] [{1 2} {3 1 2}]
@@ -289,7 +289,7 @@ f
 
 <pre>
   <code>
-&gt; (test (match {5 2 1 3 4} (Multiset Int)
+&gt; (test (match {5 2 1 3 4} (Multiset Integer)
           {[&lt;cons $n
              &lt;cons ,(- n 1)
               &lt;cons ,(- n 2)
@@ -299,10 +299,10 @@ f
             &lt;ok&gt;]
            [ _ &lt;ko&gt;]}))
 &lt;ok&gt;
-&gt; (test (match-all {1 2 3} (List Int)
+&gt; (test (match-all {1 2 3} (List Integer)
           [&lt;join $hs &lt;cons $x $ts&gt;&gt; [hs x ts]]))
 {[{} 1 {2 3}] [{1} 2 {3}] [{1 2} 3 {}]}
-&gt; (test (match-all {1 2 3 4 5} (Multiset Int)
+&gt; (test (match-all {1 2 3 4 5} (Multiset Integer)
           [&lt;cons $n $rest&gt; [m rest]]))
 {[1 {2 3 4 5}] [2 {1 3 4 5}] [3 {1 2 4 5}] [4 {1 2 3 5}] [5 {1 2 3 4}]}
   </code>
@@ -358,8 +358,8 @@ f
 
 <p>
 <code>Multiset</code>は，型を1つ受け取って，その型の多重集合の型を返す関数となっています．<br/>
-例えば，<code>(Multiset Int)</code>は数の多重集合という型になり，
-<code>(Multiset (Multiset Int))</code>は数の多重集合の多重集合という型になります．<br/>
+例えば，<code>(Multiset Integer)</code>は数の多重集合という型になり，
+<code>(Multiset (Multiset Integer))</code>は数の多重集合の多重集合という型になります．<br/>
 </p>
 
 <p>
@@ -422,13 +422,13 @@ f
 </p>
 
 <p>
-例の場合だと，型が<code>(Multiset Int)</code>で，パターンが<code>&lt;cons $x $xs&gt;</code>という形のインダクティブパターンで，
+例の場合だと，型が<code>(Multiset Integer)</code>で，パターンが<code>&lt;cons $x $xs&gt;</code>という形のインダクティブパターンで，
 ターゲットが<code>{1 2 3}</code>というコレクションだった場合，
 <code>inductive-match</code>関数を使って，パターンマッチの処理が行われます．<br/>
 その際，<code>inductive-match</code>関数の<code>cons</code>のデコンストラクトマッチ節にマッチし，
 さらに，その中の唯一のプリミティブマッチ節にマッチします．<br/>
 このプリミティブマッチ節の式を評価すると，<code>{[1 {2 3}] [2 {1 3}] [3 {1 2}]}</code>がその結果として返ってきます．<br/>
-これのそれぞれ1つ目の要素を<code>Int</code>として，2つ目の要素を<code>(Multiset Int)</code>として，
+これのそれぞれ1つ目の要素を<code>Integer</code>として，2つ目の要素を<code>(Multiset Integer)</code>として，
 再帰的にパターンマッチを行われます．<br/>
 </p>
 

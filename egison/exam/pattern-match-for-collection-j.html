@@ -1,0 +1,149 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>Egisonist検定(コレクションのパターンマッチ)</h1>
+
+<hr/>
+
+
+<h3>第1問*</h3>
+
+<p>
+  コレクションを受け取り，先頭と末尾の要素が同じであれば<code>&lt;ok&gt;</code>を返し，そうでなかったら<code>&lt;ko&gt;</code>を返すように以下の式を補足せよ．
+</p>
+
+<pre>
+  <code>
+&gt; (test (match {1 2 3 1} (List Integer)
+          {[?=1=? &lt;ok&gt;]
+           [_ &lt;ko&gt;]}))
+&lt;ok&gt;
+
+&gt; (test (match {1 2 3 2} (List Integer)
+          {[?=1=? &lt;ok&gt;]
+           [_ &lt;ko&gt;]}))
+&lt;ko&gt;
+  </code>
+</pre>
+
+
+<h3>第2問**</h3>
+
+<p>
+  以下のような3つの整数のコレクションのコレクションを受け取り，それぞれのコレクションから要素を1つずつ抽出した全ての組み合わせを返すように以下の式を補足せよ．
+</p>
+
+<pre>
+  <code>
+&gt; (test (match-all {{1 2 3} {11} {21 22}} ?=1=?
+          [?=2=? [x y z]]))
+{[1 11 21] [2 11 21] [3 11 21] [1 11 22] [2 11 22] [3 11 22]}
+  </code>
+</pre>
+
+
+<h3>第3問**</h3>
+
+<p>
+  以下のような3つの整数のコレクションのコレクションを受け取り，それぞれのコレクションに共通して含まれる要素全てを返すように以下の式を補足せよ．
+</p>
+
+<pre>
+  <code>
+&gt; (test (match-all {{1 2 3 4 5} {1 6 2 4} {6 7 2 3 4}} ?=1=?
+          [?=2=? n])
+{2 4}
+  </code>
+</pre>
+
+
+<h3>第4問***</h3>
+
+<p>
+  整数のコレクションを受け取り，そのコレクションの要素2つの組み合わせを返すように以下の式を補足せよ．
+</p>
+
+<pre>
+  <code>
+&gt; (test (match-all {1 2 3 4 5} ?=1=?
+          [?=2=? [n1 n2]])
+{[1 2] [1 3] [1 4] [1 5] [2 3] [2 4] [2 5] [3 4] [3 5] [4 5]}
+  </code>
+</pre>
+
+
+<h3>第5問***</h3>
+
+<p>
+  <code>{a b c} = {c b a}</code>というように，もとのコレクションを逆順に並び替えたコレクションがもとのコレクションと同値であるようなデータ型Stickを，以下の式を補足して定義せよ．
+</p>
+
+<pre>
+  <code>
+&gt; (define $Stick
+    (lambda [$a]
+      (type
+        {[$var-match (lambda [$tgt] {tgt})]
+         [$inductive-match
+          (deconstructor
+            {[nil []
+              ?=1=?]
+             [cons ?=2=?
+              ?=3=?]
+             [join ?=4=?
+              ?=5=?]})]
+         [$equal? (lambda [$val $tgt]
+                    (or ((type-ref (List a) equal?) val tgt)
+                        ((type-ref (List a) equal?) val (reverse tgt))))]})))
+
+&gt; (test (match-all {1 2 3} (Stick Integer) [&lt;cons $x $xs&gt; [x xs]]))
+{[1 {2 3}] [3 {2 1}]}
+
+&gt; (test (match-all {1 2 3} (Stick Integer) [&lt;join $xs $ys&gt; [xs ys]]))
+{[{} {1 2 3}] [{1} {2 3}] [{1 2} {3}] [{1 2 3} {}] [{} {3 2 1}] [{3} {2 1}] [{3 2} {1}] [{3 2 1} {}]}
+
+&gt; (test (match-all {1 2 3 4} (Stick Integer) [&lt;join $xs &lt;cons $w $ys&gt;&gt; [xs w ys]]))
+{[{} 1 {2 3 4}] [{1} 2 {3 4}] [{1 2} 3 {4}] [{1 2 3} 4 {}] [{} 4 {3 2 1}] [{4} 3 {2 1}] [{4 3} 2 {1}] [{4 3 2} 1 {}]}
+
+&gt; (test (match-all {1 2 3} (Stick Integer) [,{3 2 1} &lt;ok&gt;]))
+{&lt;ok&gt;}
+  </code>
+</pre>
+
+
+<h3>第6問***</h3>
+
+<p>
+  <code>{a b b c d b b e e} = {a a b c c d b e} = {a b c d b e}</code>というように，もとのコレクションの連続して並ぶ同じ要素の重複を無視するデータ型CompactListを定義せよ．
+</p>
+
+<pre>
+  <code>
+&gt; (define $CompactList ?=1=?)
+      
+&gt; (test (match-all {1 2 3} (CompactList Integer) [&lt;cons $x $xs&gt; [x xs]]))
+{[1 {2 3}] [1 {1 2 3}]}
+        
+&gt; (test (match-all {1 2 3} (CompactList Integer) [&lt;join $xs $ys&gt; [xs ys]]))
+{[{} {1 2 3}] [{1} {2 3}] [{1} {1 2 3}] [{1 2} {3}] [{1 2} {2 3}] [{1 2 3} {}] [{1 2 3} {3}]}
+  </code>
+</pre>
+
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>

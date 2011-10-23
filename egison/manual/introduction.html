@@ -9,8 +9,8 @@
 <hr/>
 <p>
   In this chapter, we run programs that execute pattern matching which is a specialty of Egison.<br/>
-  Egison is good at to pattern match algebraic data structure.<br/>
-  In this chapter, we write programs that execute pattern matching for collections.
+  Egison is good at to pattern match algebraic data structures.<br/>
+  In this chapter, we will write programs that execute pattern matching for collections.
   Run them and feel how Egison is like!!<br/>
 <hr/>
 
@@ -49,11 +49,11 @@ f
 </pre>
 
 <p>
-  There are two kinds of <i>top expression</i> in these expamples.<br/>
+  There are two kinds of <i>top expressions</i> in these expamples.<br/>
   The <code>define</code> expressions and the <code>test</code> expressions.<br/>
   When a <code>define</code> expression is evaluated, bind which binds the variable of first argument to the second argument value added to the top level environment.<br/>
-  When a <code>test</code> expression is evaluated, the expression of the first argument are evaluated and the result are displayed.<br/>
-  Although there are other kinds of top expressions, please note these two for the present.<br/>
+  When a <code>test</code> expression is evaluated, the expression of the first argument is evaluated and the result is displayed.<br/>
+  Although there are more top expressions, we describe only these two for the present.<br/>
 </p>
 
 <h2 id="four-parenses">Four Kinds of Parentheses</h2>
@@ -63,9 +63,9 @@ f
 </p>
 
 <p>
-  Expressions surrounded with '<code>(</code>' and '<code>)</code>' are used to represent application of syntax of the language,
-  and application of a user-defined function.<br/>
-  The head of the surrounded expression is operator, and rests are arguments.<br/>
+  Expressions surrounded with '<code>(</code>' and '<code>)</code>' are used to represent application of the syntax of the language,
+  and application of the user-defined function.<br/>
+  The head of the surrounded expression is an operator, and rests are arguments.<br/>
 </p>
 <p>
   Expressions surrounded with '<code>&lt;</code>' and '<code>&gt;</code>' represent inductive data.<br/>
@@ -77,7 +77,7 @@ f
 <p>
   Expressions surrounded with '<code>[</code>' and '<code>]</code>' represent tuples.<br/>
   Tuples are dealt as multiple values in Egison.<br/>
-  Tuple which contains only one element are dealt as sigleton value.<br/>
+  That is, a tuple which contains only one element are dealt as sigleton value.<br/>
 </p>
 
 <pre>
@@ -89,10 +89,9 @@ f
 <p>
   Expressions surrounded with '<code>{</code>' and '<code>}</code>' represent collections.<br/>
   There are two forms of expression in the expressions in the collection.<br/>
-  Expressions which have no '<code>@</code> at the head of the expression, and
-  expressions which have '<code>@</code> at the head of the expression.<br/>
+  Expressions which have no '<code>@</code> at the head of the expression, and expressions which have '<code>@</code> at the head of the expression.<br/>
   Expressions which have no '<code>@</code> are dealt as an element of the collection.<br/>
-  Expressions which have '<code>@</code> are dealt as an <i>subcollection</i> of the collection.<br/>
+  Expressions which have '<code>@</code> are dealt as a <i>subcollection</i> of the collection.<br/>
 </p>
 
 <pre>
@@ -104,19 +103,17 @@ f
 <h2 id="four-parenses"><code>lambda</code> and <code>let</code></h2>
 
 <p>
-  <code>lambda</code> expressions take a <i>pattern variable</i> as their first argument.<br/>
+  The <code>lambda</code> expression takes a <i>pattern variable</i> as its first argument.<br/>
   Pattern variables have '<code>$</code>' at their head.<br/>
-  <code>lambda</code> expressions take a expression to execute when applied as their second argument.<br/>
+  The <code>lambda</code> expression takes a expression to execute when applied as its second argument.<br/>
 </p>
 
 <p>
   There are two syntax for function applications.<br/>
-  Expressions with <code>apply</code> expression,
-  and expressions simply surrounded with '<code>(</code>' and '<code>)</code>'.<br/>
-  <code>apply</code> expressions take an operator function as their first argument,
-  and arguments as their second argument.<br/>
+  The <code>apply</code> expression, and expressions simply surrounded with '<code>(</code>' and '<code>)</code>'.<br/>
+  The <code>apply</code> expression takes an operator function as their first argument, and arguments to apply as their second argument.<br/>
   Expressions simply surrounded with '<code>(</code>' and '<code>)</code>' takes an operator function as their first elements,
-  and arguments as their rest of elements.<br/>
+  and arguments to apply as their rest of elements.<br/>
   This is a syntax sugar of <code>apply</code>.
 </p>
 <pre>
@@ -133,10 +130,10 @@ f
 </pre>
 
 <p>
-  <code>let</code> expressions take a collection of tuples of pattern variable and expression.<br/>
-  The value of the expression which is the second element of tuple are bound to the pattern variable which is the first element of tuple.<br/>
-  Bound by <code>let</code> expressions are mutual recursive.<br/>
-  The expression second argument of <code>let</code> expressions are evaluated with the new environment.<br/>
+  The <code>let</code> expression takes a collection of tuples which consist of a pattern variable and an expression.<br/>
+  The value of the expression which is the second element of tuple are bound to the pattern variable which is the first element of the tuple.<br/>
+  Bind by the <code>let</code> expression is mutual recursive.<br/>
+  The expression second argument of the <code>let</code> expression is evaluated with the new environment.<br/>
 </p>
 <pre>
   <code>
@@ -151,10 +148,9 @@ f
 
 <p>
   Let's run codes that do pattern matchnig!<br/>
-  In this section, we write codes that do pattern matching for collections,
-  which are good examples to know the characteristics of Egison.<br/>
-  To run programs in this section, we need to load <code>lib/base.egi</code>, <code>lib/number.egi</code> and <code>lib/collection.egi</code>.<br/>
-  <code>load</code> expression is a kinds of top expression.<br/>
+  In this section, we will write codes that do pattern matching for collections, which are good examples to know the characteristics of Egison.<br/>
+  To run programs in this section, we need to load <code>lib/base.egi</code>, <code>lib/number.egi</code> and <code>lib/collection.egi</code>, at first.<br/>
+  The <code>load</code> expression is one of top expressions.<br/>
   It is used to load a egison program file, specified by the first argument.<br/>
 </p>
 
@@ -167,7 +163,7 @@ f
 </pre>
 
 <p>
-  So, let's execute the code below!
+  So, let's execute the code bellow!
 </p>
 
 <pre>
@@ -186,45 +182,41 @@ f
 </pre>
 
 <p>
-  <code>match</code> expressions take <i>target</i> of pattern matching as their first argument,
-  <i>type</i> as their second argument,
-  and <i>match clauses</i> as their third argument.<br/>
-  This expression pattern matches a collection <code>{2 7 7 2 7}</code> as <code>(Multiset Int)</code>.<br/>
+  The <code>match</code> expression takes a <i>target</i> value of pattern matching as their first argument, a <i>type</i> as their second argument, and <i>match clauses</i> as their third argument.<br/>
+  This expression represents pattern matching of the collection <code>{2 7 7 2 7}</code> as the type <code>(Multiset Int)</code>.<br/>
   <code>(Multiset Int)</code> means multiset of integer.<br/>
   Multiset is a collection data type, which ignore the order of the elements.<br/>
 </p>
 
 <p>
-  Match clauses are represented as a tuple of a <i>pattern</i> and an expression which is evaluated when the pattern is matched with the target.<br/>
+  The match clause is represented as a tuple of a <i>pattern</i> and an expression which is evaluated when the pattern is matched with the target value.<br/>
   Pattern matching are executed from head of match clauses.<br/>
-  If there is a pattern for which pattern matching succeed,
-  the expression of the match clause are executed with the environment to which <i>binding frame</i> generated by pattern matching are added.<br/>
+  If there is a pattern clause for whose pattern pattern matching succeed, the expression of the match clause is executed with the environment to which <i>binding frame</i> generated by pattern matching is added.<br/>
   There are cases many binding frames exist.<br/>
-  In that case, one of binding frames are choosed.<br/>
+  In that case, one of binding frames is choosed.<br/>
 </p>
 
 <p>
-  The pattern of the first match clause matches if the target value is collection which consists of five elements, and three of these are same element and rest of two element are same element too.<br/>
-  In Egison, pattern matching is executed  from the left side of the pattern.<br/>
-  And we can refer to a value of a pattern variable to the right of its binding position.<br/>
-  Patterns ahead of which there is a '<code>,</code>' is called <i>value patterns</i>.<br/>
+  The pattern of the first match clause matches if the target value is collection which consists of five elements, and three of these are same element and rest of two elements are same too.<br/>
+  In Egison, pattern matching is executed from the left side of the pattern, and we can refer to a value bound to a pattern variable to the right of its binding position.<br/>
+  The pattern ahead of which there is a '<code>,</code>' is called the <i>value pattern</i>.<br/>
   The expression after '<code>,</code>' is evaluated, and if the value is equal to the target value, pattern matching succeed.<br/>
-  Patterns ahead of which there is a '<code>!</code>' is called <i>cut patterns</i>.<br/>
-  If there are several combinations to that point, we take one of them and continue pattern matching for the rest of the pattern.<br/>
+  The pattern ahead of which there is a '<code>!</code>' is called the <i>cut pattern</i>.<br/>
+  If there are several combinations of bindigs to the point of the cut pattern, we take one of them and continue pattern matching for the rest of the pattern.<br/>
   Cut patterns are used to get rid of unnecessary search.<br/>
-  In this sample case, there is only one combination that three same number cards in five cards, so there is no need for futher search if we failed pattern matching after we found these three same number cards.<br/>
-  This cut pattern represent it.<br/>
+  In this sample case, there is only one combination that three same number cards in five cards, so there is no need for futher search if we failed pattern matching after we found three same number cards.<br/>
+  This cut pattern represent this fact.<br/>
 </p>
 
 <p>
-  The pattern of the second match clause matches with any target.<br/>
-  '<code>_</code>' is a <i>wild card</i>.<br/>
-  This pattern matches with any objects.<br/>
+  The pattern of the second match clause matches with any target values.<br/>
+  '<code>_</code>' means the <i>wild card</i>.<br/>
+  This pattern matches with any target values.<br/>
 </p>
 
 <p>
   In Egison, patterns are first class objects.<br/>
-  Patterns can be return values of functions, or we can use them as arguments of function.<br/>
+  So patterns can be a return value of a function, or we can use it as an argument of a function.<br/>
 </p>
 
 <pre>
@@ -243,10 +235,10 @@ f
 </pre>
 
 <p>
-  Next, we show examples that there are several binding frames.<br/>
-  <code>match-all</code> expressions take a target as their first argument, and a type as their second argument, as <code>match</code> expressions do.<br/>
-  But they take single match clause as their third argument, not a collection of match clause as <code>match</code> expressions do.<br/>
-  When <code>match-all</code> expressions are evaluated, the expression of the match clause are executed  for each binding frames and return the collection which consists of each results.<br/>
+  Next, we show examples of patterm matching whose result has several binding frames.<br/>
+  The <code>match-all</code> expression takes a target value as its first argument, and a type as its second argument, as the <code>match</code> expression do.<br/>
+  But it takes single match clause as its third argument, not a collection of match clause as the <code>match</code> expression do.<br/>
+  When the <code>match-all</code> expression is evaluated, the expression of the match clause are executed for each binding frames and return the collection which consists of each results.<br/>
 </p>
 
 <pre>
@@ -269,13 +261,13 @@ f
 
 <p>
   The pattern constructor <code>join</code> takes two arguments.<br/>
-  We succeed to pattern match when the target value is equal with the value which put the value matched with pattern of the first argument and the second together.<br/>
-  The ways of pattern matching for each pattern constructor are defined when we define types.<br/>
+  We succeed pattern matching when the target collection is equal with the collection which consists of the elements of the collection matched with pattern of the first argument and the second argument.<br/>
+  The ways of pattern matching for each pattern constructors are defined in the definition of the type.<br/>
   We will describe how to define types, in the next section.<br/>
 </p>
 
 <p>
-  We give some other examples.<br/>
+  There are some other examples.<br/>
 </p>
 
 <pre>
@@ -302,10 +294,10 @@ f
 <h2>How To Define Types</h2>
 
 <p>
-  We need to define how to do pattern matching for each type of data to evaluate the pattern matching expression explained in the previous section.<br/>
-  In this section, we explain how to define type and how the pattern matching expressions of Egison are executed.<br/>
+  We need to define how to do pattern matching for each type to evaluate the pattern matching expression explained in the previous section.<br/>
+  In this section, we explain how to define types and how the pattern matching expressions of Egison are executed.<br/>
   All the knowledge you need to write type definitions is included in the type definition for multiset.<br/>
-  Therefore, we explain type definiton with examples of the type definition for multiset.<br/>
+  Therefore, we explain the type definition for multiset.<br/>
   Below is a definition of the multiset in Egison.<br/>
 </p>
 
@@ -336,20 +328,20 @@ f
 
 
 <p>
-  <code>remove</code> is a function that obtains a type and returns a function that removes the value which is its first argument from the collection which is its seconds argument.<br/>
-  <code>remove-collection</code> is a function that obtains a type and returns a function that removes all elements of the collection which is its first argument from the collection which is its seconds argument.<br/>
+  The <code>remove</code> function obtains a type and returns a function that removes the value which is its first argument from the collection which is its seconds argument.<br/>
+  The <code>remove-collection</code> function obtains a type and returns a function that removes all elements of the collection which is its first argument from the collection which is its seconds argument.<br/>
 </p>
 
 <p>
-  <code>Multiset</code> is defined as a function that obtains a type and returns a multiset type of that type.<br/>
+  The <code>Multiset</code> is defined as a function that obtains a type and returns a multiset type of that type.<br/>
   For example, <code>(Multiset Int)</code> means a multiset of an integer, and <code>(Multiset (Multiset Int))</code> means a multiset of a multiset of an integer.<br/>
 </p>
 
 <p>
-  Types are defined with <code>type</code> expressions.<br/>
-  Type expressions obtain a collection of tuples of a pattern variable and an expression as the first argument.<br/>
+  Types are defined with the <code>type</code> expression.<br/>
+  The type expression obtain a collection of tuples of a pattern variable and an expression as the first argument.<br/>
   Definitions of type expressions are mutually recursive with those of let expressions.<br/>
-  With type-ref expressions, we can refer to the value bind with type expressions.<br/>
+  With the <code>type-ref</code> expression, we can refer to the value bind with the <code>type</code> expression.<br/>
 </p>
 
 <p>

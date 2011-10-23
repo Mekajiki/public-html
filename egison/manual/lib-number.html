@@ -1,0 +1,113 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>Library <code>number.egi</code></h1>
+<hr/>
+<p>
+  In the library <code>lib/number.egi</code>, the <code>Integer</code> type, the <code>Double</code> type, and <code>Nat</code> type are defined.<br/>
+</p>
+
+<dl>
+  <dt>Type : <code>Integer</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $Integer
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     [$equal? (lambda [$val $tgt] (= val tgt))]}))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+    This type is useful to deal with integer.<br/>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Type : <code>Double</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $Double
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     [$equal? (lambda [$val $tgt] (=f val tgt))]}))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+    This type is useful to deal with float number.<br/>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Type : <code>Nat</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $Nat
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     [$inductive-match
+      (deconstructor
+        {[o []
+          {[0 {[]}]
+           [_ {}]}]
+         [s [Nat]
+          {[$tgt (match (compare-number tgt 0) Order
+                   {[&lt;greater&gt; {(- tgt 1)}]
+                      [_ {}]})]}]})]
+       [$equal? (lambda [$val $tgt] (= val tgt))]}))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+    This type is useful to deal with natural number.<br/>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+(define $fib
+  (lambda [$n]
+    (match n Nat
+      {[&lt;o&gt; 1]
+       [&lt;s &lt;o&gt;&gt; 1]
+       [&lt;s &lt;s $n1&gt;&gt; (+ (fib (+ n1 1)) (fib n1))]})))
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>
+

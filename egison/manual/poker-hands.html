@@ -1,0 +1,204 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>Example 1. Poker Hands</h1>
+<hr/>
+<p>
+  In this section, we write a program that determin the poker hands.<br/>
+  We do pattern matching collections of card as multiset of card.<br/>
+  The program code that we describe in this section can be read in <code>sample/collection-test.egi</code>.<br/>
+</p>
+
+<p>
+  To run the programs in this section, you nead to load <code>lib/base.egi</code>, <code>lib/number.egi</code>, and <code>lib/collection.egi</code>.<br/>
+</p>
+
+<pre>
+  <code>
+&gt; (load "/path/to/lib/base.egi")
+&gt; (load "/path/to/lib/number.egi")
+&gt; (load "/path/to/lib/collection.egi")
+  </code>
+</pre>
+
+<p>
+  First, we define the <code>Card</code> type.<br/>
+  To define it, we define the <code>Suit</code> type, and the <code>Mod</code>.<br/>
+</p>
+
+<p>
+  The definition of the <code>Suit</code> is as bellow.<br/>
+</p>
+
+<pre>
+  <code>
+(define $Suit
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     [$inductive-match
+      (deconstructor
+        {[spade []
+          {[&lt;spade&gt; {[]}]
+           [_ {}]}]
+         [heart []
+          {[&lt;heart&gt; {[]}]
+           [_ {}]}]
+         [club []
+          {[&lt;club&gt; {[]}]
+           [_ {}]}]
+         [diamond []
+          {[&lt;diamond&gt; {[]}]
+           [_ {}]}]
+         })]
+     [$equal?
+      (lambda [$val $tgt]
+        (match [val tgt] [Suit Suit]
+          {[[&lt;spade&gt; &lt;spade&gt;] &lt;true&gt;]
+           [[&lt;heart&gt; &lt;heart&gt;] &lt;true&gt;]
+           [[&lt;club&gt; &lt;club&gt;] &lt;true&gt;]
+           [[&lt;diamond&gt; &lt;diamond&gt;] &lt;true&gt;]
+           [[_ _] &lt;false&gt;]}))]
+     }))
+  </code>
+</pre>
+  The definition of the <code>Mod</code> is as bellow.<br/>
+<p>
+
+</p>
+<pre>
+  <code>
+(define $Mod
+  (lambda [$m]
+    (type
+      {[$var-match (lambda [$tgt] {(mod tgt m)})]
+       [$equal? (lambda [$val $tgt]
+                  (= (mod val m) (mod tgt m)))]})))
+  </code>
+</pre>
+
+<p>
+  The <code>Card</code> type is defined using those two defined above.<br/>
+</p>
+
+<pre>
+  <code>
+(define $Card
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     [$inductive-match
+      (deconstructor
+        {[card [Suit (Mod 13)]
+          {[&lt;card $s $n&gt; {[s n]}]}]})]
+     [$equal? (lambda [$val $tgt]
+                (match [val tgt] [Card Card]
+                  {[[&lt;card $s $n&gt;
+                     &lt;card ,s ,n&gt;]
+                    &lt;true&gt;]
+                   [[_ _] &lt;false&gt;]}))]}))
+  </code>
+</pre>
+
+<p>
+  If we defined the <code>Card</code> type as abobe, we can define a function that determine poker hands as following.<br/>
+</p>
+
+<pre>
+  <code>
+(define $poker-hands
+  (lambda [$Cs]
+    (match Cs (Multiset Card)
+      {[&lt;cons &lt;card $S $n&gt;
+         &lt;cons &lt;card ,S ,(- n 1)&gt;
+          &lt;cons &lt;card ,S ,(- n 2)&gt;
+           &lt;cons &lt;card ,S ,(- n 3)&gt;
+            &lt;cons &lt;card ,S ,(- n 4)&gt;
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;straight-flush&gt;]
+       [&lt;cons &lt;card _ $n&gt;
+         &lt;cons &lt;card _ ,n&gt;
+          !&lt;cons &lt;card _ ,n&gt;
+            !&lt;cons &lt;card _ ,n&gt;
+              !&lt;cons _
+                !&lt;nil&gt;
+                &gt;&gt;&gt;&gt;&gt;
+        &lt;four-of-kind&gt;]
+       [&lt;cons &lt;card _ $m&gt;
+         &lt;cons &lt;card _ ,m&gt;
+          &lt;cons &lt;card _ ,m&gt;
+           !&lt;cons &lt;card _ $n&gt;
+             !&lt;cons &lt;card _ ,n&gt;
+               !&lt;nil&gt;
+               &gt;&gt;&gt;&gt;&gt;
+        &lt;full-house&gt;]
+       [&lt;cons &lt;card $S _&gt;
+         !&lt;cons &lt;card ,S _&gt;
+           !&lt;cons &lt;card ,S _&gt;
+             !&lt;cons &lt;card ,S _&gt;
+               !&lt;cons &lt;card ,S _&gt;
+                 !&lt;nil&gt;
+                 &gt;&gt;&gt;&gt;&gt;
+        &lt;flush&gt;]
+       [&lt;cons &lt;card _ $n&gt;
+         &lt;cons &lt;card _ ,(- n 1)&gt;
+          &lt;cons &lt;card _ ,(- n 2)&gt;
+           &lt;cons &lt;card _ ,(- n 3)&gt;
+            &lt;cons &lt;card _ ,(- n 4)&gt;
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;straight&gt;]
+       [&lt;cons &lt;card _ $n&gt;
+         &lt;cons &lt;card _ ,n&gt;
+          &lt;cons &lt;card _ ,n&gt;
+           &lt;cons _
+            &lt;cons _
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;three-of-kind&gt;]
+       [&lt;cons &lt;card _ $m&gt;
+         &lt;cons &lt;card _ ,m&gt;
+          !&lt;cons &lt;card _ $n&gt;
+            &lt;cons &lt;card _ ,n&gt;
+             !&lt;cons _
+               !&lt;nil&gt;
+               &gt;&gt;&gt;&gt;&gt;
+        &lt;two-pair&gt;]
+       [&lt;cons &lt;card _ $n&gt;
+         &lt;cons &lt;card _ ,n&gt;
+          &lt;cons _
+           &lt;cons _
+            &lt;cons _
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;one-pair&gt;]
+       [&lt;cons _
+         &lt;cons _
+          &lt;cons _
+           &lt;cons _
+            &lt;cons _
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;nothing&gt;]})))
+  </code>
+</pre>
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>
+

@@ -1,0 +1,184 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>Library <code>base.egi</code></h1>
+<hr/>
+
+<p>
+  In library <code>lib/base.egi</code>, the <code>Something</code> type, the <code>Bool</code> type, and the <code>Order</code> type are defined.<br/>
+</p>
+
+<dl>
+  <dt>Type : <code>Something</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $Something
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     }))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+    Only <code>var-match</code> is defined.<br/>
+    So we can do pattern matching for Something type, only when pattern is a pattern variable.<br/>
+    We use this type as we in parametric types of other languages.<br/>
+    In following example, we define a reverse function, which reverse a list of "something".<br/>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+(define $reverse
+  (lambda [$xs]
+    (match xs (List Something)
+      {[&lt;nil&gt; {}]
+       [&lt;cons $x $rs&gt;
+        {@(reverse rs) x}]})))
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Type : <code>Bool</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $Bool
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     [$inductive-match
+      (deconstructor
+        {[true []
+          {[&lt;true&gt; {[]}]
+           [_ {}]}]
+         [false []
+          {[&lt;false&gt; {[]}]
+           [_ {}]}]
+         })]
+     [$equal?
+      (lambda [$val $tgt]
+        (match [val tgt] [Bool Bool]
+          {[[&lt;true&gt; &lt;true&gt;] &lt;true&gt;]
+           [[&lt;false&gt; &lt;false&gt;] &lt;true&gt;]
+           [[_ _] &lt;false&gt;]}))]
+     }))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+    Boolean type.
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>or</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $or
+  (lambda [$b1 $b2]
+    (match b1 Bool
+      {[&lt;true&gt; &lt;true&gt;]
+       [&lt;false&gt; b2]})))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>and</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $and
+  (lambda [$b1 $b2]
+    (match b1 Bool
+      {[&lt;true&gt; b2]
+       [&lt;false&gt; &lt;false&gt;]})))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>not</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $not
+  (lambda [$b]
+    (match b Bool
+      {[&lt;true&gt; &lt;false&gt;]
+       [&lt;false&gt; &lt;true&gt;]})))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+    This function obtains one boolean argument, and return boolean value reversed it.<br/>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Type : <code>Order</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $Order
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     [$inductive-match
+      (deconstructor
+        {[less []
+          {[&lt;equal&gt; {[]}]
+           [_ {}]}]
+         [equal []
+          {[&lt;equal&gt; {[]}]
+           [_ {}]}]
+         [greater []
+          {[&lt;greater&gt; {[]}]
+           [_ {}]}]
+         })]
+     [$equal?
+      (lambda [$val $tgt]
+        (match [val tgt] [Order Order]
+          {[[&lt;less&gt; &lt;less&gt;] &lt;true&gt;]
+           [[&lt;equal&gt; &lt;equal&gt;] &lt;true&gt;]
+           [[&lt;greater&gt; &lt;greater&gt;] &lt;true&gt;]
+           [[_ _] &lt;false&gt;]}))]
+     }))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+</dl>
+
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>
+

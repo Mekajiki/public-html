@@ -1,0 +1,507 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>Library <code>collection.egi</code></h1>
+<hr/>
+<p>
+  In library <code>lib/collection.egi</code>, the <code>List</code>type, the <code>Multiset</code>type, and the <code>Set</code> type are defined.<br/>
+</p>
+
+<dl>
+  <dt>Type : <code>List</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $List
+  (lambda [$a]
+    (type
+      {[$var-match (lambda [$tgt] {tgt})]
+       [$inductive-match
+        (deconstructor
+          {[nil []
+            {[{} {[]}]
+             [_ {}]}]
+           [cons [a (List a)]
+            {[{$x .$xs} {[x xs]}]
+             [_ {}]}]
+           [snoc [a (List a)]
+            {[{.$xs $x} {[x xs]}]
+             [_ {}]}]
+           [join [(List a) (List a)]
+            {[$tgt (let {[$loop
+                       (lambda [$ts]
+                         (match ts (List a)
+                           {[&lt;nil&gt; {[{} {}]}]
+                            [&lt;cons $x $xs&gt;
+                             {[{} ts]
+                              @(map (lambda [$as $bs] [{x @as} bs])
+                                    (loop xs))}]}))]}
+                   (loop tgt))]}]
+           [nioj [(List a) (List a)]
+            {[$tgt (let {[$loop
+                       (lambda [$ts]
+                         (match ts (List a)
+                           {[&lt;nil&gt; {[{} {}]}]
+                            [&lt;snoc $x $xs&gt;
+                             {[{} ts]
+                              @(map (lambda [$as $bs] [{@as x} bs])
+                                    (loop xs))}]}))]}
+                   (loop tgt))]}]})]
+       [$equal? (lambda [$val $tgt]
+                  (match [val tgt] [(List a) (List a)]
+                    {[[&lt;nil&gt; &lt;nil&gt;] &lt;true&gt;]
+                     [[&lt;cons $x $xs&gt; &lt;cons ,x ,xs&gt;] &lt;true&gt;]
+                     [[_ _] &lt;false&gt;]}))]})))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>map</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $map
+  (lambda [$fn $ls]
+    (match ls (List Something)
+      {[&lt;nil&gt; {}]
+       [&lt;cons $x $xs&gt; {(fn x) @(map fn xs)}]})))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>remove</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $remove
+  (lambda [$a]
+    (lambda [$xs $x]
+      (match xs (List a)
+        {[&lt;nil&gt; {}]
+         [&lt;cons ,x $rs&gt; rs]
+         [&lt;cons $y $rs&gt; {y @((remove a) rs x)}]}))))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>remove-all</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $remove-all
+  (lambda [$a]
+    (lambda [$xs $x]
+      (match xs (List a)
+        {[&lt;nil&gt; {}]
+         [&lt;cons ,x $rs&gt; ((remove-all a) rs x)]
+         [&lt;cons $y $rs&gt; {y @((remove-all a) rs x)}]}))))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>remove-collection</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $remove-collection
+  (lambda [$a]
+    (lambda [$xs $ys]
+      (match ys (List a)
+        {[&lt;nil&gt; xs]
+         [&lt;cons $y $rs&gt; ((remove-collection a) ((remove a) xs y) rs)]}))))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>add</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $add
+  (lambda [$a]
+    (lambda [$xs $x]
+      (match ((member? Integer) x xs) Bool
+        {[&lt;true&gt; xs]
+         [&lt;false&gt; {@xs x}]}))))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>union</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $union
+  (lambda [$a]
+    (lambda [$xs $ys]
+      (match ys (List a)
+        {[&lt;nil&gt; xs]
+         [&lt;cons $y $rs&gt; ((union a) ((add a) xs y) rs)]}))))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>subcollections</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $subcollections
+  (lambda [$xs]
+    (match xs (List Something)
+      {[&lt;nil&gt; {{}}]
+       [&lt;cons $x $rs&gt;
+        (let {[$subs (subcollections rs)]}
+          {@subs @(map (lambda [$sub] {x @sub})
+                       subs)})]})))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>car</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $car
+  (lambda [$xs]
+    (match xs (List Something)
+      {[&lt;cons $x _&gt; x]})))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>cdr</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $cdr
+  (lambda [$xs]
+    (match xs (List Something)
+      {[&lt;cons _ $rs&gt; rs]})))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>reverse</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $reverse
+  (lambda [$xs]
+    (match xs (List Something)
+      {[&lt;nil&gt; {}]
+       [&lt;cons $x $rs&gt;
+        {@(reverse rs) x}]})))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>member?</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $member?
+  (lambda [$a]
+    (lambda [$x $ys]
+      (match ys (List a)
+        {[&lt;nil&gt; &lt;false&gt;]
+         [&lt;cons ,x $ys&gt; &lt;true&gt;]
+         [&lt;cons $y $ys&gt; ((member? a) x ys)]}))))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>unique</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $unique
+  (lambda [$a]
+    (lambda [$xs]
+      (let {[$loop (lambda [$xs $ys]
+                     (match xs (List a)
+                       {[&lt;nil&gt; ys]
+                        [&lt;cons $x $rs&gt;
+                         (match ((member? a) x ys) Bool
+                           {[&lt;true&gt; (loop rs ys)]
+                            [&lt;false&gt; (loop rs {@ys x})]
+                            [_ {}]})]}))]}
+        (loop xs {})))))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>subcollection?</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $subcollection?
+  (lambda [$a]
+    (lambda [$xs $ys]
+      (match xs (List a)
+        {[&lt;nil&gt; &lt;true&gt;]
+         [&lt;cons $x $rest&gt;
+          (match ((member? a) x ys) Bool
+            {[&lt;false&gt; &lt;false&gt;]
+             [&lt;true&gt; ((subcollection? a) rest ys)]})]}))))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Function : <code>concat</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $concat
+  (lambda [$xs]
+    (match xs (List Something)
+      {[&lt;nil&gt; {}]
+       [&lt;cons $x $rs&gt; {@x @(concat rs)}]})))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Type : <code>Multiset</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $Multiset
+  (lambda [$a]
+    (type
+      {[$var-match (lambda [$tgt] {tgt})]
+       [$inductive-match
+        (deconstructor
+          {[nil []
+            {[{} {[]}]
+             [_ {}]}]
+           [cons [a (Multiset a)]
+            {[$tgt (map (lambda [$t] [t ((remove a) tgt t)])
+                        tgt)]}]
+           [join [(Multiset a) (Multiset a)]
+            {[$tgt (map (lambda [$ts] [ts ((remove-collection a) tgt ts)])
+                        (subcollections tgt))]}]})]
+       [$equal? (lambda [$val $tgt]
+                  (match [val tgt] [(Multiset a) (Multiset a)]
+                    {[[&lt;nil&gt; &lt;nil&gt;] &lt;true&gt;]
+                     [[&lt;cons $x $xs&gt; &lt;cons ,x ,xs&gt;] &lt;true&gt;]
+                     [[_ _] &lt;false&gt;]}))]})))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+<dl>
+  <dt>Type : <code>Set</code></dt>
+  <dd>
+    <pre>
+      <code>
+(define $Set
+  (lambda [$a]
+    (type
+      {[$var-match (lambda [$tgt] {tgt})]
+       [$inductive-match
+        (deconstructor
+          {[nil []
+            {[{} {[]}]
+             [_ {}]}]
+           [cons [a (Set a)]
+            {[$tgt (let {[$tgt2 ((unique a) tgt)]}
+                     {@(match-all tgt2 (Multiset a) [&lt;cons $x $xs&gt; [x xs]])
+                      @(match-all tgt2 (Multiset a) [&lt;cons $x $xs&gt; [x {@xs x}]])})]}]
+           [join [(Set a) (Set a)]
+            {[$tgt (let {[$tgt2 ((unique a) tgt)]}
+                     (concat (map (lambda [$xs $ys] (map (lambda [$sxs] [xs {@ys @sxs}])
+                                                         (subcollections xs)))
+                                  (match-all tgt2 (Multiset a) [&lt;join $xs $ys&gt; [xs ys]]))))]}]})]
+       [$equal? (lambda [$val $tgt]
+                  (and ((subcollection? a) val tgt) ((subcollection? a) tgt val)))]})))
+      </code>
+    </pre>
+  </dd>
+  <dd>
+  </dd>
+  <dd>
+    <pre>
+      <code>
+      </code>
+    </pre>
+  </dd>
+</dl>
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>
+

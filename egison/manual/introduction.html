@@ -10,14 +10,14 @@
 <p>
   In this chapter, we run programs that execute pattern matching which is a specialty of Egison.<br/>
   Egison is good at to pattern match algebraic data structure.<br/>
-  In this chapter, we write programs that execute pattern matching for collection.
+  In this chapter, we write programs that execute pattern matching for collections.
   Run them and feel how Egison is like!!<br/>
 <hr/>
 
 <h2 id="run-interpreter">Run Interpreter!!</h2>
 
 <p>
-  After installed Egison, command 'egison', Egison interpreter will start.<br/>
+  After you have installed Egison, you can run Egison interpreter with a command 'egison'.<br/>
   Typing Control-D, you can terminate the interpreter.
 </p>
 <pre>
@@ -32,7 +32,7 @@ Byebye. See you again! (^^)/
 </pre>
 
 <p>
-  Give some inputs to Egison.
+  Give some inputs to Egison as bellow.
 </p>
 
 <pre>
@@ -49,10 +49,10 @@ f
 </pre>
 
 <p>
-  There are two kinds of <i>top expression</i> in this expample.<br/>
-  <code>define</code> expression and <code>test</code> expression.<br/>
-  When <code>define</code> expression is evaluated, bind which binds the variable of first argument to the second argument value added to the top level environment.<br/>
-  <code>test</code> expression evaluate the expression of first argument and display the result.<br/>
+  There are two kinds of <i>top expression</i> in these expamples.<br/>
+  The <code>define</code> expressions and the <code>test</code> expressions.<br/>
+  When a <code>define</code> expression is evaluated, bind which binds the variable of first argument to the second argument value added to the top level environment.<br/>
+  When a <code>test</code> expression is evaluated, the expression of the first argument are evaluated and the result are displayed.<br/>
   Although there are other kinds of top expressions, please note these two for the present.<br/>
 </p>
 
@@ -134,7 +134,7 @@ f
 
 <p>
   <code>let</code> expressions take a collection of tuples of pattern variable and expression.<br/>
-  The Value of the expression second element of tuple are bound to the pattern variable first element of tuple.<br/>
+  The value of the expression which is the second element of tuple are bound to the pattern variable which is the first element of tuple.<br/>
   Bound by <code>let</code> expressions are mutual recursive.<br/>
   The expression second argument of <code>let</code> expressions are evaluated with the new environment.<br/>
 </p>
@@ -151,7 +151,7 @@ f
 
 <p>
   Let's run codes that do pattern matchnig!<br/>
-  In this section, we write codes that do pattern matching for collection,
+  In this section, we write codes that do pattern matching for collections,
   which are good examples to know the characteristics of Egison.<br/>
   To run programs in this section, we need to load <code>lib/base.egi</code>, <code>lib/number.egi</code> and <code>lib/collection.egi</code>.<br/>
   <code>load</code> expression is a kinds of top expression.<br/>
@@ -204,29 +204,27 @@ f
 </p>
 
 <p>
-  1つ目のマッチ節のパターンは，ターゲットが要素5つのコレクションで同じ要素が3つあり，残り2つの要素も同じである場合にパターンマッチに成功します．<br/>
-  Egisonではパターンの左側から順にパターンマッチしていきます．<br/>
-  Egisonのパターンマッチはnon-left-linearになっています．<br/>
-  non-left-linearは，パターンに現れたパターン変数に束縛される値を，それより右側で参照できるという意味です．<br/>
-  '<code>,</code>' が先頭についたパターンは，バリューパターン(value pattern)です．<br/>
-  評価されその値とターゲットを比較して同じだった場合パターンマッチに成功します．<br/>
-  その際の評価で，左側のパターン変数に束縛された値を参照できます．<br/>
-  パターンマッチは，常にパターンの左側から順に行われていきます．<br/>
-  '<code>!</code>' が先頭についたパターンは，カットパターン(cut pattern)です．<br/>
-  複数のマッチ可能な候補があっても，そのうち1つだけを残してパターンマッチを続けます．<br/>
-  カットパターンは不必要なバックトラックをなくすために使われます．<br/>
-  この場合は，5枚中同じ数のカードが3枚あるのは1パターンしかないので，もし，その組み合わせが見つかれば，それ以上のバックトラックは必要ないのでそれを表現しています．<br/>
+  The pattern of the first match clause matches if the target value is collection which consists of five elements, and three of these are same element and rest of two element are same element too.<br/>
+  In Egison, pattern matching is executed  from the left side of the pattern.<br/>
+  And we can refer to a value of a pattern variable to the right of its binding position.<br/>
+  Patterns ahead of which there is a '<code>,</code>' is called <i>value patterns</i>.<br/>
+  The expression after '<code>,</code>' is evaluated, and if the value is equal to the target value, pattern matching succeed.<br/>
+  Patterns ahead of which there is a '<code>!</code>' is called <i>cut patterns</i>.<br/>
+  If there are several combinations to that point, we take one of them and continue pattern matching for the rest of the pattern.<br/>
+  Cut patterns are used to get rid of unnecessary search.<br/>
+  In this sample case, there is only one combination that three same number cards in five cards, so there is no need for futher search if we failed pattern matching after we found these three same number cards.<br/>
+  This cut pattern represent it.<br/>
 </p>
 
 <p>
-  2つ目のマッチ節のパターンは，ターゲットが何でもパターンマッチに成功します．<br/>
+  The pattern of the second match clause matches with any target.<br/>
   '<code>_</code>' is a <i>wild card</i>.<br/>
   This pattern matches with any objects.<br/>
 </p>
 
 <p>
   In Egison, patterns are first class objects.<br/>
-  パターンも他の式と同じように評価したり，関数の引数として渡したりすることができます．<br/>
+  Patterns can be return values of functions, or we can use them as arguments of function.<br/>
 </p>
 
 <pre>
@@ -245,25 +243,10 @@ f
 </pre>
 
 <p>
-  Egisonには，<code>with</code>構文というのがあって，それを用いると新たに変数を束縛せずに再帰的定義を行うことができます．<br/>
-  この例は，上の例の2つ目の例と同じ意味です．
-</p>
-
-<pre>
-  <code>
-&gt; (test (match {1 1 1 1} (Multiset Int)
-          {[(with $loop &lt;cons ,1 (of {&lt;nil&gt; loop})&gt;) &lt;ok&gt;]
-           [_ &lt;ko&gt;]}))
-&lt;ok&gt;
-  </code>
-</pre>
-
-<p>
-  次は，パターンマッチによる束縛フレームが複数あって面白い例をみてみましょう．<br/>
-  <code>match-all</code>構文は，<code>match</code>構文と同じく1つ目の引数にターゲットを，2つ目の引数に型をとります．<br/>
-  ただ違うのは，3つめの引数で，マッチ節のコレクションではなく，単独のマッチ節をとります．<br/>
-  パターンとターゲットを，指定された型としてパターンマッチを実行し，得られた束縛フレームのコレクションの全ての束縛フレームについて，
-  それぞれマッチ節の式を実行し，その結果をコレクションにして返します．<br/>
+  Next, we show examples that there are several binding frames.<br/>
+  <code>match-all</code> expressions take a target as their first argument, and a type as their second argument, as <code>match</code> expressions do.<br/>
+  But they take single match clause as their third argument, not a collection of match clause as <code>match</code> expressions do.<br/>
+  When <code>match-all</code> expressions are evaluated, the expression of the match clause are executed  for each binding frames and return the collection which consists of each results.<br/>
 </p>
 
 <pre>
@@ -285,11 +268,10 @@ f
 </pre>
 
 <p>
-  Pattern constructor <code>join</code> takes two arguments.<br/>
-  1つ目の引数にマッチした値と2つ目の引数にマッチした値を合わせた要素が，ターゲットと同値であればパターンマッチします．<br/>
-  object matched with pattern of the first argument
-  パターンコンストラクタ毎のパターンマッチの方法の詳しい記述は型の定義のところで記述されます．<br/>
-  次節で型定義について概説します．
+  The pattern constructor <code>join</code> takes two arguments.<br/>
+  We succeed to pattern match when the target value is equal with the value which put the value matched with pattern of the first argument and the second together.<br/>
+  The ways of pattern matching for each pattern constructor are defined when we define types.<br/>
+  We will describe how to define types, in the next section.<br/>
 </p>
 
 <p>
@@ -317,20 +299,14 @@ f
   </code>
 </pre>
 
-<h2>型の定義方法</h2>
+<h2>How To Define Types</h2>
 
 <p>
-前章で説明したパターンマッチの式が動くのは，
-型ごとにどのようにパターンマッチを行うのか記述しているからです．<br/>
-本章では，型の定義の方法を示しながら，実際にどのような流れでパターンマッチが
-行われるのかを説明します．<br/>
-</p>
-
-<p>
-多重集合(同じ要素の重複を考慮する集合)の型の定義を理解すれば，
-型定義の際に必要なことが全て理解できます．<br/>
-したがって，ここでは多重集合の型の定義の例を用いて説明する．
-図1は，Egisonで多重集合の型を定義したものです．<br/>
+  We need to define how to do pattern matching for each type of data to evaluate the pattern matching expression explained in the previous section.<br/>
+  In this section, we explain how to define type and how the pattern matching expressions of Egison are executed.<br/>
+  All the knowledge you need to write type definitions is included in the type definition for multiset.<br/>
+  Therefore, we explain type definiton with examples of the type definition for multiset.<br/>
+  Below is a definition of the multiset in Egison.<br/>
 </p>
 
 <pre>
@@ -358,97 +334,85 @@ f
   </code>
 </pre>
 
+
 <p>
-<code>remove</code>は型を引数に取り，
-1つ目の引数の値の要素を2つ目の引数のコレクションから取り除く関数を返します．<br/>
-<code>remove-collection</code>は型を引数に取り，
-1つ目の引数のコレクションの要素を2つ目の引数のコレクションから取り除く関数を返します．<br/>
+  <code>remove</code> is a function that obtains a type and returns a function that removes the value which is its first argument from the collection which is its seconds argument.<br/>
+  <code>remove-collection</code> is a function that obtains a type and returns a function that removes all elements of the collection which is its first argument from the collection which is its seconds argument.<br/>
 </p>
 
 <p>
-<code>Multiset</code>は，型を1つ受け取って，その型の多重集合の型を返す関数となっています．<br/>
-例えば，<code>(Multiset Int)</code>は数の多重集合という型になり，
-<code>(Multiset (Multiset Int))</code>は数の多重集合の多重集合という型になります．<br/>
+  <code>Multiset</code> is defined as a function that obtains a type and returns a multiset type of that type.<br/>
+  For example, <code>(Multiset Int)</code> means a multiset of an integer, and <code>(Multiset (Multiset Int))</code> means a multiset of a multiset of an integer.<br/>
 </p>
 
 <p>
-型は<code>type</code>式を用いて定義されます．<br/>
-<code>type</code>式は引数に<code>let</code>式の1つ目の引数と同じく，パターン変数と式のタプルのコレクションをとります．<br/>
-<code>let</code>式と同じく相互再帰的な値の定義を行うことができます．<br/>
-<code>type-ref</code>式を用いると<code>type</code>式で定義した値を参照することができます．<br/>
+  Types are defined with <code>type</code> expressions.<br/>
+  Type expressions obtain a collection of tuples of a pattern variable and an expression as the first argument.<br/>
+  Definitions of type expressions are mutually recursive with those of let expressions.<br/>
+  With type-ref expressions, we can refer to the value bind with type expressions.<br/>
 </p>
 
 <p>
-<code>Multiset</code>の型の定義では，<code>var-match</code>関数と，
-<code>inductive-match</code>関数，<code>equal?</code>関数が定義されています．<br/>
-この3つの関数を使って，マッチ関数(<i>match function</i>)が構成されます．<br/>
-マッチ関数とは，パターンとターゲットを受け取って，
-可能な束縛フレームのコレクションを返す関数であります．<br/>
-<code>var-match</code>関数と，<code>inductive-match</code>関数，<code>equal?</code>関数の定義から，
-マッチ関数が自動で構成されます．<br/>
+  To define <code>Multiset</code>, we need to define the <code>var-match</code> function, the <code>inductive-match</code> function, and the <code>equal?</code> function.<br/>
+  The <i>match-function</i> is constructed with these three functions.<br/>
+  The match-function is function that obtains a pattern and a target value, and returns binding frames.<br/>
+  The match-function is automatically constructed from the definition of the <code>var-match</code> function, the <code>inductive-match</code> function, and the <code>equal?</code> function.<br/>
 </p>
 
 <p>
-<code>var-match</code>関数，<code>inductive-match</code>関数，<code>equal?</code>関数についてそれぞれ説明します．<br/>
+  Next, we describe the <code>var-match</code> function, the <code>inductive-match</code> function, and the <code>equal?</code> function, respectively.<br/>
 </p>
 
 <p>
-<code>var-match</code>関数は，パターンが変数パターンである場合に使われます．<br/>
-<code>var-match</code>関数にターゲットの値を適用して得られる返り値のコレクションの要素が，そのパターン変数の取りうる値となります．<br/>
-この<code>Multiset</code>の定義の例だと，パターン変数の取りうる値は，ターゲットの値だけということが記述されています．<br/>
+  The <code>var-match</code> function is used when the pattern is a <i>variable pattern</i>.<br/>
+  The variable pattern is a pattern that consist of only pattern variable.<br/>
+  The elements of collection value returned by appling the target value to the  <code>var-match</code> function is the values that the pattern variable would be bound.<br/>
+  In this <code>Multiset</code> examplen, the values that the pattern variable would be bound is only a target value.<br/>
 </p>
 
 <p>
-<code>inductive-match</code>関数は，パターンがインダクティブパターン(<i>inductive pattern</i>)である場合に使われます．<br/>
-インダクティブパターンとは，パターンコンストラクタを用いて構成されたパターンのことです．<br/>
-<code>inductive-match</code>関数についての説明は長くなるので，<code>equal?</code>関数を説明したすぐ後でまた説明します．<br/>
+  The <code>inductive-match</code> function is used when the pattern is a <i>inductive pattern</i>.<br/>
+  The inductive pattern is a pattern that is constructed by a pattern constructor.<br/>
+  We will discribe the <code>inductive-match</code> function after we described the <code>equal?</code> function.<br/>
 </p>
 
 <p>
-<code>equal?</code>関数は，パターンがバリューパターンである場合に使われます．<br/>
-<code>equal?</code>関数に，バリューパターンの中身の値とターゲットとを適用した返り値の真偽値が，パターンマッチ可能かどうかを示します．<br/>
-<code>Multiset</code>の定義の場合だと，順序関係なく同じ要素を含んでいたら<code>&lt;true&gt;</code>を返し，
-そうでなかったら<code>&lt;false&gt;</code>を返すように定義されています．<br/>
-この定義では，<code>equal?</code>関数の中で再帰的に<code>Multiset</code>が呼び出されています．<br/>
+  The <code>equal?</code> function is used when pattern is a <i>value pattern</i>.<br/>
+  The boolean value returned by appling the value of the value pattern and the target value to the <code>equal?</code> function shows the result of the pattern matching.<br/>
+  In this example, the <code>equal?</code> function is recursively defined.<br/>
+  This <code>equal?</code> function returns <code>&lt;true&gt;</code>, if both arguments contains same element same count, and else return <code>&lt;false&gt;</code>.<br/>
 </p>
 
 <p>
-では，再び<code>inductive-match</code>関数について説明します．<br/>
-<code>inductive-match</code>関数は，<code>deconstructor</code>式を用いて定義します．<br/>
-<code>deconstructor</code>式は，デコンストラクトマッチ節(<i>deconstructor-match clause</i>)のコレクションを引数に取ります．<br/>
-デコンストラクトマッチ節は，パターンコンストラクタ，評価したら型のタプルを返す式，
-プリミティブマッチ節(<i>primitive match clause</i>)のコレクションからなります．<br/>
-例として，まず<code>Multiset</code>の定義の<code>cons</code>のデコンストラクトマッチ節をみます．<br/>
-デコンストラクトマッチ節の2つ目の要素に<code>[a (Multiset a)]</code>とあるのは，
-パターンのパターンコンストラクタが<code>cons</code>であった場合， 1つ目の引数は型<code>a</code>として，
-2つ目の引数は型<code>(Multiset a)</code>として， 再帰的にパターンマッチするということを表しています．<br/>
+  Now, we describe the <code>inductive-match</code> function.<br/>
+  The <code>inductive-match</code> function is defined with the <code>deconstructor</code> expression.<br/>
+  The <code>deconstructor</code> expression takes a collection of <i>deconstructor-match clause</i> as an argument.<br/>
+  The deconstruct-match clause consist of a patttern constructer, an expression, whose value is a tuple of types, and <i>primitive match clause</i>.<br/>
+  For example, we explain the deconstructor-match clause on <code>cons</code> for <code>Multiset</code>.<br/>
+  The expression <code>[a (Multiset a)]</code> means that if the pattern constructor of the pattern is <code>cons</cons>, we do pattern matching the first argument of the inductive value as the type <code>a</code>, and the second as <code>(Multiset a)</code>.<br/>
 </p>
 
 <p>
-プリミティブマッチ節は，プリミティブパターン(<i>primitive pattern</i>)と式のタプルとして表されます．<br/>
-マッチ式のターゲットが，プリミティブパターンにマッチしたら，
-そのプリミティブマッチ節の式を評価した値が，再帰的に行われる次のパターンマッチのターゲットになります．<br/>
+  The primitive match clause is represented as a tuple of <i>primitive pattern</i> and an expression.<br/>
+  If the target value is matched with the primitive pattern of the primitive match clause, the expression of the primitive match clauses are evaluated, and the value is the next target value of recursive pattern matching.<br/>
 </p>
 
 <p>
-例の場合だと，型が<code>(Multiset Int)</code>で，パターンが<code>&lt;cons $x $xs&gt;</code>という形のインダクティブパターンで，
-ターゲットが<code>{1 2 3}</code>というコレクションだった場合，
-<code>inductive-match</code>関数を使って，パターンマッチの処理が行われます．<br/>
-その際，<code>inductive-match</code>関数の<code>cons</code>のデコンストラクトマッチ節にマッチし，
-さらに，その中の唯一のプリミティブマッチ節にマッチします．<br/>
-このプリミティブマッチ節の式を評価すると，<code>{[1 {2 3}] [2 {1 3}] [3 {1 2}]}</code>がその結果として返ってきます．<br/>
-これのそれぞれ1つ目の要素を<code>Int</code>として，2つ目の要素を<code>(Multiset Int)</code>として，
-再帰的にパターンマッチを行われます．<br/>
+  For example, the case that the pattern is inductive pattern <code>&lt;cons $x $xs&gt;</code>, the target is a collection <code>{1 2 3}</code> and we do patten matching them as the type <code>(Multiset Int)</code>, pattern matching is executed using the <code>inductive-match</code> function.<br/>
+  And in that case, the pattern is matched with the deconstructor-match clause of <code>cons</code>, and the target is matched with its only primitive match clause.<br/>
+  And result of evaluating the expression of the primitive match clause is <code>{[1 {2 3}] [2 {1 3}] [3 {1 2}]}</code>.<br/>
+  Each element of the result are the target of next pattern matching.<br/>
+  Its first element is matched as <code>Int</code> and its second is matched as <code>(Multiset Int)</code>.<br/>
 </p>
 
 <p>
-プリミティブパターンマッチでは，パターンマッチに成功する場合，可能な束縛結果が一意的に決まるような
-パターンマッチしか行えません．<br/>
-プリミティブパターンマッチでは，ひとがプリミティブに行えるデコンストラクトを行えるようになっています．<br/>
+  We call pattern matching for primitive pattern as <i>primitive pattern matching</i>.<br/>
+  Primitive pattern matching for primitive pattern returns only one binding frame, as ordinary pattern matching do.<br/>
+  Primitive pattern matchicng is the pattern matching that human can do in their mind intuitively.<br/>
 </p>
 
 <p>
-現状のEgisonで，プリミティブパターンこれから説明する7つの要素から構成されます．<br/>
+  There are 7 kinds of primitive patterns.<br/>
 </p>
 
 <pre>
@@ -462,57 +426,50 @@ primpat ::= _
 </pre>
 
 <p>
-'<code>_</code>'は，ワイルドカードである．ターゲットが何でもパターンマッチ成功します．
-'<code>_</code>' is wildcard.<br/>
+  '<code>_</code>' is wildcard.<br/>
+  This matches with any value.<br/>
 </p>
 
 <p>
-<i>pat-var</i>は，パターン変数である．ターゲットが何でもパターンマッチに成功し，値をその変数に束縛します．
-<i>pat-var</i> is a pattern variable.<br/>
-This pattern match whenver.
+  <i>pat-var</i> is a pattern variable.<br/>
+  This matches with any value too.<br/>
 </p>
 
 <p>
-<code>&lt;</code><i>cons</i> <i>prime-pat</i> <i>...</i> <code>&gt;</code>は，
-ターゲットが<code>cons</code>で指定されたデータコンストラクタで構成された
-インダクティブデータである場合にパターンマッチを行います．<br/>
-データコンストラクタの引数について再帰的にパターンマッチを行います．<br/>
+  <code>&lt;</code><i>cons</i> <i>prime-pat</i> <i>...</i> <code>&gt;</code> is called <i>inductive prime pattern</i>.<br/>
+  This pattern matches when the target value is an inductive value whose constructor is <code>cons</code>.<br/>
+  Pattern matchings for each arguments of the constructor are recursively executed.<br/>
 </p>
 
 <p>
-<code>[</code><i>prime-pat</i> <i>...</i> <code>]</code>は，ターゲットがタプルの場合，パターンマッチを行います．<br/>
-
-タプルの中身の要素について再帰的にパターンマッチを行います．<br/>
+  <code>[</code><i>prime-pat</i> <i>...</i> <code>]</code> is called <i>tuple prime pattern</i>.<br/>
+  This pattern matches when the target value is a tuple.<br/>
+  Pattern matchings for each elements of tuple are recursively executed.<br/>
 </p>
 
 <p>
-<code>{}</code> is called <i>empty pattern</i>.<br/>
-This pattern match when target is a empty collection.<br/>
+  <code>{}</code> is called <i>empty pattern</i>.<br/>
+  This pattern match when target is a empty collection.<br/>
 </p>
 
 <p>
-<code>{</code><i>prime-pat</i> <code>.</code> <i>prime-pat</i> <code>}</code>は，コンスパターン(<i>cons pattern</i>)と呼ばれます．<br/>
-ターゲットが1つ以上の要素を含むコレクションである場合にリストとしてパターンマッチを行い，
-1つ目の<i>prime-pat</i>とターゲットの先頭の要素を，
-2つ目の<i>prime-pat</i>とターゲットの残りの要素コレクションをパターンマッチします．<br/>
+  <code>{</code><i>prime-pat</i> <code>.</code><i>prime-pat</i><code>}</code> is called <i>cons pattern</i>.<br/>
+  This pattern matches when target collection contain more than one element.<br/>
+  The first <i>prime-pat</i> is matched with the first element of target collection, and the second <i>prime-pat</i> is matched with the rest elements of target collection.<br/>
 </p>
 
 <p>
-<code>{</code><code>.</code><i>prime-pat</i> <i>prime-pat</i><code>}</code> is called <i>snoc pattern</i>.
-This pattern match when target collection contain more than one element,
-second <i>prime-pat</i> is matched with the last element of target collection,
-and first <i>prime-pat</i> is matched with the rest elements of target collection.<br/>
+  <code>{</code><code>.</code><i>prime-pat</i> <i>prime-pat</i><code>}</code> is called <i>snoc pattern</i>.<br/>
+  This pattern matches when target collection contain more than one element.<br/>
+  The second <i>prime-pat</i> is matched with the last element of target collection, and the first <i>prime-pat</i> is matched with the rest elements of target collection.<br/>
 </p>
 
 <p>
-We can define lists and sets, as we do for multisets.<br/>
-We can define the type of lists as figure 2.<br/>
-In the pattern of primitive pattern match clause of <code>nil</code>,
-there is a empty pattern,
-in the pattern of primitive pattern match clause of <code>cons</code>,
-there is a cons pattern,
-<in the pattern of primitive pattern match clause of <code>snoc</code>,
-there is a snoc pattern.
+  We can define lists and sets, as we do for multisets.<br/>
+  We can define the type of lists as figure 2.<br/>
+  In the pattern of primitive pattern match clause of <code>nil</code>, there is a empty pattern.<br/>
+  In the pattern of primitive pattern match clause of <code>cons</code>, there is a cons pattern.<br/>
+  In the pattern of primitive pattern match clause of <code>snoc</code>, there is a snoc pattern.<br/>
 </p>
 
 <pre>

@@ -183,7 +183,7 @@ f
   The <code>match</code> expression takes a <i>target</i> value of pattern matching as their first argument, a <i>type</i> as their second argument, and <i>match clauses</i> as their third argument.<br/>
   This expression represents pattern matching of the collection <code>{2 7 7 2 7}</code> as the type <code>(Multiset Integer)</code>.<br/>
   <code>(Multiset Integer)</code> means multiset of integer.<br/>
-  Multiset is a collection data type, which ignore the order of the elements.<br/>
+  Multiset is a collection data type, in which the order of the elements is ignored, but multiplicity is significant.<br/>
 </p>
 
 <p>
@@ -261,7 +261,7 @@ f
 <p>
   The pattern constructor <code>join</code> takes two arguments.<br/>
   We succeed pattern matching when the target collection is equal with the collection which consists of the elements of the collection matched with pattern of the first argument and the second argument.<br/>
-  The ways of pattern matching for each pattern constructors are defined in the definition of the type.<br/>
+  The ways of pattern matching for each pattern constructor are defined when we define the type.<br/>
   We will describe how to define types, in the next section.<br/>
 </p>
 
@@ -325,7 +325,6 @@ f
   </code>
 </pre>
 
-
 <p>
   The <code>remove</code> function obtains a type and returns a function that removes the value which is its first argument from the collection which is its seconds argument.<br/>
   The <code>remove-collection</code> function obtains a type and returns a function that removes all elements of the collection which is its first argument from the collection which is its seconds argument.<br/>
@@ -362,29 +361,29 @@ f
 </p>
 
 <p>
-  The <code>inductive-match</code> function is used when the pattern is a <i>inductive pattern</i>.<br/>
-  The inductive pattern is a pattern that is constructed by a pattern constructor.<br/>
-  We will describe the <code>inductive-match</code> function after we described the <code>equal?</code> function.<br/>
+  An <code>inductive-match</code> function is used when the pattern is a <i>inductive pattern</i>.<br/>
+  An inductive pattern is a pattern that is constructed by a pattern constructor.<br/>
+  We describe the <code>inductive-match</code> function in detail after an <code>equal?</code> function.<br/>
 </p>
 
 <p>
-  The <code>equal?</code> function is used when pattern is a <i>value pattern</i>.<br/>
-  The boolean value returned by appling the value of the value pattern and the target value to the <code>equal?</code> function shows the result of the pattern matching.<br/>
+  An <code>equal?</code> function is used when pattern is a <i>value pattern</i>.<br/>
+  The boolean value returned by applying the value of the target value and the value pattern to the <code>equal?</code> function shows pattern matching succeed or not.<br/>
   In this example, the <code>equal?</code> function is recursively defined.<br/>
   This <code>equal?</code> function returns <code>&lt;true&gt;</code>, if both arguments contains same element same count, and else return <code>&lt;false&gt;</code>.<br/>
 </p>
 
 <p>
-  Now, we describe the <code>inductive-match</code> function.<br/>
-  The <code>inductive-match</code> function is defined with the <code>deconstructor</code> expression.<br/>
-  The <code>deconstructor</code> expression takes a collection of <i>deconstructor-match clause</i> as an argument.<br/>
+  Now, we describe an <code>inductive-match</code> function.<br/>
+  An <code>inductive-match</code> function is defined with a <code>deconstructor</code> expression.<br/>
+  A <code>deconstructor</code> expression takes a collection of <i>deconstructor-match clause</i> as an argument.<br/>
   The deconstruct-match clause consist of a pattern constructor, an expression, whose value is a tuple of types, and <i>primitive match clause</i>.<br/>
   For example, we explain the deconstructor-match clause on <code>cons</code> for <code>Multiset</code>.<br/>
-  The expression <code>[a (Multiset a)]</code> means that if the pattern constructor of the pattern is <code>cons</cons>, we do pattern matching the first argument of the inductive value as the type <code>a</code>, and the second as <code>(Multiset a)</code>.<br/>
+  The expression <code>[a (Multiset a)]</code> means that if the pattern constructor of the pattern is <code>cons</code>, we do pattern matching the first argument of the inductive value as the type <code>a</code>, and the second as <code>(Multiset a)</code>.<br/>
 </p>
 
 <p>
-  The primitive match clause is represented as a tuple of <i>primitive pattern</i> and an expression.<br/>
+  A primitive match clause is represented as a tuple of <i>primitive pattern</i> and an expression.<br/>
   If the target value is matched with the primitive pattern of the primitive match clause, the expression of the primitive match clauses are evaluated, and the value is the next target value of recursive pattern matching.<br/>
 </p>
 
@@ -397,8 +396,8 @@ f
 </p>
 
 <p>
-  We call pattern matching for primitive pattern as <i>primitive pattern matching</i>.<br/>
-  Primitive pattern matching for primitive pattern returns only one binding frame, as ordinary pattern matching do.<br/>
+  We call pattern matching for primitive patterns <i>primitive pattern matching</i>.<br/>
+  Primitive pattern matching returns only one binding frame, as ordinary pattern matching do.<br/>
   Primitive pattern matching is the pattern matching that human can do in their mind intuitively.<br/>
 </p>
 

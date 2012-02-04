@@ -1,0 +1,92 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>カットパターン</h1>
+<hr/>
+<p>
+  正規形を持たないデータに対するパターンマッチを行うには，探索をおこなわねばなりません．<br/>
+  カットパターンを用いると，そのパターンマッチの際の探索を制御することができます．<br/>
+</p>
+
+<hr/>
+
+<h2 id="what-is-cut-pattern">カットパターンとは？</h2>
+
+<p>
+  パターンマッチの探索の際，明らかに無駄な探索が行われることがあります．
+</p>
+
+<pre>
+  <code>
+&gt; (test (match {1 2 3 4} (Multiset Integeer)
+          {[&lt;cons $x &lt;cons $y &lt;cons $z &lt;nil&gt;&gt;&gt;&gt; &lt;ok&gt;]
+           [_ &lt;ko&gt;]}))
+&lt;ko&gt;
+  </code>
+</pre>
+
+<p>
+  この式を実行すると，ターゲットのコレクションが3つの要素からなるコレクションである場合に，
+  1つ目のマッチ節のパターンとパターンマッチに成功し，<code>&lt;ok&gt;</code>を返し，
+  そうでない場合，<code>&lt;ko&gt;</code>を返します．<br/>
+  1つ目のマッチ節のパターンとターゲットのコレクションをパターンマッチする際，この例の場合だと，4!(24)通りの探索を行なってしまいます．
+  ターゲットのコレクションの要素の個数がnだとすると，n!通りの探索をしてしまうことになり，これは明らかにひとが行なっていない無駄な探索です．
+  Egisonには，このような無駄な探索を排除するための機構があります．<br/>
+  それがカットパターン(<i>cut pattern</i>)です．<br/>
+</p>
+
+<pre>
+  <code>
+&gt; (test (match {1 2 3 4} (Multiset Integeer)
+          {[&lt;cons $x &lt;cons $y &lt;cons $z !&lt;nil&gt;&gt;&gt;&gt; &lt;ok&gt;]
+           [_ &lt;ko&gt;]}))
+&lt;ko&gt;
+  </code>
+</pre>
+
+<p>
+  先頭に'<code>!</code>'が付いているパターンがカットパターンです．<br/>
+  '<code>!</code>'が付いているパターンより右側の部分でパターンマッチに失敗した場合，'<code>!</code>'の左側までバックトラックをしません．<br/>
+  この例の場合，最初の探索で<code>$x</code>に<code>1</code>が，<code>$y</code>に<code>2</code>が，<code>$z</code>に<code>3</code>が束縛されます．<br/>
+  そして，<code>!&lt;nil&gt;</code>と<code>{4}</code>とをパターンマッチしようとしてパターンマッチに失敗します．<br/>
+  もし，<code>!</code>が付いていない場合は，バックトラックして<code>$z</code>に<code>4</code>を束縛してまたパターンマッチを続けるのですが，
+  <code>!</code>が付いている場合はそれより左側までバックトラックをしに戻らないので，バックトラックを行わずパターンマッチを終了します．<br/>
+</p>
+
+<pre>
+  <code>
+&gt; (test (match-all {1 2 3} (Multiset Integeer)
+          [&lt;cons $x &lt;cons $y &lt;cons $z !&lt;nil&gt;&gt;&gt;&gt; [x y z]]))
+{[1 2 3] [1 3 2] [2 1 3] [2 3 1] [3 1 2] [3 2 1]}
+  </code>
+</pre>
+
+<p>
+  '<code>!</code>'が付いているパターンより右側の部分でパターンマッチに成功した場合は，'<code>!</code>'の左側まで戻ってバックトラックが行われます．<br/>
+</p>
+
+<p>
+  '<code>!</code>'より左側の部分のパターンマッチで，どのようにパターンマッチしても，右側の部分でパターンマッチに失敗する場合，このカットパターンは役に立ちます．<br/>
+  1つのやり方でパターンマッチできなかった場合，どのようにパターンマッチしてもパターンマッチに成功できないという場合は，特にマルチセットのパターンマッチを行う際よくでてきます．<br/>
+  そのような際に特にカットパターンは役に立ちます．<br/>
+</p>
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>

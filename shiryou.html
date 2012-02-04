@@ -1,0 +1,118 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Egi Satoshi</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+
+<h2>プログラミング言語Egisonのコンパイラの開発</h2>
+  
+<h3>ポーカーの役判定</h3>
+
+<p>
+  Egisonでは，全てのポーカーの役を1つの単純なパターンで表現することができます．
+</p>
+
+<pre>
+  <code>
+(define $poker-hands
+  (lambda [$Cs]
+    (match Cs (Multiset Card)
+      {[&lt;cons &lt;card $S $n&gt;
+         &lt;cons &lt;card ,S ,(- n 1)&gt;
+          &lt;cons &lt;card ,S ,(- n 2)&gt;
+           &lt;cons &lt;card ,S ,(- n 3)&gt;
+            &lt;cons &lt;card ,S ,(- n 4)&gt;
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;straight-flush&gt;]
+       [&lt;cons &lt;card _ $n&gt;
+         &lt;cons &lt;card _ ,n&gt;
+          !&lt;cons &lt;card _ ,n&gt;
+            !&lt;cons &lt;card _ ,n&gt;
+              !&lt;cons _
+                !&lt;nil&gt;
+                &gt;&gt;&gt;&gt;&gt;
+        &lt;four-of-kind&gt;]
+       [&lt;cons &lt;card _ $m&gt;
+         &lt;cons &lt;card _ ,m&gt;
+          &lt;cons &lt;card _ ,m&gt;
+           &lt;cons &lt;card _ $n&gt;
+            !&lt;cons &lt;card _ ,n&gt;
+              !&lt;nil&gt;
+              &gt;&gt;&gt;&gt;&gt;
+        &lt;full-house&gt;]
+       [&lt;cons &lt;card $S _&gt;
+         !&lt;cons &lt;card ,S _&gt;
+           !&lt;cons &lt;card ,S _&gt;
+             !&lt;cons &lt;card ,S _&gt;
+               !&lt;cons &lt;card ,S _&gt;
+                 !&lt;nil&gt;
+                 &gt;&gt;&gt;&gt;&gt;
+        &lt;flush&gt;]
+       [&lt;cons &lt;card _ $n&gt;
+         &lt;cons &lt;card _ ,(- n 1)&gt;
+          &lt;cons &lt;card _ ,(- n 2)&gt;
+           &lt;cons &lt;card _ ,(- n 3)&gt;
+            &lt;cons &lt;card _ ,(- n 4)&gt;
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;straight&gt;]
+       [&lt;cons &lt;card _ $n&gt;
+         &lt;cons &lt;card _ ,n&gt;
+          &lt;cons &lt;card _ ,n&gt;
+           &lt;cons _
+            &lt;cons _
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;three-of-kind&gt;]
+       [&lt;cons &lt;card _ $m&gt;
+         &lt;cons &lt;card _ ,m&gt;
+          !&lt;cons &lt;card _ $n&gt;
+            &lt;cons &lt;card _ ,n&gt;
+             !&lt;cons _
+               !&lt;nil&gt;
+               &gt;&gt;&gt;&gt;&gt;
+        &lt;two-pair&gt;]
+       [&lt;cons &lt;card _ $n&gt;
+         &lt;cons &lt;card _ ,n&gt;
+          &lt;cons _
+           &lt;cons _
+            &lt;cons _
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;one-pair&gt;]
+       [&lt;cons _
+         &lt;cons _
+          &lt;cons _
+           &lt;cons _
+            &lt;cons _
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;nothing&gt;]})))
+  </code>
+</pre>
+
+<h3>グラフのパターンマッチ</h3>
+
+<p>
+  グラフはノードのコレクションとして表現できる．<br/>
+  ノードは，自身のラベルと，自分の方向に向いているエッジを持つノードのコレクションと
+  自分から出ているエッジの指しているノードのコレクションとの直積で表現できる．
+</p>
+
+<pre>
+  <code>
+(define $g {&lt;node {2 3 4 5} 1 {2 3 4 5}&gt;
+            &lt;node {1 3} 2 {1 3}&gt;
+            &lt;node {1 2 4} 3 {1 2 4}&gt;
+            &lt;node {1 3} 4 {1 3}&gt;
+            &lt;node {1} 5 {1}&gt;})
+  </code>
+</pre>
+
+<img src="./img/graph.png" height="300" width="300" />
+
+</body>
+</html>

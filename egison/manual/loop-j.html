@@ -1,0 +1,215 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>ループ構文</h1>
+<hr/>
+
+
+<h2>添字付き変数</h2>
+
+変数名の後に'<code>_</code>'とそれに続けて式を書くと添字付き変数となります．<br/>
+添字はいくつでも付けることができます．<br/>
+添字の式は評価されると整数を返す式でないといけません．<br/>
+
+<pre>
+  <code>
+$a_1
+$b_1_2
+$c_(+ 1 1)_3_(* 10 10)
+  </code>
+</pre>
+
+
+<h2>組み合わせ</h2>
+
+<p>
+コレクションをリストとしてパターンマッチし，
+<code>cons</code>と<code>join</code>を組み合わせたパターンでマッチすると，
+そのコレクションからいくつかの要素を取り出す組み合わせをとることができます．<br/>
+</p>
+
+<p>
+以下は2つの要素を取り出す組み合わせを返す例です．
+</p>
+
+<pre>
+  <code>
+(test (match-all {1 2 3 4 5} (List Integer)
+        [&lt;join_ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 _&gt;&gt;&gt;&gt;
+         [a_1 a_2]]))
+
+=> {[1 2] [1 3] [1 4] [1 5] [2 3]
+    [2 4] [2 5] [3 4] [3 5] [4 5]}
+  </code>
+</pre>
+
+<p>
+また，以下のようにすると3つの要素を取り出す組み合わせを返す式になります．<br/>
+</p>
+
+<pre>
+  <code>
+(test (match-all {1 2 3 4 5} (List Integer)
+        [&lt;join_ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 &lt;join _ &lt;cons $a_3 _&gt;&gt;&gt;&gt;&gt;&gt;
+         [a_1 a_2 a_3]]))
+
+=> {[1 2 3] [1 2 4] [1 2 5] [1 3 4] [1 3 5]
+    [1 4 5] [2 3 4] [2 3 5] [2 4 5] [3 4 5]}
+  </code>
+</pre>
+
+<p>
+取り出す要素の数が固定なら，上記の例の通り1つの簡潔なパターンで表現できます．<br/>
+しかし，パラメータの値によって取り出す要素の数を変えるようなパターンを書こうとすると特別な工夫なしではそれが不可能なことに気付きます．<br/>
+</p>
+
+<pre>
+  <code>
+&lt;join _ &lt;cons $a_1
+ &lt;join _ &lt;cons $a_2
+  ...
+  &lt;join _ &lt;cons$a_i
+  ...
+   &lt;join _ &lt;cons $a_n _&gt;&gt;...&gt;
+  </code>
+</pre>
+
+<p>
+ループ構文を用いるとこのような添字だけが変わる式が任意の回数続く式を表現することができます．<br/>
+以下は上の式をループ構文を使って表現したものです．<br/>
+</p>
+
+<pre>
+  <code>
+(loop $l $i [1 n] &lt;join _ &lt;cons $a_i l&gt;&gt; _)
+  </code>
+</pre>
+
+<p>
+第1引数と第2引数ではそれぞれループ変数，添字変数を指定します．<br/>
+第3引数では添字変数のとる範囲が指定します．<br/>
+この例では<code>1</code>から<code>n</code>までの範囲を添字の変数は動くと指定されています．<br/>
+第4引数ではループする式を記述します．<br/>
+第5引数ではループの最後の式を記述します．<br/>
+</p>
+
+<p>
+このパターンを使うと引数で指定されたコレクションから，もう1つの引数で指定された数の要素を抽出した組み合わせを返す関数を簡潔に定義できます．<br/>
+</p>
+
+<pre>
+  <code>
+(define $combination
+  (lambda [$xs $k]
+    (match-all xs (List Something)
+      [(loop $l $i [1 k] &lt;join _ &lt;cons $a_i l&gt;&gt; _)
+       [@(loop $l $i [1 k] {a_i @l} {})]
+       ])))
+
+(test (combination {1 2 3 4 5} 3))
+
+=> {[1 2 3] [1 2 4] [1 2 5] [1 3 4] [1 3 5]
+    [1 4 5] [2 3 4] [2 3 5] [2 4 5] [3 4 5]}
+
+(test (combination {1 2 3 4 5 6 7 8} 2))
+
+=> {[1 2] [1 3] [1 4] [1 5] [1 6] [1 7] [1 8]
+    [2 3] [2 4] [2 5] [2 6] [2 7] [2 8] [3 4]
+    [3 5] [3 6] [3 7] [3 8] [4 5] [4 6] [4 7]
+    [4 8] [5 6] [5 7] [5 8] [6 7] [6 8] [7 8]}
+  </code>
+</pre>
+
+<p>
+パターンだけでなく，マッチ節の実行部の式もループ構文を使って書かれています．
+</p>
+
+<h2>グラフのパターンマッチ</h2>
+
+<p>
+ループ構文はパターンの表現力を大きく引き上げます．<br/>
+ループ構文を使うと，グラフのノードの個数によってパターンの長さが変わるハミルトン閉路やハミルトンパスのパターンが1つのパターンで簡潔に表現できます．<br/>
+</p>
+
+<h3>ハミルトン閉路</h3>
+
+<p>
+ハミルトン閉路にパターンマッチするパターンは以下のように書けます．<br/>
+パターンの長さは，グラフのノードの個数によって変わるので，ループ構文を使って表現されています．<br/>
+</p>
+
+<pre>
+  <code>
+(define $hamilton-cycle
+  (lambda [$g]
+    (let {[$n (size g)]}
+      (match-all g Graph
+        [&lt;cons &lt;node $a_1 &lt;cons $a_2 _&gt; _&gt;
+               (loop $l $i [3 n]
+                     &lt;cons &lt;node ,a_(- i 1) &lt;cons $a_i _&gt; _&gt;
+                           l&gt;
+                     &lt;cons &lt;node ,a_n &lt;cons ,a_1 _&gt; _&gt;
+                           _&gt;)&gt;
+         [@(loop $l $i [1 n] {a_i @l} {})]
+         ]))))
+  </code>
+</pre>
+
+
+
+<pre>
+  <code>
+(define $g {&lt;node 1 {2 3 4 5} {2 3 4 5}&gt;
+             &lt;node 2 {1 3} {1 3}&gt;
+             &lt;node 3 {1 2 4} {1 2 4}&gt;
+             &lt;node 4 {1 3 5} {1 3 5}&gt;
+             &lt;node 5 {1 5} {1 5}&gt;})
+  </code>
+</pre>
+
+<img src="./img/graph2.png" height="400" width="400" />
+
+
+
+<h3>ハミルトンパス</h3>
+
+<p>
+ハミルトンパスのパターンは以下のように書けます．
+</p>
+
+<pre>
+  <code>
+(define $hamilton-path
+  (lambda [$g]
+    (let {[$n (size g)]}
+      (match-all g Graph
+        [&lt;cons &lt;node $a_1 &lt;cons $a_2 _&gt; _&gt;
+               (loop $l $i [3 n]
+                     &lt;cons &lt;node ,a_(- i 1) &lt;cons $a_i _&gt; _&gt;
+                           l&gt;
+                     &lt;cons &lt;node ,a_n _ _&gt;
+                           &lt;nil&gt;&gt;)&gt;
+         [@(loop $l $i [1 n] {a_i @l} {})]
+         ]))))
+  </code>
+</pre>
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>

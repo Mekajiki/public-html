@@ -9,8 +9,8 @@
 <hr/>
 <p>
   In this chapter, we run programs that execute pattern matching which is a specialty of Egison.<br/>
-  Egison is good at to pattern match algebraic data structures.<br/>
-  In this chapter, we will write programs that execute pattern matching for collections.
+  Egison is good at pattern matching for data types whose data have no normal form.<br/>
+  In this chapter, we will write programs that execute pattern matching for collections, such as lists, multisets, and sets.
   Run them and feel how Egison is like!!<br/>
 <hr/>
 
@@ -18,7 +18,7 @@
 
 <p>
   After you have installed Egison, you can run Egison interpreter with a command 'egison'.<br/>
-  Typing Control-D, you can terminate the interpreter.
+  Type Control-D to terminate the interpreter.
 </p>
 <pre>
   <code>
@@ -32,7 +32,7 @@ Byebye. See you again! (^^)/
 </pre>
 
 <p>
-  Give some inputs to Egison as below.
+  Give some input to Egison as below.
 </p>
 
 <pre>
@@ -49,12 +49,44 @@ f
 </pre>
 
 <p>
-  There are two kinds of <i>top expressions</i> in these examples.<br/>
+  There are two kinds of <i>top expressions</i> in above input.<br/>
   The <code>define</code> expressions and the <code>test</code> expressions.<br/>
-  When a <code>define</code> expression is evaluated, bind which binds the variable of first argument to the second argument value added to the top level environment.<br/>
+  When a <code>define</code> expression is evaluated, the bind which binds the variable of first argument to the second argument value is added to the top level environment.<br/>
   When a <code>test</code> expression is evaluated, the expression of the first argument is evaluated and the result is displayed.<br/>
-  Although there are more top expressions, we describe only these two for the present.<br/>
+  Although there are more top expressions, we describe only these two for now.<br/>
 </p>
+
+
+<h2 id="pattern-matching">Let's do Pattern Matching!!</h2>
+
+<p>
+  Let's run codes that do pattern matching!<br/>
+  In this section, we will write codes that do pattern matching for collections.<br/>
+  These codes will be good examples to know the characteristics of Egison.<br/>
+  To run programs in this section, we need to load <code>lib/base.egi</code>, <code>lib/number.egi</code> and <code>lib/collection.egi</code>, at first.<br/>
+  A <code>load</code> expression is one of top expressions.<br/>
+  It is used to load an Egison library, specified by the first argument.<br/>
+</p>
+
+<pre>
+  <code>
+&gt; (load "lib/base.egi")
+&gt; (load "lib/number.egi")
+&gt; (load "lib/collection.egi")
+  </code>
+</pre>
+
+
+<p>
+  To load your own program, you can use <code>load-file</code> expressions.<br/>
+  A <code>load-file</code> expression takes a full-path to the Egison program file.<br/>
+</p>
+
+<p>
+  Now, let's execute the following code.<br/>
+</p>
+
+...
 
 <h2 id="four-parenses">Four Kinds of Parentheses</h2>
 
@@ -98,7 +130,7 @@ f
   </code>
 </pre>
   
-<h2 id="four-parenses"><code>lambda</code> and <code>let</code></h2>
+<h2 id="lambda-and-let"><code>lambda</code> and <code>let</code></h2>
 
 <p>
   The <code>lambda</code> expression takes a <i>pattern variable</i> as its first argument.<br/>
@@ -108,10 +140,10 @@ f
 
 <p>
   There are two syntax for function applications.<br/>
-  The <code>apply</code> expression, and expressions simply enclosed with '<code>(</code>' and '<code>)</code>'.<br/>
-  The <code>apply</code> expression takes an operator function as their first argument, and arguments to apply as their second argument.<br/>
-  Expressions simply enclosed with '<code>(</code>' and '<code>)</code>' takes an operator function as their first elements,
-  and arguments to apply as their rest of elements.<br/>
+  An <code>apply</code> expression, and an expression simply enclosed with '<code>(</code>' and '<code>)</code>'.<br/>
+  An <code>apply</code> expression takes an operator function as its first argument, and arguments passed to the operator function as its second argument.<br/>
+  An expressions enclosed with '<code>(</code>' and '<code>)</code>' takes an operator function as its first elements,
+  and arguments to apply as its rest of elements.<br/>
   This is a syntax sugar of <code>apply</code>.
 </p>
 <pre>
@@ -142,26 +174,10 @@ f
   </code>
 </pre>
 
-<h2 id="four-parenses">Let's do Pattern Matching!!</h2>
+<h2 id="match expressions">Match Expressions</h2>
 
 <p>
-  Let's run codes that do pattern matching!<br/>
-  In this section, we will write codes that do pattern matching for collections, which are good examples to know the characteristics of Egison.<br/>
-  To run programs in this section, we need to load <code>lib/base.egi</code>, <code>lib/number.egi</code> and <code>lib/collection.egi</code>, at first.<br/>
-  The <code>load</code> expression is one of top expressions.<br/>
-  It is used to load a egison program file, specified by the first argument.<br/>
-</p>
-
-<pre>
-  <code>
-&gt; (load "/path/to/lib/base.egi")
-&gt; (load "/path/to/lib/number.egi")
-&gt; (load "/path/to/lib/collection.egi")
-  </code>
-</pre>
-
-<p>
-  So, let's execute the code below!
+  Now, let's execute the following code.<br/>
 </p>
 
 <pre>

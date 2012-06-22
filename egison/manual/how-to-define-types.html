@@ -1,0 +1,247 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>How to Define Types</h1>
+<hr/>
+<p>
+  We need to define how to do pattern matching for each type to evaluate the pattern matching expression explained in the previous section.<br/>
+  In this section, we explain how to define types and how the pattern matching expressions of Egison are executed.<br/>
+</p>
+<hr/>
+
+<p>
+  A type definition for multisets is good example to explain type definitions.<br/>
+  Therefore, we explain the type definition for multiset.<br/>
+  Below is a definition of the multiset in Egison.<br/>
+</p>
+
+<pre>
+  <code>
+(define $Multiset
+  (lambda [$a]
+    (type
+      {[$var-match (lambda [$tgt] {tgt})]
+       [$inductive-match
+        (deconstructor
+          {[nil []
+            {[{} {[]}]
+             [_ {}]}]
+           [cons [a (Multiset a)]
+            {[$tgt (map (lambda [$t] [t ((remove a) tgt t)]) tgt)]}]
+           [join [(Multiset a) (Multiset a)]
+            {[$tgt (map (lambda [$ts] [ts ((remove-collection a) tgt ts)])
+                        (subcollections tgt))]}]})]
+       [$equal?
+        (lambda [$val $tgt]
+          (match [val tgt] [(Multiset a) (Multiset a)]
+            {[[&lt;nil&gt; &lt;nil&gt;] &lt;true&gt;]
+             [[&lt;cons $x $xs&gt; &lt;cons ,x ,xs&gt;] &lt;true&gt;]
+             [[_ _] &lt;false&gt;]}))]})))
+  </code>
+</pre>
+
+<!--
+<p>
+  The <code>remove</code> function obtains a type and returns a function that removes the value which is its first argument from the collection which is its seconds argument.<br/>
+  The <code>remove-collection</code> function obtains a type and returns a function that removes all elements of the collection which is its first argument from the collection which is its seconds argument.<br/>
+</p>
+-->
+
+<p>
+  The <code>Multiset</code> is defined as a function that obtains a type and returns a multiset type of that type.<br/>
+  For example, <code>(Multiset Integer)</code> means multiset of integers, and <code>(Multiset (Multiset Integer))</code> means multiset of multiset of integers.<br/>
+</p>
+
+<p>
+  Types are defined with <code>type</code> expressions.<br/>
+  A type expression obtains a collection of tuples of a pattern variable and an expression.<br/>
+  A definition of type expressions is mutually recursive.<br/>
+  With a <code>type-ref</code> expression, we can refer to the value bound by a <code>type</code> expression.<br/>
+</p>
+
+<pre>
+  <code>
+> (test ((type-ref (Multiset Integer) equal?) {1 2 3} {2 3 1}))
+
+&lt;true&gt;
+  </code>
+</pre>
+
+<p>
+  We define <code>var-match</code>, <code>inductive-match</code> and <code>equal?</code> to define <code>Multiset</code>.<br/>
+</p>
+
+<p>
+  <code>var-match</code> and <code>inductive-match</code> are used to construct the <i>matching-function</i>.<br/>
+  A matching-function is a function that obtains a pattern and a target value, and returns binding frames.<br/>
+  If programmers define <code>var-match</code> and <code>inductive-match</code>, the matching-function is automatically generated.<br/>
+</p>
+
+<p>
+  In the matching function, <code>var-match</code> is used when the pattern is a <i>variable pattern</i>.<br/>
+  The variable pattern is a pattern that consist of only a pattern variable.<br/>
+  The elements of the collection returned by <code>var-match</code> applying target is the values that the pattern variable would be bound.<br/>
+  In almost all cases, the value bound to the pattern variable would be unique, as it is so for <code>Multiset</code>.<br/>
+  However not to lose generality, we chose this design.<br/>
+</p>
+
+<p>
+  In the matching function, <code>inductive-match</code> is used when the pattern is an <i>inductive pattern</code>.<br/>
+  An inductive pattern is a pattern that is constructed by a pattern constructor.<br/>
+  <code>inductive-match</code> is defined with a <code>destructor</code> expression.<br/>
+  A <code>destructor</code> expression takes a collection of <i>destruct-match clauses</i> as an argument.<br/>
+  The destruct-match clause consist of a pattern constructor, an expression which returns a tuple of types, and <i>primitive match clauses</i>.<br/>
+  For example, we explain the destruct-match clause for <code>cons</code> of <code>Multiset</code>.<br/>
+  The expression <code>[a (Multiset a)]</code> means that if the pattern constructor of the pattern is <code>cons</code>, the first argument of the inductive data is matched as the type <code>a</code>, and the second is matched as <code>(Multiset a)</code>.<br/>
+  Pattern matching for primitive match clauses is similar to ordinary pattern matching.<br/>
+  It has only one result and Patterns are linear.<br/>
+  The result of executing pattern matching for primitive matching clauses is a collection.<br/>
+  The elements of it become next pattern matching targets.<br/>
+</p>
+
+<p>
+  <code>equal?</code> is used when pattern is a <i>value pattern</i>.<br/>
+  The boolean value returned by <code>equal?</code> function determines whether pattern matching succeed or not.<br/>
+  In this example, the <code>equal?</code> function is recursively defined implicitly using value patterns.<br/>
+  This <code>equal?</code> function returns <code>&lt;true&gt;</code>, if the same element occurs the same times in both arguments, otherwise it returns <code>&lt;false&gt;</code>.<br/>
+</p>
+
+
+<p>
+  Patterns in primitive match clauses are called <i>primitive patterns</i>.<br/>
+  If the target value is matched with the primitive patterne, the expression of the primitive match clauses are evaluated, and the value is the next target value of recursive pattern matching.<br/>
+</p>
+
+<p>
+  For example, the case that the pattern is inductive pattern <code>&lt;cons $x $xs&gt;</code>, the target is a collection <code>{1 2 3</code></code> and we do pattern matching them as the type <code>(Multiset Int)</code>, pattern matching is executed using the <code>inductive-match</code> function.<br/>
+  And in that case, the pattern is matched with the deconstructor-match clause of <code>cons</code>, and the target is matched with its only primitive match clause.<br/>
+  And result of evaluating the expression of the primitive match clause is <code>{[1 {2 3</code>] [2 {1 3</code>] [3 {1 2</code>]</code></code>.<br/>
+  Each element of the result are the target of next pattern matching.<br/>
+  Its first element is matched as <code>Int</code> and its second is matched as <code>(Multiset Int)</code>.<br/>
+</p>
+
+<p>
+  We call pattern matching for primitive patterns <i>primitive pattern matching</i>.<br/>
+  Primitive pattern matching returns only one binding frame, as ordinary pattern matching do.<br/>
+  Primitive pattern matching is the pattern matching that human can do in their mind intuitively.<br/>
+</p>
+
+<p>
+  There are 7 kinds of primitive patterns.<br/>
+</p>
+
+<pre>
+primpat ::= _
+          | patvar
+          | &lt; cons primpat ... &t;
+          | [ primpat ... ]
+          | {}
+          | { primpat .primpat }
+          | { .primepat primepat }
+</pre>
+
+<p>
+  '<code>_</code>' is wildcard.<br/>
+  This matches with any value.<br/>
+</p>
+
+<p>
+  <i>pat-var</i> is a pattern variable.<br/>
+  This matches with any value too.<br/>
+</p>
+
+<p>
+  <code>&lt;</code><i>cons</i> <i>prime-pat</i> <i>...</i> <code>&gt;</code> is an <i>inductive prime pattern</i>.<br/>
+  This pattern matches when the target value is an inductive value whose constructor is <code>cons</code>.<br/>
+  Pattern matchings for each arguments of the constructor are recursively executed.<br/>
+</p>
+
+<p>
+  <code>[</code><i>prime-pat</i> <i>...</i> <code>]</code> is a <i>tuple prime pattern</i>.<br/>
+  This pattern matches when the target value is a tuple.<br/>
+  Pattern matching for each element of the tuple is recursively executed.<br/>
+</p>
+
+<p>
+  <code>{}</code> is an <i>empty pattern</i>.<br/>
+  This pattern matches when the target value is a empty collection.<br/>
+</p>
+
+<p>
+  <code>{</code><i>prime-pat</i> <code>.</code><i>prime-pat</i><code>}</code> is a <i>cons pattern</i>.<br/>
+  This pattern matches when the target collection contain more than one element.<br/>
+  The first <i>prime-pat</i> is matched with the first element of the target collection, and the second <i>prime-pat</i> is matched with the rest elements of the target collection.<br/>
+</p>
+
+<p>
+  <code>{</code><code>.</code><i>prime-pat</i> <i>prime-pat</i><code>}</code> is a <i>snoc pattern</i>.<br/>
+  This pattern matches when the target collection contain more than one element.<br/>
+  The second <i>prime-pat</i> is matched with the last element of the target collection, and the first <i>prime-pat</i> is matched with the rest elements of the target collection.<br/>
+</p>
+
+<p>
+  We can define lists and sets, as we do for multisets.<br/>
+  In the pattern of primitive pattern match clause of <code>nil</code>, an empty pattern is used.<br/>
+  In the pattern of primitive pattern match clause of <code>cons</code>, a cons pattern is used.<br/>
+  In the pattern of primitive pattern match clause of <code>snoc</code>, a snoc pattern is used.<br/>
+</p>
+
+<pre>
+  <code>
+(define $List
+  (lambda [$a]
+    (type
+      {[$var-match (lambda [$tgt] {tgt})]
+       [$inductive-match
+        (deconstructor
+          {[nil []
+            {[{} {[]}]
+             [_ {}]}]
+           [cons [a (List a)]
+            {[{$x .$xs} {[x xs]}]
+             [_ {}]}]
+           [snoc [a (List a)]
+            {[{.$xs $x} {[x xs]}]
+             [_ {}]}]
+           [join [(List a) (List a)]
+            {[$tgt (let {[$loop (lambda [$ts]
+                                  (match ts (List a)
+                                    {[&lt;nil&gt; {[{} {}]}]
+                                     [&lt;cons $x $xs&gt; {[{} ts] @(map (lambda [$as $bs] [{x @as} bs])
+                                                                   (loop xs))}]}))]}
+                   (loop tgt))]}]
+           [nioj [(List a) (List a)]
+            {[$tgt (let {[$loop (lambda [$ts]
+                                  (match ts (List a)
+                                    {[&lt;nil&gt; {[{} {}]}]
+                                     [&lt;snoc $x $xs&gt; {[{} ts] @(map (lambda [$as $bs] [{@as x} bs])
+                                                                   (loop xs))}]}))]}
+                   (loop tgt))]}]})]
+       [$equal? (lambda [$val $tgt]
+                  (match [val tgt] [(List a) (List a)]
+                    {[[&lt;nil&gt; &lt;nil&gt;] &lt;true&gt;]
+                     [[&lt;cons $x $xs&gt; &lt;cons ,x ,xs&gt;]
+                      &lt;true&gt;]
+                     [[_ _] &lt;false&gt;]}))]})))
+  </code>
+</pre>
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>

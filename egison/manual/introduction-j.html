@@ -318,7 +318,7 @@ f
     (type
       {[$var-match (lambda [$tgt] {tgt})]
        [$inductive-match
-        (deconstructor
+        (destructor
           {[nil []
             {[{} {[]}]
              [_ {}]}]
@@ -393,8 +393,8 @@ f
 
 <p>
 では，再び<code>inductive-match</code>関数について説明します．<br/>
-<code>inductive-match</code>関数は，<code>deconstructor</code>式を用いて定義します．<br/>
-<code>deconstructor</code>式は，デコンストラクトマッチ節(<i>deconstructor-match clause</i>)のコレクションを引数に取ります．<br/>
+<code>inductive-match</code>関数は，<code>destructor</code>式を用いて定義します．<br/>
+<code>destructor</code>式は，デコンストラクトマッチ節(<i>destructor-match clause</i>)のコレクションを引数に取ります．<br/>
 デコンストラクトマッチ節は，パターンコンストラクタ，評価したら型のタプルを返す式，
 プリミティブマッチ節(<i>primitive match clause</i>)のコレクションからなります．<br/>
 例として，まず<code>Multiset</code>の定義の<code>cons</code>のデコンストラクトマッチ節をみます．<br/>
@@ -494,7 +494,7 @@ primpat ::= _
     (type
       {[$var-match (lambda [$tgt] {tgt})]
        [$inductive-match
-        (deconstructor
+        (destructor
           {[nil []
             {[{} {[]}]
              [_ {}]}]

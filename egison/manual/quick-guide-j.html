@@ -8,16 +8,16 @@
 <h1>Demonstration</h2>
 <hr/>
 <p>
-  Egison is good at pattern matching for data types whose data have no normal form.<br/>
-  We will demonstrate programs that execute pattern matching for collections, such as lists, multisets, and sets.<br/>
-  Run them on your machine and feel how Egison is like!!<br/>
+  Egisonは代数的に定義されるデータ構造に対して協力なパターンマッチ機能を持っています．<br/>
+  この章では，そのもっともわかりやすい例として，コレクションデータに対してパターンマッチを行うプログラムを書いてみます．<br/>
+  これらのプログラムを動かしてみて，Egisonがどのようなものなのか感じてみてください．<br/>
 <hr/>
 
-<h2 id="run-interpreter">Run Interpreter!!</h2>
+<h2 id="run-interpreter">インタプリタを起動しよう</h2>
 
 <p>
-  After you have installed Egison, you can run Egison interpreter with a command 'egison'. (<a href="./setting-up-egison.html">Setting up Egison!!</a>)<br/>
-  Type Control-D to terminate the interpreter.
+  インストールに成功すると，コマンドラインで<code>egison</code>と打つとEgisonのインタプリタが起動します．<br/>
+  Control-Dを打つとインタプリタを終了できます．(ControlキーとDキーを同時押し)
 </p>
 <pre>
   <code>
@@ -31,7 +31,7 @@ Byebye. See you again! (^^)/
 </pre>
 
 <p>
-  Give some input to Egison as below.<br/>
+  いくつか，Egisonに入力を与えてみましょう．<br/>
 </p>
 
 <pre>
@@ -48,20 +48,19 @@ f
 </pre>
 
 <p>
-  There are two kinds of <i>top expressions</i> in above input, <code>define</code> expressions and <code>test</code> expressions.<br/>
-  A <code>define</code> expression binds the value or the function to the variable.<br/>
-  A <code>test</code> expression evaluates the given expression.<br/>
+  この例では，2つのトップ式(<i>top expression</i>)がでてきました．<br/>
+  <code>define</code>式と<code>test</code>式です．<br/>
+  <code>define</code>式は変数に値を束縛するのに使われます．<br/>
+  <code>test</code>式は入力された式を評価するのに使われます．<br/>
 </p>
 
 <h2 id="pattern-matching">Let's do Pattern Matching!!</h2>
 
 <p>
-  Let's run codes that do pattern matching!<br/>
-  In this section, we will demonstrate codes that do pattern matching for collections.<br/>
-  These codes will be good examples to know the characteristics of Egison.<br/>
-  To run programs in this section, we need to load "<code>lib/base.egi</code>", "<code>lib/number.egi</code>" and "<code>lib/collection.egi</code>", at first.<br/>
-  A <code>load</code> expression is one of the top expressions.<br/>
-  It is used to load an Egison library.<br/>
+  パターンマッチを行うコードを動かしてみましょう．<br/>
+  この節では，そのなかでもわかりやすいコレクションのパターンマッチを書いてみます．<br/>
+  この節に出てくるコードを実行するには，"<code>lib/base.egi</code>"と，"<code>lib/number.egi</code>"，"<code>lib/collection.egi</code>"をロードする必要があります．<br/>
+  <code>load</code>式はトップ式で，1つ目の引数で指定されたファイルの内容を読み込みます．<br/>
 </p>
 
 <pre>
@@ -73,12 +72,12 @@ f
 </pre>
 
 <p>
-  To load your own program, you can use <code>load-file</code> expressions.<br/>
-  A <code>load-file</code> expression takes a full-path to the Egison program file.<br/>
+  ユーザ自身が書いたプログラムをロードするためには<code>load-file</code>式を用います．<br/>
+  <code>load-file</code>式では，プログラムへのパスを指定します．<br/>
 </p>
 
 <p>
-  Now, let's execute the following code.<br/>
+  では，パターンマッチを行うコードを動かしてみましょう．<br/>
 </p>
 
 <pre>
@@ -114,7 +113,7 @@ f
 <p>
   There are four kinds of parentheses in Egison.<br/>
   Here is brief explanation.<br/>
-  An expression enclosed with '<code>(</code>' and '<code>)</code>' represent a procedure call or an application of syntax.<br/>
+  An expression enclosed with '<code>(</code>' and '<code>{</code>' represent a procedure call or an application of syntax.<br/>
   An expression enclosed with '<code>&lt;</code>' and '<code>&gt;</code>' is used to construct an inductive data.<br/>
   An expression enclosed with '<code>[</code>' and '<code>]</code>' represent a tuple.<br/>
   An expression enclosed with '<code>{</code>' and '<code>}</code>' represent a collection.<br/>
@@ -132,7 +131,7 @@ f
 </p>
 
 <p>
-  Here are other examples.<br/>
+  他の例をあげてみます．<br/>
 </p>
 
 <pre>
@@ -160,6 +159,7 @@ f
 
 <p>
   There is another pattern constructor <code>join</code>.<br/>
+  <code>join</code>は先程<code>cons</code>とは別のパターンコンストラクタです．<br/>
   It takes two arguments.<br/>
   Programmers use it to divide a collection into two collections.<br/>
   A target matches to the pattern when the target collection is the union of the collection matched with both arguments of <code>join</code>.<br/>
@@ -167,7 +167,7 @@ f
 </p>
 
 <p>
-  The list data type has special pattern constructors, <code>snoc</code> and <code>nioj</code>.
+  リストには<code>snoc</code>と<code>nioj</code>という2つのパターンコンストラクタが他にあります．<br/>
 </p>
 
 <pre>

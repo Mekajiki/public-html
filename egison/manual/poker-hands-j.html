@@ -20,9 +20,9 @@
 
 <pre>
   <code>
-&gt; (load "/path/to/lib/base.egi")
-&gt; (load "/path/to/lib/number.egi")
-&gt; (load "/path/to/lib/collection.egi")
+&gt; (load "/lib/base.egi")
+&gt; (load "/lib/number.egi")
+&gt; (load "/lib/collection.egi")
   </code>
 </pre>
 
@@ -41,7 +41,7 @@
   (type
     {[$var-match (lambda [$tgt] {tgt})]
      [$inductive-match
-      (deconstructor
+      (destructor
         {[spade []
           {[&lt;spade&gt; {[]}]
            [_ {}]}]
@@ -91,7 +91,7 @@
   (type
     {[$var-match (lambda [$tgt] {tgt})]
      [$inductive-match
-      (deconstructor
+      (destructor
         {[card [Suit (Mod 13)]
           {[&lt;card $s $n&gt; {[s n]}]}]})]
      [$equal? (lambda [$val $tgt]

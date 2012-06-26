@@ -40,7 +40,7 @@
   (type
     {[$var-match (lambda [$tgt] {tgt})]
      [$inductive-match
-      (deconstructor
+      (destructor
         {[spade []
           {[&lt;spade&gt; {[]}]
            [_ {}]}]
@@ -90,7 +90,7 @@
   (type
     {[$var-match (lambda [$tgt] {tgt})]
      [$inductive-match
-      (deconstructor
+      (destructor
         {[card [Suit (Mod 13)]
           {[&lt;card $s $n&gt; {[s n]}]}]})]
      [$equal? (lambda [$val $tgt]

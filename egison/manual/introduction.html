@@ -323,7 +323,7 @@ f
     (type
       {[$var-match (lambda [$tgt] {tgt})]
        [$inductive-match
-        (deconstructor
+        (destructor
           {[nil []
             {[{} {[]}]
              [_ {}]}]
@@ -391,10 +391,10 @@ f
 
 <p>
   Now, we describe an <code>inductive-match</code> function.<br/>
-  An <code>inductive-match</code> function is defined with a <code>deconstructor</code> expression.<br/>
-  A <code>deconstructor</code> expression takes a collection of <i>deconstructor-match clause</i> as an argument.<br/>
-  The deconstruct-match clause consist of a pattern constructor, an expression, whose value is a tuple of types, and <i>primitive match clause</i>.<br/>
-  For example, we explain the deconstructor-match clause on <code>cons</code> for <code>Multiset</code>.<br/>
+  An <code>inductive-match</code> function is defined with a <code>destructor</code> expression.<br/>
+  A <code>destructor</code> expression takes a collection of <i>destructor-match clause</i> as an argument.<br/>
+  The destruct-match clause consist of a pattern constructor, an expression, whose value is a tuple of types, and <i>primitive match clause</i>.<br/>
+  For example, we explain the destructor-match clause on <code>cons</code> for <code>Multiset</code>.<br/>
   The expression <code>[a (Multiset a)]</code> means that if the pattern constructor of the pattern is <code>cons</code>, we do pattern matching the first argument of the inductive value as the type <code>a</code>, and the second as <code>(Multiset a)</code>.<br/>
 </p>
 
@@ -405,7 +405,7 @@ f
 
 <p>
   For example, the case that the pattern is inductive pattern <code>&lt;cons $x $xs&gt;</code>, the target is a collection <code>{1 2 3}</code> and we do pattern matching them as the type <code>(Multiset Int)</code>, pattern matching is executed using the <code>inductive-match</code> function.<br/>
-  And in that case, the pattern is matched with the deconstructor-match clause of <code>cons</code>, and the target is matched with its only primitive match clause.<br/>
+  And in that case, the pattern is matched with the destructor-match clause of <code>cons</code>, and the target is matched with its only primitive match clause.<br/>
   And result of evaluating the expression of the primitive match clause is <code>{[1 {2 3}] [2 {1 3}] [3 {1 2}]}</code>.<br/>
   Each element of the result are the target of next pattern matching.<br/>
   Its first element is matched as <code>Int</code> and its second is matched as <code>(Multiset Int)</code>.<br/>
@@ -485,7 +485,7 @@ primpat ::= _
     (type
       {[$var-match (lambda [$tgt] {tgt})]
        [$inductive-match
-        (deconstructor
+        (destructor
           {[nil []
             {[{} {[]}]
              [_ {}]}]

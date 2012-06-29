@@ -5,19 +5,18 @@
 </head>
 
 <body>
-<h1>Introduction</h2>
+<h1>Introduction</h1>
 <hr/>
 <p>
-  In this chapter, we run programs that execute pattern matching which is a specialty of Egison.<br/>
   Egison is good at pattern matching for data types whose data have no normal form.<br/>
-  In this chapter, we will write programs that execute pattern matching for collections, such as lists, multisets, and sets.
-  Run them and feel how Egison is like!!<br/>
+  We will demonstrate programs that execute pattern matching for collections, such as lists, multisets, and sets.<br/>
+  Run them on your machine and feel how Egison is like!!<br/>
 <hr/>
 
 <h2 id="run-interpreter">Run Interpreter!!</h2>
 
 <p>
-  After you have installed Egison, you can run Egison interpreter with a command 'egison'.<br/>
+  After you have installed Egison, you can run Egison interpreter with a command 'egison'. (<a href="./setting-up-egison.html">Setting up Egison!!</a>)<br/>
   Type Control-D to terminate the interpreter.
 </p>
 <pre>
@@ -32,7 +31,7 @@ Byebye. See you again! (^^)/
 </pre>
 
 <p>
-  Give some input to Egison as below.
+  Give some input to Egison as below.<br/>
 </p>
 
 <pre>
@@ -49,23 +48,20 @@ f
 </pre>
 
 <p>
-  There are two kinds of <i>top expressions</i> in above input.<br/>
-  The <code>define</code> expressions and the <code>test</code> expressions.<br/>
-  When a <code>define</code> expression is evaluated, the bind which binds the variable of first argument to the second argument value is added to the top level environment.<br/>
-  When a <code>test</code> expression is evaluated, the expression of the first argument is evaluated and the result is displayed.<br/>
-  Although there are more top expressions, we describe only these two for now.<br/>
+  There are two kinds of <i>top expressions</i> in above input, <code>define</code> expressions and <code>test</code> expressions.<br/>
+  A <code>define</code> expression binds the value or the function to the variable.<br/>
+  A <code>test</code> expression evaluates the given expression.<br/>
 </p>
-
 
 <h2 id="pattern-matching">Let's do Pattern Matching!!</h2>
 
 <p>
   Let's run codes that do pattern matching!<br/>
-  In this section, we will write codes that do pattern matching for collections.<br/>
+  In this section, we will demonstrate codes that do pattern matching for collections.<br/>
   These codes will be good examples to know the characteristics of Egison.<br/>
-  To run programs in this section, we need to load <code>lib/base.egi</code>, <code>lib/number.egi</code> and <code>lib/collection.egi</code>, at first.<br/>
-  A <code>load</code> expression is one of top expressions.<br/>
-  It is used to load an Egison library, specified by the first argument.<br/>
+  To run programs in this section, we need to load "<code>lib/base.egi</code>", "<code>lib/number.egi</code>" and "<code>lib/collection.egi</code>", at first.<br/>
+  A <code>load</code> expression is one of the top expressions.<br/>
+  It is used to load an Egison library.<br/>
 </p>
 
 <pre>
@@ -76,7 +72,6 @@ f
   </code>
 </pre>
 
-
 <p>
   To load your own program, you can use <code>load-file</code> expressions.<br/>
   A <code>load-file</code> expression takes a full-path to the Egison program file.<br/>
@@ -86,437 +81,303 @@ f
   Now, let's execute the following code.<br/>
 </p>
 
-...
+<pre>
+  <code>
+&gt; (test (match-all {1 2 3 4} (List Integer)
+          [&lt;cons $x $xs&gt; [x xs]]))
 
-<h2 id="four-parenses">Four Kinds of Parentheses</h2>
+{[1 {2 3 4}]}
+
+
+&gt; (test (match-all {1 2 3 4} (Multiset Integer)
+          [&lt;cons $x $xs&gt; [x xs]]))
+
+{[1 {2 3 4}] [2 {1 3 4}] [3 {1 2 4}] [4 {1 2 3}]}
+
+
+&gt; (test (match-all {1 2 3 4} (Set Integer)
+          [&lt;cons $x $xs&gt; [x xs]]))
+
+{[1 {2 3 4}] [2 {1 3 4}] [3 {1 2 4}] [4 {1 2 3}]
+ [1 {2 3 4 1}] [2 {1 3 4 2}] [3 {1 2 4 3}] [4 {1 2 3 4}]}
+  </code>
+</pre>
+
+<p>
+  A <code>match-all</code> expression takes a target expression, a type expression, and a single match-clause.<br/>
+  Pattern matching of Egison has multiple results because unfree data has many forms.<br/>
+  The body of a match-clause is evaluated for each result of pattern matching.<br/>
+  In above example, the match-clause is "<code>[&lt;cons $x $xs&gt; [x xs]]</code>", and the body of the match-clause is "<code>{[x xs]}</code>".<br/>
+  A <code>match-all</code> expression returns a collection which consists of all of those evaluated values.<br/>
+</p>
 
 <p>
   There are four kinds of parentheses in Egison.<br/>
+  Here is brief explanation.<br/>
+  An expression enclosed with '<code>(</code>' and '<code>)</code>' represent a procedure call or an application of syntax.<br/>
+  An expression enclosed with '<code>&lt;</code>' and '<code>&gt;</code>' is used to construct an inductive data.<br/>
+  An expression enclosed with '<code>[</code>' and '<code>]</code>' represent a tuple.<br/>
+  An expression enclosed with '<code>{</code>' and '<code>}</code>' represent a collection.<br/>
 </p>
+
 <p>
-  A expression enclosed with '<code>(</code>' and '<code>)</code>' are used to represent application of the syntax of the language, and application of the user-defined function.<br/>
-  The head expression of the enclosed expression is an operator, and rests are arguments.<br/>
+  The meaning of <code>cons</code> is similar to that of the ordinary functional programming languages for lists.<br/>
+  The meaning of a pattern constructor depends on types specified by second argument of the <code>match-all</code> expression.<br/>
+  It divides a collection into an element and the rest of the collection.<br/>
+  In case of multisets, an element bound to the first argument can be any elements in the target since the order of elements is not considered.<br/>
+  In the third example, the target is matched as a set of integers where the order of elements and the multiple occurrence of elements are both ignored.<br/>
+  Therefore the result of pattern matching consists of many elements.<br/>
+  In case of sets, different from multisets, sets ignore the multiple occurrence of the same element.<br/>
+  Therefore a element bound to <code>$x</code> can be contained to the collection bound to <code>$xs</code>.<br/>
 </p>
+
 <p>
-  A expression enclosed with '<code>&lt;</code>' and '<code>&gt;</code>' represents an inductive data.<br/>
-  The head of the enclosed expression is a data constructor, and rests are arguments.<br/>
-  These expressions are also used to represent application of <i>pattern constructor</i>.<br/>
-  Pattern constructors are same things with data constructors.<br/>
-  We will describe them later.<br/>
-</p>
-<p>
-  A expression enclosed with '<code>[</code>' and '<code>]</code>' represents a tuple.<br/>
-  A tuple is dealt as multiple values in Egison.<br/>
-  A tuple which contains only one element is dealt as a singleton value.<br/>
+  Here are other examples.<br/>
 </p>
 
 <pre>
   <code>
-1 = [1] = [[1]] = ...
+&gt; (test (match-all {1 2 3} (List Integer)
+          [&lt;join $xs $ys&gt; [xs ys]]))
+
+{[{} {1 2 3}] [{1} {2 3}] [{1 2} {3}] [{1 2 3} {}]}
+
+
+&gt; (test (match-all {1 2 3} (Multiset Integer)
+          [&lt;join $xs $ys&gt; [xs ys]]))
+
+{[{} {1 2 3}] [{3} {1 2}] [{2} {1 3}] [{2 3} {1}]
+ [{1} {2 3}] [{1 3} {2}] [{1 2} {3}] [{1 2 3} {}]}
+
+
+&gt; (test (match-all {1 2 3} (Set Integer)
+          [&lt;join $xs $ys&gt; [xs ys]]))
+
+{[{} {1 2 3}] [{3} {1 2}] [{3} {1 2 3}] [{2} {1 3}] [{2} {1 3 2}]
+ ... [{1 2 3} {1 2 3}]}
   </code>
 </pre>
 
 <p>
-  A expression enclosed with '<code>{</code>' and '<code>}</code>' represents a collection.<br/>
-  There are two forms of inner-expressions.<br/>
-  Expressions which have no '<code>@</code> at the head of the expression, and expressions which have '<code>@</code> at the head of the expression.<br/>
-  A expression which has no '<code>@</code> is dealt as an element of the collection.<br/>
-  A expression which have '<code>@</code> is dealt as a <i>subcollection</i> of the collection.<br/>
+  There is another pattern constructor <code>join</code>.<br/>
+  It takes two arguments.<br/>
+  Programmers use it to divide a collection into two collections.<br/>
+  A target matches to the pattern when the target collection is the union of the collection matched with both arguments of <code>join</code>.<br/>
+  The meaning of union differs from type to type.<br/>
+</p>
+
+<p>
+  The list data type has special pattern constructors, <code>snoc</code> and <code>nioj</code>.
 </p>
 
 <pre>
   <code>
-{1 @{2 3 4} @{5 @{6} 7} 8} = {1 2 3 4 5 6 7 8}
+&gt; (test (match-all {1 2 3} (List Integer)
+          [&lt;snoc $x $xs&gt; [x xs]]))
+
+{[4 {1 2 3}]}
+
+      
+&gt; (test (match-all {1 2 3} (List Integer)
+          [&lt;nioj $xs $ys&gt; [xs ys]]))
+
+{[{} {1 2 3}] [{3} {1 2}] [{2 3} {1}] [{1 2 3} {}]}
   </code>
 </pre>
-  
-<h2 id="lambda-and-let"><code>lambda</code> and <code>let</code></h2>
 
 <p>
-  The <code>lambda</code> expression takes a <i>pattern variable</i> as its first argument.<br/>
-  Pattern variables have '<code>$</code>' at their head.<br/>
-  The <code>lambda</code> expression takes a expression to execute when applied as its second argument.<br/>
+  Arguments of <code>snoc</code> matches with the last element of a target collection and the rest of it.<br/>
+  In Egison, extraction of an element from the tail of a collection is represented in the same way with the head of it.<br/>
+  A pattern constructor <code>nioj</code> is similar with <code>join</code>, and used to divide a target collection into two collections.<br/>
+  The difference is the order of pattern matching.<br/>
+  In case of <code>nioj</code>, pattern matching is executed from the back-side of a collection.<br/>
+  The order of pattern matching is significant if we consider non-linear pattern matching, which we will discuss in the next section.<br/>
 </p>
 
+<h2 id="non-linear-patterns">Non-linear Patterns</h2>
+
 <p>
-  There are two syntax for function applications.<br/>
-  An <code>apply</code> expression, and an expression simply enclosed with '<code>(</code>' and '<code>)</code>'.<br/>
-  An <code>apply</code> expression takes an operator function as its first argument, and arguments passed to the operator function as its second argument.<br/>
-  An expressions enclosed with '<code>(</code>' and '<code>)</code>' takes an operator function as its first elements,
-  and arguments to apply as its rest of elements.<br/>
-  This is a syntax sugar of <code>apply</code>.
+  With Egison，programmers can match for a pattern that has repeated varibles.<br/>
 </p>
+
 <pre>
   <code>
-&gt; (define $f (lambda [$x $y] [(+ x y) (* x y)]))
-f
-&gt; (test (f 2 4))
-[6 8]
-&gt; (test (apply f [2 4]))
-[6 8]
-&gt; (test (apply f (f 2 4)))
-[14 48]
+&gt; (test (match-all {1 2 3 1 2} (Multiset Integer)
+          [&lt;cons $n &lt;cons ,n _&gt;&gt; n]))
+
+{1 2}
   </code>
 </pre>
 
 <p>
-  A <code>let</code> expression takes a collection of tuples which consist of a pattern variable and an expression.<br/>
-  The value of the expression which is the second element of tuple are bound to the pattern variable which is the first element of the tuple.<br/>
-  Bind by the <code>let</code> expression is mutual recursive.<br/>
-  The expression second argument of the <code>let</code> expression is evaluated with the new environment.<br/>
+  The output of this example is a collection of numbers which are contained in the target collection more than twice.<br/>
 </p>
+
+<p>
+  In Egison, pattern matching is executed from the left side of the pattern,
+  and the value bound to a pattern variable can be referd in its right side of the pattern.<br/>
+  A pattern which has '<code>,</code>' at the head is called a <i>value pattern</i>.<br/>
+  If the value of the expression after '<code>,</code>' is equivalent to the target value when they are regarded as the type specified, pattern matching succeed.<br/>
+  In this case, when the matching process proceeds to the pattern <code>,n</code>,
+  the expression <code>n</code> is evaluated to the value to which <code>$n</code> is bound.<br/>
+  The pattern <code>,n</code> is matched as an integer, so if the target value is equal to the value bound to <code>$n</code> as an integer,
+  the pattern matching succeeds.<br/>
+  '<code>_</code>' is a <i>wild card</i> which matches with any values.<br/>
+</p>
+
+<p>
+  Here is another example.
+</p>
+
 <pre>
   <code>
-&gt; (test (let {[$f (lambda [$x] (+ (g x) 10))]
-              [$g (lambda [$x] (+ x 1))]}
-          (f 0)))
-11
+&gt; (test (match-all {{1 2 3 4 5} {4 5 1} {6 1 7 4}} (List (Multiset Integer))
+          [&lt;cons &lt;cons $n _&gt; &lt;cons &lt;cons ,n _&gt; &lt;cons &lt;cons ,n _&gt; &lt;nil&gt;&gt;&gt;&gt; n]))
+
+{1 4}
   </code>
 </pre>
 
-<h2 id="match expressions">Match Expressions</h2>
-
 <p>
-  Now, let's execute the following code.<br/>
+  With Egison, we are able to do pattern matching with nested data types easily.<br/>
+  The target value is a collection of collections of integers.<br/>
+  It is matched as a list of multisets of integers.<br/>
+  This pattern extracts an element from each collection, which is an element of the target collection.<br/>
 </p>
+
+<h2 id="cut-patterns">Cut Patterns</h2>
 
 <pre>
   <code>
 &gt; (test (match {2 7 7 2 7} (Multiset Integer)
-          {[&lt;cons $m
-             &lt;cons ,m
-              &lt;cons ,m
-               &lt;cons $n
-                !&lt;cons ,n
-                  !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+          {[&lt;cons $m &lt;cons ,m &lt;cons ,m
+             &lt;cons $n !&lt;cons ,n !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
             &lt;ok&gt;]
-           [_ &lt;ko&gt;]})
+           [_ &lt;ko&gt;]}))
+
 &lt;ok&gt;
   </code>
 </pre>
 
 <p>
-  The <code>match</code> expression takes a <i>target</i> value of pattern matching as their first argument, a <i>type</i> as their second argument, and <i>match clauses</i> as their third argument.<br/>
-  This expression represents pattern matching of the collection <code>{2 7 7 2 7}</code> as the type <code>(Multiset Integer)</code>.<br/>
-  <code>(Multiset Integer)</code> means multiset of integer.<br/>
-  Multiset is a collection data type, in which the order of the elements is ignored, but multiplicity is significant.<br/>
+  Egison also has <code>match</code> expressions.<br/>
+  A <code>match</code> expression takes a collection of match clauses.<br/>
+  Matching process is executed from the top of the match clauses.<br/>
+  The body of first succeeded match clause is evalated.<br/>
 </p>
 
 <p>
-  The match clause is represented as a tuple of a <i>pattern</i> and an expression which is evaluated when the pattern is matched with the target value.<br/>
-  Pattern matching are executed from head of match clauses.<br/>
-  If there is a pattern clause for whose pattern pattern matching succeed, the expression of the match clause is executed with the environment to which <i>binding frame</i> generated by pattern matching is added.<br/>
-  There are cases many binding frames exist.<br/>
-  In that case, one of binding frames is chose.<br/>
+  The pattern of the first match clause matches if the target value is collection which contains three same number and other two same number.<br/>
+  The target matches with the pattern of the first match clause, so the return value is <code><ok></code>.<br/>
 </p>
 
 <p>
-  The pattern of the first match clause matches if the target value is collection which consists of five elements, and three of these are same element and rest of two elements are same too.<br/>
-  In Egison, pattern matching is executed from the left side of the pattern, and we can refer to a value bound to a pattern variable to the right of its binding position.<br/>
-  The pattern ahead of which there is a '<code>,</code>' is called the <i>value pattern</i>.<br/>
-  The expression after '<code>,</code>' is evaluated, and if the value is equal to the target value, pattern matching succeed.<br/>
-  The pattern ahead of which there is a '<code>!</code>' is called the <i>cut pattern</i>.<br/>
-  If there are several combinations of bindings to the point of the cut pattern, we take one of them and continue pattern matching for the rest of the pattern.<br/>
-  Cut patterns are used to get rid of unnecessary search.<br/>
-  In this sample case, there is only one combination that three same number in five of them, so there is no need for further search if we failed pattern matching after we found one combination of three same numbers.<br/>
+  A pattern which has '<code>!</code>' at the head is called a <i>cut pattern</i>.<br/>
+  If there are several matchings to the point of the cut pattern, one of them are taken and pattern matching for the rest of the pattern is executed.<br/>
+  If pattern matching after the position of the cut pattern fails, backtracking before the position of the cut pattern is not executed.<br/>
+  Cut patterns are used to avoid unnecessary search.<br/>
+  In the above case, since there is only one combination that three same number appears among the collection which has five elements,<br/>
+  further search is not required if pattern matching failed after a triple of three same number is found.<br/>
   This cut pattern represent this fact.<br/>
 </p>
 
 <p>
-  The pattern of the second match clause matches with any target values.<br/>
-  '<code>_</code>' means the <i>wild card</i>.<br/>
-  This pattern matches with any target values.<br/>
-</p>
-
-<p>
-  In Egison, a pattern is a first class object.<br/>
-  So a pattern can be a return value of a function, or we can use it as an argument of a function.<br/>
-  So we can generate complex patterns as below.<br/>
+  If pattern matching after the cut pattern succeed, backtracking before the position of the cut pattern is executed as there is no cut pattern.<br/>
 </p>
 
 <pre>
   <code>
-&gt; (test (let {[$pat &lt;cons ,1 &lt;nil&gt;&gt;]}
-          (match {1} (Multiset Int)
-            {[pat &lt;ok&gt;]
-             [_ &lt;ko&gt;]})))
-&lt;ok&gt;
-&gt; (test (let {[$loop &lt;cons ,1 (of {&lt;nil&gt; loop})&gt;]}
-          (match {1 1 1 1} (Multiset Int)
-            {[loop &lt;ok&gt;]
-             [_ &lt;ko&gt;]})))
-&lt;ok&gt;
+&gt; (test (match-all {1 2 3} (Multiset Integer)
+          [&lt;cons $x &lt;cons $y &lt;cons $z !&lt;nil&gt;&gt;&gt;&gt; [x y z]]))
+
+{[1 2 3] [1 3 2] [2 1 3] [2 3 1] [3 1 2] [3 2 1]}
   </code>
 </pre>
 
 <p>
-  Next, we show examples of pattern matching whose result has several binding frames.<br/>
-  The <code>match-all</code> expression takes a target value as its first argument, and a type as its second argument, as the <code>match</code> expression do.<br/>
-  But it takes single match clause as its third argument, not a collection of match clause as the <code>match</code> expression do.<br/>
-  When the <code>match-all</code> expression is evaluated, the expression of the match clause are executed for each binding frames and return the collection which consists of each results.<br/>
+  The cut pattern is especially useful for pattern matching with multisets.<br/>
+  The power of cut patterns is demonstrated with the code that determines poker hands.
+  (<a href="./poker-hands.html">Example1. Poker Hands</a>)<br/>
+</p>
+
+<h2 id="loop-patterns">Loop Patterns</h2>
+
+<pre>
+  <code>
+&gt; (test (match-all {1 2 3 4} (List Integer)
+          [&lt;join _ &lt;cons $m &lt;join _ &lt;cons $n _&gt;&gt;&gt;&gt; [m n]]))
+
+{[1 2] [1 3] [1 4] [2 3] [2 4] [3 4]}
+  </code>
+</pre>
+
+<p>
+  The output of the above expression is all combinations of two elements from the target collection.<br/>
+  The output consists of <i>nC2</i> elements where <code>n</code> is the length of the target collection.<br/>
+  The first '<code>_</code>' matches with some front part of the target collection,<br/>
+  and <code>$m</code> matches with the element behind it.<br/>
+  The second '<code>_</code>' matches with some subcollection that follows after the element bound to <code>\$m</code>,<br/>
+  and <code>$n</code> matches with the element behind it.<br/>
+  The last '<code>_</code>' matches with the rest of collection.<br/>
+  For example, the case <code>$m</code> bound to <code>1</code> and <code>$n</code> bound to <code>2</code>,<br/>
+  the first and the second '<code>_</code>' matches with empty collection,<br/>
+  and the last '<code>_</code>' matches with the collection <code>{3 4}</code>.<br/>
+</p>
+
+<p>
+  The pattern which generates <i>nCk</i> combinations of elements can be written for any fixed <i>k</i> in the same way.<br/>
+  However, it is not possible to write a pattern for dynamically changing <i>k</i> in the same way.<br/>
+  This is because we cannot write patterns including a parameter that determines the count of pattern variables in them.<br/>
+  Egison has the special pattern syntax, <code>loop</code> expressions and <i>subscripted variables</i> to enable it.<br/>
+</p>
+
+<p>
+  A variable whose name contains `_' and an expression which returns integer in its tail is called a subscripted variable.<br/>
+  It is similar to an array of other programming languages.<br/>
+  A difference is it can be used in patterns as a pattern variable.<br/>
+  We can append several subscritions to one variable.<br/>
+</p>
+
+<p>
+  A <code>loop</code> expression takes a <i>loop variable</i>, a <i>index variable</i>, a <i>range expression</i>, a <i>middle expression</i>, and a <i>tail expression</i>.<br/>
+  A range expression returns a index collection.<br/>
+  The index variable runs through its elements.<br/>
+  A <code>loop</code> expression is expanded to the middle expression when it has one and more elements.<br/>
+  When there are no elements, a <code>loop</code> expression is expanded to the tail expression.<br/>
+  The loop variable in the middle expression is expanded to the next middle expression when there is the next element in the index collection.<br/>
+  If there is no unused element in the index collection, the loop variable in the middle expression is expanded to the tail expression.<br/>
 </p>
 
 <pre>
   <code>
-&gt; (test (match-all {1 2 3} (List Int)
-          [&lt;join $hs $ts&gt; [hs ts]]))
-{[{} {1 2 3}] [{1} {2 3}] [{1 2} {3}] [{1 2 3} {}]}
+&gt; (define $combination
+    (lambda [$xs $k]
+      (match-all xs (List Something)
+        [(loop $l $i (between 1 k) &lt;join _ &lt;cons $a_i l&gt;&gt; _)
+         [@(loop $l $i (between 1 k) {a_i @l} {})]])))
 
-&gt; (test (match-all {1 2 3} (Multiset Int)
-          [&lt;join $hs $ts&gt; [hs ts]]))
-{[{} {1 2 3}] [{3} {1 2}] [{2} {1 3}] [{2 3} {1}] [{1} {2 3}] [{1 3} {2}] [{1 2} {3}] [{1 2 3} {}]}
-          
-&gt; (test (match-all {1 2 3} (Set Int)
-          [&lt;join $hs $ts&gt; [hs ts]]))
-{[{} {1 2 3}] [{3} {1 2}] [{3} {1 2 3}] [{2} {1 3}] [{2} {1 3 2}] [{2 3} {1}] [{2 3} {1 3}] [{2 3} {1 2}] [{2 3} {1 2 3}]
- [{1} {2 3}] [{1} {2 3 1}] [{1 3} {2}] [{1 3} {2 3}] [{1 3} {2 1}] [{1 3} {2 1 3}] [{1 2} {3}] [{1 2} {3 2}] [{1 2} {3 1}] [{1 2} {3 1 2}]
- [{1 2 3} {}] [{1 2 3} {3}] [{1 2 3} {2}] [{1 2 3} {2 3}] [{1 2 3} {1}] [{1 2 3} {1 3}] [{1 2 3} {1 2}] [{1 2 3} {1 2 3}]}
+&gt; (test (combination {1 2 3 4} 3))
+
+{[1 2 3] [1 2 4] [1 3 4][2 3 4]}
   </code>
 </pre>
 
 <p>
-  The pattern constructor <code>join</code> takes two arguments.<br/>
-  We succeed pattern matching when the target collection is equal with the collection which consists of the elements of the collection matched with pattern of the first argument and the second argument.<br/>
-  The ways of pattern matching for each pattern constructor are defined when we define the type.<br/>
-  We will describe how to define types, in the next section.<br/>
-</p>
-
-<p>
-  There are some other examples.<br/>
+  <code>between</code> is a function which take two arguments and return a sequence of numbers between them.<br/>
 </p>
 
 <pre>
   <code>
-&gt; (test (match {5 2 1 3 4} (Multiset Int)
-          {[&lt;cons $n
-             &lt;cons ,(- n 1)
-              &lt;cons ,(- n 2)
-               &lt;cons ,(- n 3)
-                &lt;cons ,(- n 4)
-                 &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
-            &lt;ok&gt;]
-           [ _ &lt;ko&gt;]}))
-&lt;ok&gt;
-&gt; (test (match-all {1 2 3} (List Int)
-          [&lt;join $hs &lt;cons $x $ts&gt;&gt; [hs x ts]]))
-{[{} 1 {2 3}] [{1} 2 {3}] [{1 2} 3 {}]}
-&gt; (test (match-all {1 2 3 4 5} (Multiset Int)
-          [&lt;cons $n $rest&gt; [m rest]]))
-{[1 {2 3 4 5}] [2 {1 3 4 5}] [3 {1 2 4 5}] [4 {1 2 3 5}] [5 {1 2 3 4}]}
-  </code>
-</pre>
+&gt; (test (between 2 4))
 
-<h2>How To Define Types</h2>
-
-<p>
-  We need to define how to do pattern matching for each type to evaluate the pattern matching expression explained in the previous section.<br/>
-  In this section, we explain how to define types and how the pattern matching expressions of Egison are executed.<br/>
-  All the knowledge you need to write type definitions is included in the type definition for multiset.<br/>
-  Therefore, we explain the type definition for multiset.<br/>
-  Below is a definition of the multiset in Egison.<br/>
-</p>
-
-<pre>
-  <code>
-(define $Multiset
-  (lambda [$a]
-    (type
-      {[$var-match (lambda [$tgt] {tgt})]
-       [$inductive-match
-        (destructor
-          {[nil []
-            {[{} {[]}]
-             [_ {}]}]
-           [cons [a (Multiset a)]
-            {[$tgt (map (lambda [$t] [t ((remove a) tgt t)]) tgt)]}]
-           [join [(Multiset a) (Multiset a)]
-            {[$tgt (map (lambda [$ts] [ts ((remove-collection a) tgt ts)])
-                        (subcollections tgt))]}]})]
-       [$equal?
-        (lambda [$val $tgt]
-          (match [val tgt] [(Multiset a) (Multiset a)]
-            {[[&lt;nil&gt; &lt;nil&gt;] &lt;true&gt;]
-             [[&lt;cons $x $xs&gt; &lt;cons ,x ,xs&gt;] &lt;true&gt;]
-             [[_ _] &lt;false&gt;]}))]})))
+{2 3 4}
   </code>
 </pre>
 
 <p>
-  The <code>remove</code> function obtains a type and returns a function that removes the value which is its first argument from the collection which is its seconds argument.<br/>
-  The <code>remove-collection</code> function obtains a type and returns a function that removes all elements of the collection which is its first argument from the collection which is its seconds argument.<br/>
+  With a loop pattern, we can represent patterns for Hamilton path or cycle of graphs in a single pattern.
+  (<a href="./graph.html">Example2. Graphs</a>)<br/>
 </p>
-
-<p>
-  The <code>Multiset</code> is defined as a function that obtains a type and returns a multiset type of that type.<br/>
-  For example, <code>(Multiset Integer)</code> means multiset of integers, and <code>(Multiset (Multiset Integer))</code> means multiset of multiset of integers.<br/>
-</p>
-
-<p>
-  Types are defined with <code>type</code> expressions.<br/>
-  A type expression obtains a collection of tuples of a pattern variable and an expression as the first argument.<br/>
-  A definition of type expressions is mutually recursive.<br/>
-  With a <code>type-ref</code> expression, we can refer to the value bound by a <code>type</code> expression.<br/>
-</p>
-
-<p>
-  To define <code>Multiset</code>, we need to define the <code>var-match</code> function, the <code>inductive-match</code> function, and the <code>equal?</code> function.<br/>
-  The <i>match-function</i> is constructed from these three functions.<br/>
-  The match-function is function that obtains a pattern and a target value, and returns binding frames.<br/>
-  The match-function is automatically constructed if we define the <code>var-match</code> function, the <code>inductive-match</code> function, and the <code>equal?</code> function.<br/>
-</p>
-
-<p>
-  Next, we describe the <code>var-match</code> function, the <code>inductive-match</code> function, and the <code>equal?</code> function, respectively.<br/>
-</p>
-
-<p>
-  The <code>var-match</code> function is used when the pattern is a <i>variable pattern</i>.<br/>
-  The variable pattern is a pattern that consist of only pattern variable.<br/>
-  The elements of collection value returned by applying the target value to the  <code>var-match</code> function is the values that the pattern variable would be bound.<br/>
-  In this <code>Multiset</code> examples, the values that the pattern variable would be bound is only a target value.<br/>
-</p>
-
-<p>
-  An <code>inductive-match</code> function is used when the pattern is a <i>inductive pattern</i>.<br/>
-  An inductive pattern is a pattern that is constructed by a pattern constructor.<br/>
-  We describe the <code>inductive-match</code> function in detail after an <code>equal?</code> function.<br/>
-</p>
-
-<p>
-  An <code>equal?</code> function is used when pattern is a <i>value pattern</i>.<br/>
-  The boolean value returned by applying the value of the target value and the value pattern to the <code>equal?</code> function shows pattern matching succeed or not.<br/>
-  In this example, the <code>equal?</code> function is recursively defined.<br/>
-  This <code>equal?</code> function returns <code>&lt;true&gt;</code>, if both arguments contains same element same count, and else return <code>&lt;false&gt;</code>.<br/>
-</p>
-
-<p>
-  Now, we describe an <code>inductive-match</code> function.<br/>
-  An <code>inductive-match</code> function is defined with a <code>destructor</code> expression.<br/>
-  A <code>destructor</code> expression takes a collection of <i>destructor-match clause</i> as an argument.<br/>
-  The destruct-match clause consist of a pattern constructor, an expression, whose value is a tuple of types, and <i>primitive match clause</i>.<br/>
-  For example, we explain the destructor-match clause on <code>cons</code> for <code>Multiset</code>.<br/>
-  The expression <code>[a (Multiset a)]</code> means that if the pattern constructor of the pattern is <code>cons</code>, we do pattern matching the first argument of the inductive value as the type <code>a</code>, and the second as <code>(Multiset a)</code>.<br/>
-</p>
-
-<p>
-  A primitive match clause is represented as a tuple of <i>primitive pattern</i> and an expression.<br/>
-  If the target value is matched with the primitive pattern of the primitive match clause, the expression of the primitive match clauses are evaluated, and the value is the next target value of recursive pattern matching.<br/>
-</p>
-
-<p>
-  For example, the case that the pattern is inductive pattern <code>&lt;cons $x $xs&gt;</code>, the target is a collection <code>{1 2 3}</code> and we do pattern matching them as the type <code>(Multiset Int)</code>, pattern matching is executed using the <code>inductive-match</code> function.<br/>
-  And in that case, the pattern is matched with the destructor-match clause of <code>cons</code>, and the target is matched with its only primitive match clause.<br/>
-  And result of evaluating the expression of the primitive match clause is <code>{[1 {2 3}] [2 {1 3}] [3 {1 2}]}</code>.<br/>
-  Each element of the result are the target of next pattern matching.<br/>
-  Its first element is matched as <code>Int</code> and its second is matched as <code>(Multiset Int)</code>.<br/>
-</p>
-
-<p>
-  We call pattern matching for primitive patterns <i>primitive pattern matching</i>.<br/>
-  Primitive pattern matching returns only one binding frame, as ordinary pattern matching do.<br/>
-  Primitive pattern matching is the pattern matching that human can do in their mind intuitively.<br/>
-</p>
-
-<p>
-  There are 7 kinds of primitive patterns.<br/>
-</p>
-
-<pre>
-primpat ::= _
-          | patvar
-          | &lt; cons primpat ... &t;
-          | [ primpat ... ]
-          | {}
-          | { primpat .primpat }
-          | { .primepat primepat }
-</pre>
-
-<p>
-  '<code>_</code>' is wildcard.<br/>
-  This matches with any value.<br/>
-</p>
-
-<p>
-  <i>pat-var</i> is a pattern variable.<br/>
-  This matches with any value too.<br/>
-</p>
-
-<p>
-  <code>&lt;</code><i>cons</i> <i>prime-pat</i> <i>...</i> <code>&gt;</code> is an <i>inductive prime pattern</i>.<br/>
-  This pattern matches when the target value is an inductive value whose constructor is <code>cons</code>.<br/>
-  Pattern matchings for each arguments of the constructor are recursively executed.<br/>
-</p>
-
-<p>
-  <code>[</code><i>prime-pat</i> <i>...</i> <code>]</code> is a <i>tuple prime pattern</i>.<br/>
-  This pattern matches when the target value is a tuple.<br/>
-  Pattern matching for each element of the tuple is recursively executed.<br/>
-</p>
-
-<p>
-  <code>{}</code> is an <i>empty pattern</i>.<br/>
-  This pattern matches when the target value is a empty collection.<br/>
-</p>
-
-<p>
-  <code>{</code><i>prime-pat</i> <code>.</code><i>prime-pat</i><code>}</code> is a <i>cons pattern</i>.<br/>
-  This pattern matches when the target collection contain more than one element.<br/>
-  The first <i>prime-pat</i> is matched with the first element of the target collection, and the second <i>prime-pat</i> is matched with the rest elements of the target collection.<br/>
-</p>
-
-<p>
-  <code>{</code><code>.</code><i>prime-pat</i> <i>prime-pat</i><code>}</code> is a <i>snoc pattern</i>.<br/>
-  This pattern matches when the target collection contain more than one element.<br/>
-  The second <i>prime-pat</i> is matched with the last element of the target collection, and the first <i>prime-pat</i> is matched with the rest elements of the target collection.<br/>
-</p>
-
-<p>
-  We can define lists and sets, as we do for multisets.<br/>
-  We define the type of lists as figure 2.<br/>
-  In the pattern of primitive pattern match clause of <code>nil</code>, an empty pattern is used.<br/>
-  In the pattern of primitive pattern match clause of <code>cons</code>, a cons pattern is used.<br/>
-  In the pattern of primitive pattern match clause of <code>snoc</code>, a snoc pattern is used.<br/>
-</p>
-
-<pre>
-  <code>
-(define $List
-  (lambda [$a]
-    (type
-      {[$var-match (lambda [$tgt] {tgt})]
-       [$inductive-match
-        (destructor
-          {[nil []
-            {[{} {[]}]
-             [_ {}]}]
-           [cons [a (List a)]
-            {[{$x .$xs} {[x xs]}]
-             [_ {}]}]
-           [snoc [a (List a)]
-            {[{.$xs $x} {[x xs]}]
-             [_ {}]}]
-           [join [(List a) (List a)]
-            {[$tgt (let {[$loop (lambda [$ts]
-                                  (match ts (List a)
-                                    {[&lt;nil&gt; {[{} {}]}]
-                                     [&lt;cons $x $xs&gt; {[{} ts] @(map (lambda [$as $bs] [{x @as} bs])
-                                                                   (loop xs))}]}))]}
-                   (loop tgt))]}]
-           [nioj [(List a) (List a)]
-            {[$tgt (let {[$loop (lambda [$ts]
-                                  (match ts (List a)
-                                    {[&lt;nil&gt; {[{} {}]}]
-                                     [&lt;snoc $x $xs&gt; {[{} ts] @(map (lambda [$as $bs] [{@as x} bs])
-                                                                   (loop xs))}]}))]}
-                   (loop tgt))]}]})]
-       [$equal? (lambda [$val $tgt]
-                  (match [val tgt] [(List a) (List a)]
-                    {[[&lt;nil&gt; &lt;nil&gt;] &lt;true&gt;]
-                     [[&lt;cons $x $xs&gt; &lt;cons ,x ,xs&gt;]
-                      &lt;true&gt;]
-                     [[_ _] &lt;false&gt;]}))]})))
-  </code>
-</pre>
 
 </body>
 

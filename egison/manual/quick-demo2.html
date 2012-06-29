@@ -1,0 +1,156 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>Quick Demo</h1>
+<hr/>
+<p>
+  Here are codes.<br/>
+  If you run these codes, you will quickly understand how Egison is like.<br/>
+<hr/>
+
+<pre><code>
+&gt; (load "lib/base.egi")
+&gt; (load "lib/number.egi")
+&gt; (load "lib/collection.egi")
+</code></pre>
+
+<pre><code>
+&gt; (test (match-all {1 2 3} (List Integer)
+          [&lt;cons $x $ts&gt; [x ts]]))
+{[1 {2 3}]}
+
+&gt; (test (match-all {1 2 3} (Multiset Integer)
+          [&lt;cons $x $ts&gt; [x ts]]))
+{[1 {2 3}] [2 {1 3}] [3 {1 2}]}
+
+&gt; (test (match-all {1 2 3} (Set Integer)
+          [&lt;cons $x $ts&gt; [x ts]]))
+{[1 {2 3}] [2 {1 3}] [3 {1 2}] [1 {2 3 1}] [2 {1 3 2}] [3 {1 2 3}]}
+</code></pre>
+
+<pre><code>
+&gt; (test (match-all {1 2 3} (List Integer)
+          [&lt;join $xs $ys&gt; [xs ys]]))
+{[{} {1 2 3}] [{1} {2 3}] [{1 2} {3}] [{1 2 3} {}]}
+
+&gt; (test (match-all {1 2 3} (Multiset Integer)
+          [&lt;join $xs $ys&gt; [xs ys]]))
+{[{} {1 2 3}] [{3} {1 2}] [{2} {1 3}] [{2 3} {1}] [{1} {2 3}] [{1 3} {2}] [{1 2} {3}] [{1 2 3} {}]}
+
+&gt; (test (match-all {1 2 3} (Set Integer)
+          [&lt;join $xs $ys&gt; [xs ys]]))
+{[{} {1 2 3}] [{3} {1 2}] [{3} {1 2 3}] [{2} {1 3}] [{2} {1 3 2}] [{2 3} {1}] [{2 3} {1 3}] [{2 3} {1 2}] [{2 3} {1 2 3}] [{1} {2 3}] [{1} {2 3 1}] [{1 3} {2}] [{1 3} {2 3}] [{1 3} {2 1}] [{1 3} {2 1 3}] [{1 2} {3}] [{1 2} {3 2}] [{1 2} {3 1}] [{1 2} {3 1 2}] [{1 2 3} {}] [{1 2 3} {3}] [{1 2 3} {2}] [{1 2 3} {2 3}] [{1 2 3} {1}] [{1 2 3} {1 3}] [{1 2 3} {1 2}] [{1 2 3} {1 2 3}]}
+</code></pre>
+
+<pre><code>
+&gt; (test (match-all {1 2 3} (List Integer)
+          [&lt;snoc $x $ts&gt; [x ts]]))
+{[3 {1 2}]}
+
+&gt; (test (match-all {1 2 3} (List Integer)
+          [&lt;nioj $hs $ts&gt; [hs ts]]))
+{[{} {1 2 3}] [{3} {1 2}] [{2 3} {1}] [{1 2 3} {}]}
+</code></pre>
+
+<pre><code>
+&gt; (test (match-all {1 2 3 4 5} (List Integer)
+          [&lt;join _ &lt;cons $x &lt;join _ &lt;cons $y _&gt;&gt;&gt;&gt; [x y]]))
+{[1 2] [1 3] [1 4] [1 5] [2 3] [2 4] [2 5] [3 4] [3 5] [4 5]}
+
+&gt; (test (match-all {1 2 3 4 5} (List Integer)
+          [&lt;join _ &lt;cons $x &lt;join _ &lt;cons $y &lt;join _ &lt;cons $z _&gt;&gt;&gt;&gt;&gt;&gt; [x y z]]))
+{[1 2 3] [1 2 4] [1 2 5] [1 3 4] [1 3 5] [1 4 5] [2 3 4] [2 3 5] [2 4 5] [3 4 5]}
+</code></pre>
+
+<pre><code>
+&gt; (test (match-all {2 8 7 2 7} (Multiset Integer)
+          [&lt;cons $m &lt;cons ,m _&gt;&gt; m]))
+{2 7}
+</code></pre>
+
+<pre><code>
+&gt; (test (match {5 2 1 3 4} (Multiset Integer)
+          {[&lt;cons $n
+             &lt;cons ,(- n 1)
+              &lt;cons ,(- n 2)
+               &lt;cons ,(- n 3)
+                &lt;cons ,(- n 4)
+                 &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+            &lt;ok&gt;]
+           [_ &lt;ko&gt;]}))
+&lt;ok&gt;
+</code></pre>
+
+<pre><code>
+&gt; (test (match {2 7 7 2 7} (Multiset Integer)
+          {[&lt;cons $m
+             &lt;cons ,m
+              &lt;cons ,m
+               &lt;cons $n
+                !&lt;cons ,n
+                  !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+            &lt;ok&gt;]
+           [_ &lt;ko&gt;]}))
+&lt;ok&gt;
+</code></pre>
+
+<pre><code>
+&gt; (test (match-all {{1 2 3 4 5} {4 5 1} {6 1 7 4}}
+          (List (Multiset Integer))
+          [&lt;cons &lt;cons $n _&gt;
+            &lt;cons &lt;cons ,n _&gt;
+             &lt;cons &lt;cons ,n _&gt;
+              &lt;nil&gt;&gt;&gt;&gt;
+           n]))
+{1 4}
+</code></pre>
+
+<pre><code>
+&gt; (test (loop $l $i (between 1 3) {i @l} {}))
+{1 2 3}
+</code></pre>
+
+<pre><code>
+&gt; (test (match-all {1 2 3 4 5} (Multiset Integer)
+          [(loop $l $i (between 1 2) &lt;cons $a_i &lt;cons (& $a_(+ i 1) ,(+ a_i 1)) l&gt;&gt; _)
+           [@(loop $l $i (between 1 2) {a_i @l} {})]]))
+{[1 3] [1 4] [2 4] [3 1] [4 1] [4 2]}
+
+&gt; (test (match-all {1 2 3 4 5} (List Integer)
+          [(loop $l $i (between 1 3) &lt;join _ &lt;cons $a_i l&gt;&gt; _)
+           [@(loop $l $i (between 1 3) {a_i @l} {})]]))
+{[1 2 3] [1 2 4] [1 2 5] [1 3 4] [1 3 5] [1 4 5] [2 3 4] [2 3 5] [2 4 5] [3 4 5]}
+</code></pre>
+
+<pre><code>
+&gt; (define $combination
+    (lambda [$xs $k]
+      (match-all xs (List Something)
+        [(loop $l $i (between 1 k) &lt;join _ &lt;cons $a_i l&gt;&gt; _)
+         [@(loop $l $i (between 1 k) {a_i @l} {})]])))
+combination
+
+&gt; (test (combination {1 2 3 4 5} 3))
+{[1 2 3] [1 2 4] [1 2 5] [1 3 4] [1 3 5] [1 4 5] [2 3 4] [2 3 5] [2 4 5] [3 4 5]}
+
+&gt; (test (combination {1 2 3 4 5 6 7 8} 2))
+{[1 2] [1 3] [1 4] [1 5] [1 6] [1 7] [1 8] [2 3] [2 4] [2 5] [2 6] [2 7] [2 8] [3 4] [3 5] [3 6] [3 7] [3 8] [4 5] [4 6] [4 7] [4 8] [5 6] [5 7] [5 8] [6 7] [6 8] [7 8]}
+</code></pre>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://hagi.is.s.u-tokyo.ac.jp/~egi/">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>

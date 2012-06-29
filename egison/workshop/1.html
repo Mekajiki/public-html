@@ -10,26 +10,29 @@
 
 <hr/>
 
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://hagi.is.s.u-tokyo.ac.jp/~egi/egison/workshop/1.html" data-text="第1回 Egison ワークショップ さわって覚えるパターンマッチプログラミング" data-via="Egison_Lang">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
 <h2 id="objective">目的</h2>
 
 <p>
-  従来のプログラミング言語では集合や多重集合のような1つの定まった形を持たないデータ型に対するパターンマッチを行うためには、<br/>
-  一度順序をもったコレクション型であるリストとしてこれらのデータを捉え直してパターンマッチするしかありませんでした。<br/>
-  多くのプログラマは、この煩雑な作業を当たり前のことだと認識していますが、これは実はかなりのプログラミングの際の潜在的な精神的なストレスになっています。<br/>
+  従来のプログラミング言語では集合や多重集合のような1つの定まった形を持たないデータ型に対するパターンマッチを行うためには，<br/>
+  一度順序をもったコレクション型であるリストとしてこれらのデータを捉え直してパターンマッチするしかありませんでした．<br/>
+  多くのプログラマは，この煩雑な作業を当たり前のことだと認識していますが，これは実はかなりのプログラミングの際の潜在的な精神的なストレスになっています．<br/>
 </p>
 
 <p>
-  Egisonは強力なパターンマッチをユーザーが記述できる新しい関数型言語です。<br/>
-  ユーザーが集合や多重集合のような(正規形を持たない)データ型のパターンマッチの方法を定義し、<br/>
-  それを使用したプログラムを直感的に記述することができます。
+  Egisonは強力なパターンマッチをユーザーが記述できる新しい関数型言語です．<br/>
+  ユーザーが集合や多重集合のような(正規形を持たない)データ型のパターンマッチの方法を定義し，<br/>
+  それを使用したプログラムを直感的に記述することができます．
 </p>
 
 <p>
-  本ワークショップでは、実際にEgisonでプログラミングをしながら、Egisonについて深く学んでいきます。<br/>
+  本ワークショップでは，実際にEgisonでプログラミングをしながら，Egisonについて深く学んでいきます．<br/>
 </p>
 
 <p>
-  EgisonはHaskellを使って実装されていて、オープンソースとして公開されています。
+  EgisonはHaskellを使って実装されていて，オープンソースとして公開されています．
 </p>
 
 <hr/>
@@ -37,7 +40,10 @@
 <h2>参加登録</h2>
 
 <p>
-  Twitterで<a href="http://twitter.com/Egison_Lang">@Egison_Lang</a>宛に参加するとツイートするだけでも大丈夫です。<br/>
+  Twitterで<a href="http://twitter.com/Egison_Lang">@Egison_Lang</a>宛に参加するとツイートするだけでも大丈夫です．<br/>
+
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://hagi.is.s.u-tokyo.ac.jp/~egi/egison/workshop/1.html" data-text="Egison Workshopに参加します" data-via="Egison_Lang">Tweet</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </p>
 
 <hr/>
@@ -58,9 +64,35 @@
 <h2>プログラム</h2>
 <ul>
   <li>13:00 - 14:30 Egison講習</li>
-  <li>14:30 - 16:00 Egisonistたちによる講演 (公募中)</li>
+  <p>
+    Egisonは強力なパターンマッチ記述能力を持つ言語です．<br/>
+    Egisonを用いればどのようなパターンマッチができるのか，コードを実際に走らせながら体感していきます．<br/>
+    (<a href="../manual/index.html">Egisonユーザマニュアル</a>)<br/>
+    理解を測るための問題も用意されており，Egisonによる新たなプログラミング体験を楽しむこともできます．<br/>
+    (<a href="../exam/index-j.html">Egisonist検定</a>)<br/>
+  </p>
+  <li>14:30 - 15:30 Egisonistたちによる講演</li>
+    <ul>
+      <li>Egisonで麻雀 川又 生吹(東京大学博士2年)</li>
+      <p>
+        Egisonの強力なパターンマッチ記述力により，麻雀の役判定が非常に短いコードで記述できます．<br/>
+      </p>
+      <li>EgisonでQM法 本多 健太郎(東京大学修士2年)</li>
+      <p>
+        QM法とは，論理式自動圧縮アルゴリズムです．<br/>
+        集合のパターンマッチも可能なEgisonを用いるとこのアルゴリズムも非常にシンプルに記述できます．<br/>
+      </p>
+    </ul>
   <li>16:00 - 18:00 Egisonでプログラミング大会</li>
+  <p>
+    Egisonの強力なパターンマッチ記述力を用いると，ゲームのAIが非常にシンプルなコードで記述できます．<br/>
+    このセクションではより実践的なプログラムをEgisonで書いてみます．<br/>
+  </p>
   <li>18:00 - 19:00 My Egisonを考える (グループディスカッション)</li>
+  <p>
+    ユーザがパターンマッチを記述できるようになると，どんなうれしいことがあるでしょう．<br/>
+    参加者が選んだプログラミング言語にEgisonをライブラリとして組み込むなど新しいプログラミングの世界を夢想します．<br/>
+  </p>
 </ul>
 
 <hr/>
